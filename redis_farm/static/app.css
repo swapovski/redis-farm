@@ -97,3 +97,8 @@
 .catalog-edit-row {display:flex;justify-content:flex-end;min-height:30px;margin-bottom:8px;}
 .catalog-toggle-all {width:100%;display:flex;justify-content:center;margin:8px 0 10px;min-height:30px;}
 .welcome-logo {height:76px;width:auto;object-fit:contain;margin-bottom:8px;}
+
+/* 0.2.0 UI refinement: both catalog actions on the same line. */
+.catalog-actions-row{display:flex;align-items:center;gap:8px;min-width:0;margin:8px 0 10px}
+.catalog-actions-row .catalog-toggle-all{flex:1 1 auto;width:auto;margin:0;justify-content:flex-start;min-width:0;padding-left:9px}
+.catalog-actions-row .catalog-edit-button{flex:0 0 auto;margin:0;min-height:30px;padding:6px 10px}

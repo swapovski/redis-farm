@@ -1,6 +1,7 @@
 {
-  "checks": 51,
+  "checks": 55,
   "passed": [
+    "en catalog actions share a row",
     "en no JS errors",
     "en three nodes",
     "en logo original",
@@ -14,6 +15,7 @@
     "en anonymous employee-secret",
     "en anonymous production-customer-secret",
     "English main screen has no Cyrillic",
+    "en login label",
     "en add original",
     "en add initial host cleared",
     "en default tab no automatic modal",
@@ -27,6 +29,7 @@
     "en original restored",
     "en mobile no page overflow",
     "en mobile dialog fits",
+    "ru catalog actions share a row",
     "ru no JS errors",
     "ru three nodes",
     "ru logo original",
@@ -39,6 +42,7 @@
     "ru anonymous private.internal",
     "ru anonymous employee-secret",
     "ru anonymous production-customer-secret",
+    "ru login label",
     "ru add original",
     "ru add initial host cleared",
     "ru default tab no automatic modal",

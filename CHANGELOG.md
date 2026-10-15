@@ -2,6 +2,8 @@
 
 ## 0.2.0
 
+GitHub publication includes a CI workflow for syntax checks, Python tests and bilingual demo screenshot generation, the catalog action buttons on one row, and LDAP sign-in screenshots in both READMEs.
+
 Universal distribution: English default on new installations; Russian selectable in both installers and preserved on legacy upgrades. Localized templates, dynamic labels, password validation, panel errors and installer prompts. Redis CLI output and external package-manager diagnostics remain original.
 
 Optional LDAP/no-login server mode with explicit acknowledgment for unauthenticated access; local mode remains independent of LDAP. Generic first-run IP/DNS/LDAP examples replace organization-specific defaults. Configurable named Redis ACL user, consistently shown in its tab and passed to CLI; default profile/password scopes unchanged.

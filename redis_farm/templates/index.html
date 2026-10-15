@@ -35,11 +35,13 @@
 </section>
 <div class="app-layout">
   <aside class="sidebar">
-    <div class="catalog-edit-row"><button id="editButton" class="ghost small" disabled title="{{ t('Имя и группа') }}">{{ t("Править") }}</button></div>
     <div class="sidebar-heading"><strong>{{ t("Каталог") }}</strong><span id="catalogCount" class="count">0</span></div>
     <input id="catalogSearch" type="search" placeholder="{{ t('Сервис, хост или порт…') }}" aria-label="{{ t('Поиск по каталогу') }}">
     <button id="addButton" class="add-button">{{ t("＋ Добавить ноду / кластер") }}</button>
-    <button id="toggleAllGroups" type="button" class="ghost small catalog-toggle-all" aria-controls="catalog" disabled>{{ t("Развернуть всё") }}</button>
+    <div class="catalog-actions-row">
+      <button id="toggleAllGroups" type="button" class="ghost small catalog-toggle-all" aria-controls="catalog" disabled>{{ t("Развернуть всё") }}</button>
+      <button id="editButton" type="button" class="ghost small catalog-edit-button" disabled title="{{ t('Имя и группа') }}">{{ t("Править") }}</button>
+    </div>
     <div id="catalog" class="catalog" aria-label="{{ t('Сохранённые сервисы') }}"></div>
     <div class="sidebar-bottom">
       <div class="button-row"><button id="exportButton" class="ghost small">{{ t("Экспорт") }}</button><button id="importButton" type="button" class="ghost small">{{ t("Импорт") }}</button></div>

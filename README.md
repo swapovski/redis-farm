@@ -6,7 +6,7 @@
 
 ## Screenshots
 
-These are the actual application templates and JavaScript rendered.
+Example of the application JavaScript template.
 
 ![Dashboard: catalog, topology, replication and console](docs/images/dashboard-en.png)
 
@@ -28,6 +28,12 @@ These are the actual application templates and JavaScript rendered.
 <details><summary>About and installation details</summary>
 
 ![About: expanded installation details](docs/images/about-en.png)
+
+</details>
+
+<details><summary>LDAP sign-in</summary>
+
+![LDAP sign-in](docs/images/login-en.png)
 
 </details>
 
