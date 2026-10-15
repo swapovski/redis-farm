@@ -6,7 +6,7 @@
 
 ## Screenshots
 
-These are the actual application templates and JavaScript rendered with the bundled artwork and **entirely fictional** hosts, accounts, groups, console output and measurements. They are not connections to a production environment. Demo records are never imported on installation. The screenshots show a configured named user `ops-admin`; a fresh install proposes `admin`.
+These are the actual application templates and JavaScript rendered.
 
 ![Dashboard: catalog, topology, replication and console](docs/images/dashboard-en.png)
 
