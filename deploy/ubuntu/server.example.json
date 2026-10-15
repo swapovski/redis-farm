@@ -1,0 +1,30 @@
+{
+  "bind_host": "192.0.2.10",
+  "port": 8765,
+  "public_host": "192.0.2.10",
+  "allowed_hosts": [
+    "192.0.2.10"
+  ],
+  "allowed_client_cidrs": [
+    "192.0.2.0/24",
+    "127.0.0.1/32",
+    "::1/128"
+  ],
+  "tls_cert": "/etc/redis-farm/tls/server.crt",
+  "tls_key": "/etc/redis-farm/tls/server.key",
+  "data_dir": "/var/lib/redis-farm",
+  "cli_path": "/usr/bin/redis-cli",
+  "dns_servers": [],
+  "threads": 32,
+  "session_idle": 3600,
+  "session_lifetime": 43200,
+  "scan_redis_start": 6379,
+  "scan_redis_end": 6478,
+  "scan_sentinel_start": 26379,
+  "scan_sentinel_end": 26478,
+  "ldap_connector": "/opt/redis-farm/connectors/connector_settings.py",
+  "language": "en",
+  "panel_auth": "ldap",
+  "redis_admin_user": "admin",
+  "use_acl_user": true
+}

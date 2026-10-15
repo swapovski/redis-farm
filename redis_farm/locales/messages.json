@@ -1,0 +1,1454 @@
+{
+  "Весь редис на одной грядке": {
+    "en": "All your Redis in one garden",
+    "ru": "Весь редис на одной грядке"
+  },
+  "Пароли сервиса": {
+    "en": "Service passwords",
+    "ru": "Пароли сервиса"
+  },
+  "Выберите сервис в каталоге или добавьте новую ноду. Пароль admin не нужен.": {
+    "en": "Select a service in the catalog or add a node. No admin password is needed.",
+    "ru": "Выберите сервис в каталоге или добавьте новую ноду. Пароль admin не нужен."
+  },
+  "default · пароль выбранного сервиса / инстанса": {
+    "en": "default - password for the selected service / instance",
+    "ru": "default · пароль выбранного сервиса / инстанса"
+  },
+  "Доступ default": {
+    "en": "Default access",
+    "ru": "Доступ default"
+  },
+  "Область пароля": {
+    "en": "Password scope",
+    "ru": "Область пароля"
+  },
+  "Весь выбранный сервис (его master и replicas)": {
+    "en": "Entire selected service (master and replicas)",
+    "ru": "Весь выбранный сервис (его master и replicas)"
+  },
+  "Только инстанс": {
+    "en": "This instance only",
+    "ru": "Только инстанс"
+  },
+  "Пароль default": {
+    "en": "Password",
+    "ru": "Пароль"
+  },
+  "Пароль": {
+    "en": "Password",
+    "ru": "Пароль"
+  },
+  "Использовать пароль": {
+    "en": "Use password",
+    "ru": "Использовать пароль"
+  },
+  "Забыть пароль": {
+    "en": "Forget password",
+    "ru": "Забыть пароль"
+  },
+  "Удалить переопределение": {
+    "en": "Remove override",
+    "ru": "Удалить переопределение"
+  },
+  "Пароль (необязательно)": {
+    "en": "Password (optional)",
+    "ru": "Пароль (необязательно)"
+  },
+  "Redis-порт для этого пароля": {
+    "en": "Redis port for this password",
+    "ru": "Redis-порт для этого пароля"
+  },
+  "При сканировании пароль применяется только к указанному Redis-порту и связанным участникам его сервиса. Другие инстансы добавятся без пароля — его можно ввести позже. Оставьте поле пустым для обнаружения без пароля.": {
+    "en": "During discovery, this password is used only for the selected Redis port and related service members. Other instances are added without a password; provide theirs later. Leave blank to discover without a password.",
+    "ru": "При сканировании пароль применяется только к указанному Redis-порту и связанным участникам его сервиса. Другие инстансы добавятся без пароля — его можно ввести позже. Оставьте поле пустым для обнаружения без пароля."
+  },
+  "Добавление завершено": {
+    "en": "Added successfully",
+    "ru": "Добавление завершено"
+  },
+  "Перейти в каталог": {
+    "en": "Go to catalog",
+    "ru": "Перейти в каталог"
+  },
+  "Добавлено": {
+    "en": "Added",
+    "ru": "Добавлено"
+  },
+  "Sentinel — без пароля": {
+    "en": "Sentinel - no password",
+    "ru": "Sentinel — без пароля"
+  },
+  "Выберите сервис": {
+    "en": "Select a service",
+    "ru": "Выберите сервис"
+  },
+  "Пароль не введён": {
+    "en": "Password not provided",
+    "ru": "Пароль не введён"
+  },
+  "Авторизован": {
+    "en": "Authorized",
+    "ru": "Авторизован"
+  },
+  "Введите пароль default для выбранного сервиса или инстанса.": {
+    "en": "Enter the password for the selected service or instance.",
+    "ru": "Введите пароль default для выбранного сервиса или инстанса."
+  },
+  "Пароль принят.": {
+    "en": "Password accepted.",
+    "ru": "Пароль принят."
+  },
+  "Пароль удалён из сессии.": {
+    "en": "Password removed from this session.",
+    "ru": "Пароль удалён из сессии."
+  },
+  "Пароль admin удалён. Пароли default не изменены.": {
+    "en": "The admin password was forgotten. Default passwords are unchanged.",
+    "ru": "Пароль admin удалён. Пароли default не изменены."
+  },
+  "Пароли default выбранного сервиса удалены.": {
+    "en": "Default passwords for the selected service were forgotten.",
+    "ru": "Пароли default выбранного сервиса удалены."
+  },
+  "Ввести пароль default": {
+    "en": "Enter default password",
+    "ru": "Ввести пароль default"
+  },
+  "Сканирование завершено, но сервисы не добавлены.": {
+    "en": "Discovery finished, but no services were added.",
+    "ru": "Сканирование завершено, но сервисы не добавлены."
+  },
+  "Пароль не требуется": {
+    "en": "No password required",
+    "ru": "Пароль не требуется"
+  },
+  "Доступ к части инстансов": {
+    "en": "Some instances are unlocked",
+    "ru": "Доступ к части инстансов"
+  },
+  "Подключение": {
+    "en": "Connection",
+    "ru": "Подключение"
+  },
+  "требуется пароль default": {
+    "en": "default password required",
+    "ru": "требуется пароль default"
+  },
+  "Сервис": {
+    "en": "Service",
+    "ru": "Сервис"
+  },
+  "default · без логина": {
+    "en": "default - no username",
+    "ru": "default · без логина"
+  },
+  "Выбранные здесь сервисы не используют общий пароль admin.": {
+    "en": "These services do not use the shared admin password.",
+    "ru": "Выбранные здесь сервисы не используют общий пароль admin."
+  },
+  "В каталоге сохранено": {
+    "en": "Saved to catalog",
+    "ru": "В каталоге сохранено"
+  },
+  "Закрыть": {
+    "en": "Close",
+    "ru": "Закрыть"
+  },
+  "Сведения о сервере": {
+    "en": "Server information",
+    "ru": "Сведения о сервере"
+  },
+  "Репликация": {
+    "en": "Replication",
+    "ru": "Репликация"
+  },
+  "Текущая роль": {
+    "en": "Current role",
+    "ru": "Текущая роль"
+  },
+  "Память": {
+    "en": "Memory",
+    "ru": "Память"
+  },
+  "Статистика": {
+    "en": "Statistics",
+    "ru": "Статистика"
+  },
+  "Клиентские соединения": {
+    "en": "Client connections",
+    "ru": "Клиентские соединения"
+  },
+  "Список пользователей": {
+    "en": "User list",
+    "ru": "Список пользователей"
+  },
+  "ACL в памяти инстанса": {
+    "en": "Instance ACL in memory",
+    "ru": "ACL в памяти инстанса"
+  },
+  "Пользователь admin": {
+    "en": "ACL user admin",
+    "ru": "Пользователь admin"
+  },
+  "Путь ACL-файла": {
+    "en": "ACL file path",
+    "ru": "Путь ACL-файла"
+  },
+  "Сохранить ACL-файл": {
+    "en": "Save ACL file",
+    "ru": "Сохранить ACL-файл"
+  },
+  "Лимит памяти": {
+    "en": "Memory limit",
+    "ru": "Лимит памяти"
+  },
+  "Записать текущую конфигурацию": {
+    "en": "Write current configuration",
+    "ru": "Записать текущую конфигурацию"
+  },
+  "Последние медленные команды": {
+    "en": "Recent slow commands",
+    "ru": "Последние медленные команды"
+  },
+  "События задержек": {
+    "en": "Latency events",
+    "ru": "События задержек"
+  },
+  "Статистика баз": {
+    "en": "Database statistics",
+    "ru": "Статистика баз"
+  },
+  "Все наблюдаемые группы": {
+    "en": "All monitored groups",
+    "ru": "Все наблюдаемые группы"
+  },
+  "Выбранная master-группа": {
+    "en": "Selected master group",
+    "ru": "Выбранная master-группа"
+  },
+  "Реплики группы": {
+    "en": "Group replicas",
+    "ru": "Реплики группы"
+  },
+  "Другие Sentinel": {
+    "en": "Other Sentinels",
+    "ru": "Другие Sentinel"
+  },
+  "Адрес master по данным Sentinel": {
+    "en": "Master address reported by Sentinel",
+    "ru": "Адрес master по данным Sentinel"
+  },
+  "Проверка кворума по запросу": {
+    "en": "Check quorum on request",
+    "ru": "Проверка кворума по запросу"
+  },
+  "Переключить master": {
+    "en": "Fail over master",
+    "ru": "Переключить master"
+  },
+  "Сведения Sentinel": {
+    "en": "Sentinel information",
+    "ru": "Сведения Sentinel"
+  },
+  "Сохранить конфигурацию Sentinel": {
+    "en": "Save Sentinel configuration",
+    "ru": "Сохранить конфигурацию Sentinel"
+  },
+  "Состояние Redis Cluster": {
+    "en": "Redis Cluster state",
+    "ru": "Состояние Redis Cluster"
+  },
+  "Участники и слоты": {
+    "en": "Members and slots",
+    "ru": "Участники и слоты"
+  },
+  "Шарды (Redis 7+)": {
+    "en": "Shards (Redis 7+)",
+    "ru": "Шарды (Redis 7+)"
+  },
+  "Ещё не опрошено": {
+    "en": "Not polled yet",
+    "ru": "Ещё не опрошено"
+  },
+  "Введите пароль.": {
+    "en": "Enter the password.",
+    "ru": "Введите пароль."
+  },
+  "Локальная сессия завершена. Перезагрузите страницу и повторно введите пароль Redis.": {
+    "en": "Your session has expired. Reload the page and enter the Redis password again.",
+    "ru": "Сессия завершена. Обновите страницу."
+  },
+  "redis-cli недоступен. Установите redis-tools и перезапустите приложение.": {
+    "en": "redis-cli is unavailable. Install a compatible client and restart the application.",
+    "ru": "redis-cli недоступен. Установите redis-tools и перезапустите приложение."
+  },
+  "Процесс redis-cli закрыт. Откройте новую консоль; команды автоматически не повторяются.": {
+    "en": "The redis-cli process is closed. Open a new console; commands are not retried automatically.",
+    "ru": "Процесс redis-cli закрыт. Откройте новую консоль; команды автоматически не повторяются."
+  },
+  "Операция остановлена.": {
+    "en": "Operation stopped.",
+    "ru": "Операция остановлена."
+  },
+  "Токен локальной сессии устарел. Перезагрузите страницу.": {
+    "en": "The session token has expired. Reload the page.",
+    "ru": "Токен сессии устарел. Обновите страницу."
+  },
+  "Неверный ответ HTTP {0}": {
+    "en": "Invalid HTTP response {0}",
+    "ru": "Неверный ответ HTTP {0}"
+  },
+  "Операция остановлена": {
+    "en": "Operation stopped",
+    "ru": "Операция остановлена"
+  },
+  "Свернуть всё": {
+    "en": "Collapse all",
+    "ru": "Свернуть всё"
+  },
+  "Развернуть всё": {
+    "en": "Expand all",
+    "ru": "Развернуть всё"
+  },
+  "Совпадений нет": {
+    "en": "No matches",
+    "ru": "Совпадений нет"
+  },
+  "Каталог пока пуст": {
+    "en": "The catalog is empty",
+    "ru": "Каталог пока пуст"
+  },
+  "Без группы": {
+    "en": "Ungrouped",
+    "ru": "Без группы"
+  },
+  "Инстансов в группе": {
+    "en": "Instances in this group",
+    "ru": "Инстансов в группе"
+  },
+  "Получение состояния инстанса…": {
+    "en": "Loading instance state...",
+    "ru": "Получение состояния инстанса…"
+  },
+  "Получение INFO и топологии…": {
+    "en": "Loading INFO and topology...",
+    "ru": "Получение INFO и топологии…"
+  },
+  "Не удалось обновить · ": {
+    "en": "Could not refresh - ",
+    "ru": "Не удалось обновить · "
+  },
+  "КАТАЛОГ": {
+    "en": "CATALOG",
+    "ru": "КАТАЛОГ"
+  },
+  "Независимый сервис Redis": {
+    "en": "Independent Redis service",
+    "ru": "Независимый сервис Redis"
+  },
+  "Последний опрос: {0}": {
+    "en": "Last polled: {0}",
+    "ru": "Последний опрос: {0}"
+  },
+  "доступны из панели": {
+    "en": "reachable from the panel",
+    "ru": "доступны из панели"
+  },
+  "разные адреса master": {
+    "en": "different master addresses",
+    "ru": "разные адреса master"
+  },
+  "не подтверждён": {
+    "en": "not confirmed",
+    "ru": "не подтверждён"
+  },
+  "роль из INFO Redis": {
+    "en": "role reported by Redis INFO",
+    "ru": "роль из INFO Redis"
+  },
+  "Клиенты": {
+    "en": "Clients",
+    "ru": "Клиенты"
+  },
+  "соединения на всех Redis": {
+    "en": "connections across all Redis instances",
+    "ru": "соединения на всех Redis"
+  },
+  "Память Redis": {
+    "en": "Redis memory",
+    "ru": "Память Redis"
+  },
+  "все процессы, включая replicas": {
+    "en": "all processes, including replicas",
+    "ru": "все процессы, включая replicas"
+  },
+  "Подготовка топологии…": {
+    "en": "Preparing topology...",
+    "ru": "Подготовка топологии…"
+  },
+  "не опрошен": {
+    "en": "not polled",
+    "ru": "не опрошен"
+  },
+  "доступен": {
+    "en": "reachable",
+    "ru": "доступен"
+  },
+  "нет ответа": {
+    "en": "no response",
+    "ru": "нет ответа"
+  },
+  "\nДругие адреса: ": {
+    "en": "\nOther addresses: ",
+    "ru": "\nДругие адреса: "
+  },
+  "Другие известные инстансы": {
+    "en": "Other known instances",
+    "ru": "Другие известные инстансы"
+  },
+  "Связь replica → master не up: {0}": {
+    "en": "Replica to master link is not up: {0}",
+    "ru": "Связь replica → master не up: {0}"
+  },
+  "Sentinel показывают разные master: {0}": {
+    "en": "Sentinels report different masters: {0}",
+    "ru": "Sentinel показывают разные master: {0}"
+  },
+  "Недоступность Sentinel из панели не означает, что его не видят другие участники.": {
+    "en": "An unreachable Sentinel from this panel may still be reachable by other members.",
+    "ru": "Недоступность Sentinel из панели не означает, что его не видят другие участники."
+  },
+  "Статистика появится после успешного опроса.": {
+    "en": "Statistics will appear after a successful poll.",
+    "ru": "Статистика появится после успешного опроса."
+  },
+  "Нет подтверждённых данных этого инстанса.": {
+    "en": "No confirmed data for this instance.",
+    "ru": "Нет подтверждённых данных этого инстанса."
+  },
+  "Версия Redis": {
+    "en": "Redis version",
+    "ru": "Версия Redis"
+  },
+  "Конфигурация": {
+    "en": "Configuration",
+    "ru": "Конфигурация"
+  },
+  "Группа": {
+    "en": "Group",
+    "ru": "Группа"
+  },
+  "Master по Sentinel": {
+    "en": "Master reported by Sentinel",
+    "ru": "Master по Sentinel"
+  },
+  "Флаги": {
+    "en": "Flags",
+    "ru": "Флаги"
+  },
+  "Известные реплики": {
+    "en": "Known replicas",
+    "ru": "Известные реплики"
+  },
+  "Время опроса CLI": {
+    "en": "CLI poll duration",
+    "ru": "Время опроса CLI"
+  },
+  "Роль": {
+    "en": "Role",
+    "ru": "Роль"
+  },
+  "Связь с master": {
+    "en": "Master link",
+    "ru": "Связь с master"
+  },
+  "Реплик подключено": {
+    "en": "Connected replicas",
+    "ru": "Реплик подключено"
+  },
+  "Синхронизация": {
+    "en": "Synchronization",
+    "ru": "Синхронизация"
+  },
+  "ACL-пользователей": {
+    "en": "ACL users",
+    "ru": "ACL-пользователей"
+  },
+  "не определено": {
+    "en": "unknown",
+    "ru": "не определено"
+  },
+  "Назначено слотов": {
+    "en": "Assigned slots",
+    "ru": "Назначено слотов"
+  },
+  "Слотов fail": {
+    "en": "Failed slots",
+    "ru": "Слотов fail"
+  },
+  "Память / RSS": {
+    "en": "Memory / RSS",
+    "ru": "Память / RSS"
+  },
+  "Лимит / eviction": {
+    "en": "Limit / eviction",
+    "ru": "Лимит / eviction"
+  },
+  "без лимита": {
+    "en": "no limit",
+    "ru": "без лимита"
+  },
+  "Клиенты / blocked": {
+    "en": "Clients / blocked",
+    "ru": "Клиенты / blocked"
+  },
+  "Нет известных инстансов": {
+    "en": "No known instances",
+    "ru": "Нет известных инстансов"
+  },
+  "Переоткрыть": {
+    "en": "Reopen",
+    "ru": "Переоткрыть"
+  },
+  "Открыть": {
+    "en": "Open",
+    "ru": "Открыть"
+  },
+  "Команда {0}… Enter — выполнить, Shift+Enter — новая строка": {
+    "en": "{0} command... Enter to execute, Shift+Enter for a new line",
+    "ru": "Команда {0}… Enter — выполнить, Shift+Enter — новая строка"
+  },
+  "Открытая консоль остаётся на {0}. Выбрано {1}; кнопка «Переоткрыть» создаст новое соединение.": {
+    "en": "The open console remains on {0}. Selected: {1}. Use Reopen to create a new connection.",
+    "ru": "Открытая консоль остаётся на {0}. Выбрано {1}; кнопка «Переоткрыть» создаст новое соединение."
+  },
+  "Адрес запуска: {0}{1} · {2} · DB при открытии: {3}{4} · {5}": {
+    "en": "Initial address: {0}{1} - {2} - Initial DB: {3}{4} - {5}",
+    "ru": "Адрес запуска: {0}{1} · {2} · DB при открытии: {3}{4} · {5}"
+  },
+  " → {0} (DNS ОС)": {
+    "en": " -> {0} (system DNS)",
+    "ru": " → {0} (DNS ОС)"
+  },
+  "без авторизации": {
+    "en": "no authentication",
+    "ru": "без авторизации"
+  },
+  " · -c: следование редиректам": {
+    "en": " - -c: follow redirects",
+    "ru": " · -c: следование редиректам"
+  },
+  "процесс CLI запущен": {
+    "en": "CLI process running",
+    "ru": "процесс CLI запущен"
+  },
+  "процесс CLI завершён": {
+    "en": "CLI process exited",
+    "ru": "процесс CLI завершён"
+  },
+  "Соединение не открыто": {
+    "en": "Connection is not open",
+    "ru": "Соединение не открыто"
+  },
+  "Откройте консоль для выбранного инстанса.\n": {
+    "en": "Open a console for the selected instance.\n",
+    "ru": "Откройте консоль для выбранного инстанса.\n"
+  },
+  "[Старый вывод удалён из буфера]\n": {
+    "en": "[Older output was removed from the buffer]\n",
+    "ru": "[Старый вывод удалён из буфера]\n"
+  },
+  "# redis-cli открыт для {0}\n": {
+    "en": "# redis-cli opened for {0}\n",
+    "ru": "# redis-cli открыт для {0}\n"
+  },
+  "\n[Старые фрагменты вышли за пределы серверного буфера]\n": {
+    "en": "\n[Older output exceeded the server buffer limit]\n",
+    "ru": "\n[Старые фрагменты вышли за пределы серверного буфера]\n"
+  },
+  "\n[redis-cli завершён, код {0}]\n": {
+    "en": "\n[redis-cli exited with code {0}]\n",
+    "ru": "\n[redis-cli завершён, код {0}]\n"
+  },
+  "\n[Консоль завершена или сессия истекла]\n": {
+    "en": "\n[Console closed or session expired]\n",
+    "ru": "\n[Консоль завершена или сессия истекла]\n"
+  },
+  "События наблюдения в памяти текущей сессии": {
+    "en": "Observed events in this session's memory",
+    "ru": "События наблюдения в памяти текущей сессии"
+  },
+  "Изменений пока не зафиксировано. История начинается с первого опроса, не с запуска Redis.": {
+    "en": "No changes observed yet. History starts with the first poll, not the Redis startup.",
+    "ru": "Изменений пока не зафиксировано. История начинается с первого опроса, не с запуска Redis."
+  },
+  "Доступность из панели": {
+    "en": "Reachability from the panel",
+    "ru": "Доступность из панели"
+  },
+  "Новый участник": {
+    "en": "New member",
+    "ru": "Новый участник"
+  },
+  "Время": {
+    "en": "Time",
+    "ru": "Время"
+  },
+  "Инстанс": {
+    "en": "Instance",
+    "ru": "Инстанс"
+  },
+  "Изменение": {
+    "en": "Change",
+    "ru": "Изменение"
+  },
+  "Было": {
+    "en": "Before",
+    "ru": "Было"
+  },
+  "Стало": {
+    "en": "After",
+    "ru": "Стало"
+  },
+  "Для получения данных установите redis-cli и перезапустите панель.": {
+    "en": "Install redis-cli and restart the panel to retrieve data.",
+    "ru": "Для получения данных установите redis-cli и перезапустите панель."
+  },
+  "Выберите инстанс.": {
+    "en": "Select an instance.",
+    "ru": "Выберите инстанс."
+  },
+  "{0} · загрузка…": {
+    "en": "{0} - loading...",
+    "ru": "{0} · загрузка…"
+  },
+  "Получение данных…": {
+    "en": "Loading data...",
+    "ru": "Получение данных…"
+  },
+  "{0} · данные не получены": {
+    "en": "{0} - data unavailable",
+    "ru": "{0} · данные не получены"
+  },
+  "ACL-файл: {0}": {
+    "en": "ACL file: {0}",
+    "ru": "ACL-файл: {0}"
+  },
+  "Внешний ACL-файл не настроен. Ниже — ACL в памяти Redis.": {
+    "en": "No external ACL file is configured. The Redis in-memory ACL is shown below.",
+    "ru": "Внешний ACL-файл не настроен. Ниже — ACL в памяти Redis."
+  },
+  "Путь ACL-файла не определён: {0}": {
+    "en": "ACL file path could not be determined: {0}",
+    "ru": "Путь ACL-файла не определён: {0}"
+  },
+  "Пользователь": {
+    "en": "User",
+    "ru": "Пользователь"
+  },
+  "Статус": {
+    "en": "Status",
+    "ru": "Статус"
+  },
+  "Назначение": {
+    "en": "Purpose",
+    "ru": "Назначение"
+  },
+  "Правила (хеши скрыты)": {
+    "en": "Rules (hashes hidden)",
+    "ru": "Правила (хеши скрыты)"
+  },
+  "системный": {
+    "en": "system",
+    "ru": "системный"
+  },
+  "прикладной": {
+    "en": "application",
+    "ru": "прикладной"
+  },
+  "Соединений в ответе: {0}{1}": {
+    "en": "Connections in response: {0}{1}",
+    "ru": "Соединений в ответе: {0}{1}"
+  },
+  " · отображаются первые 1000": {
+    "en": " - showing the first 1000",
+    "ru": " · отображаются первые 1000"
+  },
+  "Адрес": {
+    "en": "Address",
+    "ru": "Адрес"
+  },
+  "Имя": {
+    "en": "Name",
+    "ru": "Имя"
+  },
+  "Команда": {
+    "en": "Command",
+    "ru": "Команда"
+  },
+  "Параметр": {
+    "en": "Parameter",
+    "ru": "Параметр"
+  },
+  "Значение": {
+    "en": "Value",
+    "ru": "Значение"
+  },
+  "Выполнение, µs": {
+    "en": "Execution, us",
+    "ru": "Выполнение, µs"
+  },
+  "Клиент": {
+    "en": "Client",
+    "ru": "Клиент"
+  },
+  "Slowlog пуст.": {
+    "en": "Slowlog is empty.",
+    "ru": "Slowlog пуст."
+  },
+  "Событие": {
+    "en": "Event",
+    "ru": "Событие"
+  },
+  "Последняя, ms": {
+    "en": "Latest, ms",
+    "ru": "Последняя, ms"
+  },
+  "Максимум, ms": {
+    "en": "Maximum, ms",
+    "ru": "Максимум, ms"
+  },
+  "Событий LATENCY LATEST нет.": {
+    "en": "No LATENCY LATEST events.",
+    "ru": "Событий LATENCY LATEST нет."
+  },
+  "Сканировать и добавить": {
+    "en": "Scan and add",
+    "ru": "Сканировать и добавить"
+  },
+  "Обнаружить": {
+    "en": "Discover",
+    "ru": "Обнаружить"
+  },
+  "Поиск завершён": {
+    "en": "Discovery complete",
+    "ru": "Поиск завершён"
+  },
+  "Сбор участников кластера": {
+    "en": "Discovering cluster members",
+    "ru": "Сбор участников кластера"
+  },
+  "Сканирование портов ноды": {
+    "en": "Scanning node ports",
+    "ru": "Сканирование портов ноды"
+  },
+  "Ответили на исходной ноде: Redis {0}, Sentinel {1}. Сервисов: {2}{3}": {
+    "en": "Replies from the seed node: Redis {0}, Sentinel {1}. Services: {2}{3}",
+    "ru": "Ответили на исходной ноде: Redis {0}, Sentinel {1}. Сервисов: {2}{3}"
+  },
+  "Обнаружение нод и инстансов…": {
+    "en": "Discovering nodes and instances...",
+    "ru": "Обнаружение нод и инстансов…"
+  },
+  "нет прямого доступа": {
+    "en": "no direct access",
+    "ru": "нет прямого доступа"
+  },
+  "Открыть сервис": {
+    "en": "Open service",
+    "ru": "Открыть сервис"
+  },
+  "Нет ответа или данные не получены: {0} (показать)": {
+    "en": "No response or missing data: {0} (show)",
+    "ru": "Нет ответа или данные не получены: {0} (показать)"
+  },
+  "Сообщения обнаружения ({0})": {
+    "en": "Discovery messages ({0})",
+    "ru": "Сообщения обнаружения ({0})"
+  },
+  "Достигнут лимит обнаружения. Добавьте оставшиеся участники отдельной записью.": {
+    "en": "Discovery limit reached. Add the remaining members separately.",
+    "ru": "Достигнут лимит обнаружения. Добавьте оставшиеся участники отдельной записью."
+  },
+  "Связанных сервисов не найдено.": {
+    "en": "No related services found.",
+    "ru": "Связанных сервисов не найдено."
+  },
+  "Найдено сервисов: {0}": {
+    "en": "Services found: {0}",
+    "ru": "Найдено сервисов: {0}"
+  },
+  "В каталоге: {0} сервисов. Повторно найденные записи обновлены.": {
+    "en": "Catalog: {0} services. Previously discovered entries were updated.",
+    "ru": "В каталоге: {0} сервисов. Повторно найденные записи обновлены."
+  },
+  "Выберите хотя бы один сервис.": {
+    "en": "Select at least one service.",
+    "ru": "Выберите хотя бы один сервис."
+  },
+  "Добавлено или обновлено сервисов: {0}": {
+    "en": "Services added or updated: {0}",
+    "ru": "Добавлено или обновлено сервисов: {0}"
+  },
+  "\n[Процесс CLI закрыт пользователем]\n": {
+    "en": "\n[CLI process closed by the user]\n",
+    "ru": "\n[Процесс CLI закрыт пользователем]\n"
+  },
+  "Удалить запись только из локального каталога? Redis и Sentinel не изменяются.": {
+    "en": "Remove this catalog entry only? Redis and Sentinel will not be changed.",
+    "ru": "Удалить запись только из локального каталога? Redis и Sentinel не изменяются."
+  },
+  "Файл каталога превышает 2 MiB.": {
+    "en": "The catalog file exceeds 2 MiB.",
+    "ru": "Файл каталога превышает 2 MiB."
+  },
+  "Каталог импортирован.": {
+    "en": "Catalog imported.",
+    "ru": "Каталог импортирован."
+  },
+  "redis-cli не найден / не поддерживается": {
+    "en": "redis-cli not found / unsupported",
+    "ru": "redis-cli не найден / не поддерживается"
+  },
+  " → DNS ОС при ошибке": {
+    "en": " -> system DNS on lookup failure",
+    "ru": " → DNS ОС при ошибке"
+  },
+  "Версия": {
+    "en": "Version",
+    "ru": "Версия"
+  },
+  "недоступен": {
+    "en": "unavailable",
+    "ru": "недоступен"
+  },
+  "Бинарник": {
+    "en": "Executable",
+    "ru": "Бинарник"
+  },
+  "Данные": {
+    "en": "Data",
+    "ru": "Данные"
+  },
+  "Обновление": {
+    "en": "Refresh interval",
+    "ru": "Обновление"
+  },
+  "Установите redis-tools, затем перезапустите панель. Каталог остаётся доступным.": {
+    "en": "Install a compatible redis-cli, then restart the panel. The catalog remains available.",
+    "ru": "Установите redis-tools, затем перезапустите панель. Каталог остаётся доступным."
+  },
+  "Не удалось обновить форму входа. Повторите попытку.": {
+    "en": "Could not refresh the sign-in form. Please try again.",
+    "ru": "Не удалось обновить форму входа. Повторите попытку."
+  },
+  "серверная панель": {
+    "en": "server panel",
+    "ru": "серверная панель"
+  },
+  "локальная панель": {
+    "en": "local panel",
+    "ru": "локальная панель"
+  },
+  "Логотип": {
+    "en": "Logo",
+    "ru": "Логотип"
+  },
+  "Выйти из панели": {
+    "en": "Sign out of panel",
+    "ru": "Выйти из панели"
+  },
+  "Серверный режим · HTTPS": {
+    "en": "Server mode - HTTPS",
+    "ru": "Серверный режим · HTTPS"
+  },
+  "Локальный режим": {
+    "en": "Local mode",
+    "ru": "Локальный режим"
+  },
+  "О приложении": {
+    "en": "About",
+    "ru": "О приложении"
+  },
+  "Подключение к Redis": {
+    "en": "Redis connection",
+    "ru": "Подключение к Redis"
+  },
+  "Разлогиниться": {
+    "en": "Sign out",
+    "ru": "Разлогиниться"
+  },
+  "Имя и группа": {
+    "en": "Name and group",
+    "ru": "Имя и группа"
+  },
+  "Править": {
+    "en": "Edit",
+    "ru": "Править"
+  },
+  "Каталог": {
+    "en": "Catalog",
+    "ru": "Каталог"
+  },
+  "Сервис, хост или порт…": {
+    "en": "Service, host or port...",
+    "ru": "Сервис, хост или порт…"
+  },
+  "Поиск по каталогу": {
+    "en": "Search catalog",
+    "ru": "Поиск по каталогу"
+  },
+  "＋ Добавить ноду / кластер": {
+    "en": "+ Add node / cluster",
+    "ru": "＋ Добавить ноду / кластер"
+  },
+  "Сохранённые сервисы": {
+    "en": "Saved services",
+    "ru": "Сохранённые сервисы"
+  },
+  "Экспорт": {
+    "en": "Export",
+    "ru": "Экспорт"
+  },
+  "Импорт": {
+    "en": "Import",
+    "ru": "Импорт"
+  },
+  "Проверка redis-cli…": {
+    "en": "Checking redis-cli...",
+    "ru": "Проверка redis-cli…"
+  },
+  "ВАША ИНФРАСТРУКТУРА В ОДНОМ ОКНЕ": {
+    "en": "YOUR INFRASTRUCTURE IN ONE PLACE",
+    "ru": "ВАША ИНФРАСТРУКТУРА В ОДНОМ ОКНЕ"
+  },
+  "Начните с любой ноды": {
+    "en": "Start with any node",
+    "ru": "Начните с любой ноды"
+  },
+  "Добавьте имя ноды без порта: панель найдёт Redis, Sentinel и связанные": {
+    "en": "Add a node name without a port: the panel discovers Redis, Sentinel and related",
+    "ru": "Добавьте имя ноды без порта: панель найдёт Redis, Sentinel и связанные"
+  },
+  "ноды, роли и инстансы и сохранит их": {
+    "en": "nodes, roles and instances, and saves them",
+    "ru": "ноды, роли и инстансы и сохранит их"
+  },
+  "в общем каталоге на сервере": {
+    "en": "to the shared catalog on the server",
+    "ru": "в общем каталоге на сервере"
+  },
+  "в локальном каталоге": {
+    "en": "to the local catalog",
+    "ru": "в локальном каталоге"
+  },
+  "＋ Обнаружить сервис": {
+    "en": "+ Discover service",
+    "ru": "＋ Обнаружить сервис"
+  },
+  "Подключения выполняет redis-cli": {
+    "en": "Connections are made by redis-cli",
+    "ru": "Подключения выполняет redis-cli"
+  },
+  "на сервере панели": {
+    "en": "on the panel server",
+    "ru": "на сервере панели"
+  },
+  "на этом компьютере": {
+    "en": "on this computer",
+    "ru": "на этом компьютере"
+  },
+  ". SSH не используется.": {
+    "en": ". No SSH is used.",
+    "ru": ". SSH не используется."
+  },
+  "Автообновление": {
+    "en": "Auto refresh",
+    "ru": "Автообновление"
+  },
+  "↻ Обновить": {
+    "en": "Refresh",
+    "ru": "↻ Обновить"
+  },
+  "Топология": {
+    "en": "Topology",
+    "ru": "Топология"
+  },
+  "Выберите хост и порт инстанса": {
+    "en": "Select a host and instance port",
+    "ru": "Выберите хост и порт инстанса"
+  },
+  "Роль и репликация": {
+    "en": "Role and replication",
+    "ru": "Роль и репликация"
+  },
+  "Ресурсы и состояние": {
+    "en": "Resources and state",
+    "ru": "Ресурсы и состояние"
+  },
+  "Консоль": {
+    "en": "Console",
+    "ru": "Консоль"
+  },
+  "Прямое выполнение команд": {
+    "en": "Direct command execution",
+    "ru": "Прямое выполнение команд"
+  },
+  "Развернуть консоль": {
+    "en": "Expand console",
+    "ru": "Развернуть консоль"
+  },
+  "Инстанс для открытия консоли": {
+    "en": "Instance to open in console",
+    "ru": "Инстанс для открытия консоли"
+  },
+  "DB при открытии": {
+    "en": "Initial DB",
+    "ru": "DB при открытии"
+  },
+  "Вывод redis-cli": {
+    "en": "redis-cli output",
+    "ru": "Вывод redis-cli"
+  },
+  "Откройте консоль для выбранного инстанса.": {
+    "en": "Open a console for the selected instance.",
+    "ru": "Откройте консоль для выбранного инстанса."
+  },
+  "Команда Redis… Enter — выполнить, Shift+Enter — новая строка": {
+    "en": "Redis command... Enter to execute, Shift+Enter for a new line",
+    "ru": "Команда Redis… Enter — выполнить, Shift+Enter — новая строка"
+  },
+  "Команда redis-cli": {
+    "en": "redis-cli command",
+    "ru": "Команда redis-cli"
+  },
+  "Выполнить ↵": {
+    "en": "Execute",
+    "ru": "Выполнить ↵"
+  },
+  "Очистить вывод": {
+    "en": "Clear output",
+    "ru": "Очистить вывод"
+  },
+  "Команды": {
+    "en": "Commands",
+    "ru": "Команды"
+  },
+  "Щелчок вставляет, не выполняет": {
+    "en": "Click to insert, not execute",
+    "ru": "Щелчок вставляет, не выполняет"
+  },
+  "Найти команду…": {
+    "en": "Find command...",
+    "ru": "Найти команду…"
+  },
+  "Поиск подсказок": {
+    "en": "Search command hints",
+    "ru": "Поиск подсказок"
+  },
+  "Пользователи ACL": {
+    "en": "ACL users",
+    "ru": "Пользователи ACL"
+  },
+  "События": {
+    "en": "Events",
+    "ru": "События"
+  },
+  "Выберите инстанс": {
+    "en": "Select an instance",
+    "ru": "Выберите инстанс"
+  },
+  "Фильтр строк…": {
+    "en": "Filter rows...",
+    "ru": "Фильтр строк…"
+  },
+  "Фильтр таблицы": {
+    "en": "Filter table",
+    "ru": "Фильтр таблицы"
+  },
+  "Только redis-cli": {
+    "en": "redis-cli only",
+    "ru": "Только redis-cli"
+  },
+  "Общий каталог сервера": {
+    "en": "Shared server catalog",
+    "ru": "Общий каталог сервера"
+  },
+  "Локальный каталог": {
+    "en": "Local catalog",
+    "ru": "Локальный каталог"
+  },
+  "Без SSH": {
+    "en": "No SSH",
+    "ru": "Без SSH"
+  },
+  "Каталог Redis кластеров": {
+    "en": "Redis cluster catalog",
+    "ru": "Каталог Redis кластеров"
+  },
+  "Значок добавления": {
+    "en": "Add icon",
+    "ru": "Значок добавления"
+  },
+  "Добавить сервис": {
+    "en": "Add service",
+    "ru": "Добавить сервис"
+  },
+  "Способ добавления": {
+    "en": "Discovery mode",
+    "ru": "Способ добавления"
+  },
+  "Нода: найти все инстансы": {
+    "en": "Node: find all instances",
+    "ru": "Нода: найти все инстансы"
+  },
+  "Указать порт / кластер": {
+    "en": "Specify port / cluster",
+    "ru": "Указать порт / кластер"
+  },
+  "Хост / IP": {
+    "en": "Host / IP",
+    "ru": "Хост / IP"
+  },
+  "Изменить диапазоны сканирования": {
+    "en": "Change scan ranges",
+    "ru": "Изменить диапазоны сканирования"
+  },
+  "Redis: первый порт": {
+    "en": "Redis: first port",
+    "ru": "Redis: первый порт"
+  },
+  "Redis: последний порт": {
+    "en": "Redis: last port",
+    "ru": "Redis: последний порт"
+  },
+  "Sentinel: первый порт": {
+    "en": "Sentinel: first port",
+    "ru": "Sentinel: первый порт"
+  },
+  "Sentinel: последний порт": {
+    "en": "Sentinel: last port",
+    "ru": "Sentinel: последний порт"
+  },
+  "Каждый диапазон проверяется целиком, включая порты после пропусков. Не более 512 портов в одном диапазоне.": {
+    "en": "Every port in the range is checked, including ports after gaps. Up to 512 ports per range.",
+    "ru": "Каждый диапазон проверяется целиком, включая порты после пропусков. Не более 512 портов в одном диапазоне."
+  },
+  "Порт или список портов": {
+    "en": "Port or port list",
+    "ru": "Порт или список портов"
+  },
+  "Тип точки входа": {
+    "en": "Seed type",
+    "ru": "Тип точки входа"
+  },
+  "Определить автоматически": {
+    "en": "Auto detect",
+    "ru": "Определить автоматически"
+  },
+  "Порт Sentinel": {
+    "en": "Sentinel port",
+    "ru": "Порт Sentinel"
+  },
+  "(необязательно)": {
+    "en": "(optional)",
+    "ru": "(необязательно)"
+  },
+  "Авто: 6389 → 26389": {
+    "en": "Auto: 6389 -> 26389",
+    "ru": "Авто: 6389 → 26389"
+  },
+  "Искать связанный Sentinel по правилу «2 + порт Redis»": {
+    "en": "Look for a related Sentinel using the \"2 + Redis port\" convention",
+    "ru": "Искать связанный Sentinel по правилу «2 + порт Redis»"
+  },
+  "Название": {
+    "en": "Name",
+    "ru": "Название"
+  },
+  "Из Sentinel или адреса": {
+    "en": "From Sentinel or address",
+    "ru": "Из Sentinel или адреса"
+  },
+  "Группа / кластер": {
+    "en": "Group / cluster",
+    "ru": "Группа / кластер"
+  },
+  "Доступ к Redis": {
+    "en": "Redis access",
+    "ru": "Доступ к Redis"
+  },
+  "Без авторизации — выбрать явно": {
+    "en": "No authentication - select explicitly",
+    "ru": "Без авторизации — выбрать явно"
+  },
+  "Добавить найденные сервисы в каталог автоматически": {
+    "en": "Add discovered services to the catalog automatically",
+    "ru": "Добавить найденные сервисы в каталог автоматически"
+  },
+  "TLS-параметры": {
+    "en": "TLS settings",
+    "ru": "TLS-параметры"
+  },
+  "Для чего нужны TLS-параметры": {
+    "en": "What are TLS settings for?",
+    "ru": "Для чего нужны TLS-параметры"
+  },
+  "Шифрование соединения Redis Farm → Redis/Sentinel. Включайте для TLS-портов; при обычном подключении оставьте выключенным. Не относится к HTTPS панели или LDAP.": {
+    "en": "Encrypt the Redis Farm to Redis/Sentinel connection. Enable for TLS ports; leave off for plain TCP. This is unrelated to the panel's HTTPS or LDAP.",
+    "ru": "Шифрование соединения Redis Farm → Redis/Sentinel. Включайте для TLS-портов; при обычном подключении оставьте выключенным. Не относится к HTTPS панели или LDAP."
+  },
+  "Использовать TLS": {
+    "en": "Use TLS",
+    "ru": "Использовать TLS"
+  },
+  "Для Redis и Sentinel, настроенных на TLS-подключения.": {
+    "en": "For Redis and Sentinel configured to accept TLS connections.",
+    "ru": "Для Redis и Sentinel, настроенных на TLS-подключения."
+  },
+  "Параметры TLS-подключения": {
+    "en": "TLS connection settings",
+    "ru": "Параметры TLS-подключения"
+  },
+  "CA-файл": {
+    "en": "CA file",
+    "ru": "CA-файл"
+  },
+  "необязательно": {
+    "en": "optional",
+    "ru": "необязательно"
+  },
+  "Путь на сервере панели": {
+    "en": "Path on the panel server",
+    "ru": "Путь на сервере панели"
+  },
+  "Путь на компьютере, где запущен Redis Farm": {
+    "en": "Path on the computer running Redis Farm",
+    "ru": "Путь на компьютере, где запущен Redis Farm"
+  },
+  ". PEM-сертификат доверенного CA; если CA уже доверен redis-cli, поле можно оставить пустым.": {
+    "en": ". PEM certificate of a trusted CA; leave blank when redis-cli already trusts the CA.",
+    "ru": ". PEM-сертификат доверенного CA; если CA уже доверен redis-cli, поле можно оставить пустым."
+  },
+  "Имя сервера (SNI)": {
+    "en": "Server name (SNI)",
+    "ru": "Имя сервера (SNI)"
+  },
+  "Имя, передаваемое при TLS-соединении. Укажите, если этого требует Redis или TLS-прокси.": {
+    "en": "Name sent during the TLS handshake. Specify it if required by Redis or a TLS proxy.",
+    "ru": "Имя, передаваемое при TLS-соединении. Укажите, если этого требует Redis или TLS-прокси."
+  },
+  "Диапазоны сканируются только на введённой ноде. Участники её кластеров обнаруживаются по данным Redis и Sentinel, в том числе вне указанных диапазонов.": {
+    "en": "Port ranges are scanned on the seed node only. Related members are discovered from Redis and Sentinel, including ports outside these ranges.",
+    "ru": "Диапазоны сканируются только на введённой ноде. Участники её кластеров обнаруживаются по данным Redis и Sentinel, в том числе вне указанных диапазонов."
+  },
+  "Остановить поиск": {
+    "en": "Stop discovery",
+    "ru": "Остановить поиск"
+  },
+  "Сканирование": {
+    "en": "Scanning",
+    "ru": "Сканирование"
+  },
+  "Добавить выбранные": {
+    "en": "Add selected",
+    "ru": "Добавить выбранные"
+  },
+  "Запись каталога": {
+    "en": "Catalog entry",
+    "ru": "Запись каталога"
+  },
+  "Удалить из каталога": {
+    "en": "Remove from catalog",
+    "ru": "Удалить из каталога"
+  },
+  "Сохранить": {
+    "en": "Save",
+    "ru": "Сохранить"
+  },
+  "Изменяется только локальная запись, не удалённые Redis.": {
+    "en": "Only the catalog entry changes, not the remote Redis instances.",
+    "ru": "Изменяется только локальная запись, не удалённые Redis."
+  },
+  "— панель для работы с Redis и Sentinel. Подключения и команды выполняются через": {
+    "en": "is a panel for Redis and Sentinel. Connections and commands use",
+    "ru": "— панель для работы с Redis и Sentinel. Подключения и команды выполняются через"
+  },
+  ", без SSH.": {
+    "en": ", without SSH.",
+    "ru": ", без SSH."
+  },
+  "Возможности": {
+    "en": "Features",
+    "ru": "Возможности"
+  },
+  "Добавляйте ноды по имени или IP: панель найдёт инстансы в заданном диапазоне портов и соберёт связанных участников. Можно указать конкретный порт и объединить сервисы в группы.": {
+    "en": "Add nodes by hostname or IP: the panel finds instances in the selected port range and discovers their related members. You can also specify a port and organize services into groups.",
+    "ru": "Добавляйте ноды по имени или IP: панель найдёт инстансы в заданном диапазоне портов и соберёт связанных участников. Можно указать конкретный порт и объединить сервисы в группы."
+  },
+  "В топологии видны ноды, порты, роли master/replica и доступность. Для выбранного инстанса доступны статистика, клиенты, ACL, конфигурация, Slowlog и Latency, а также консоли Redis и Sentinel с подсказками команд.": {
+    "en": "Topology shows nodes, ports, master/replica roles and reachability. The selected instance offers statistics, clients, ACL, configuration, Slowlog and Latency, plus Redis and Sentinel consoles with command hints.",
+    "ru": "В топологии видны ноды, порты, роли master/replica и доступность. Для выбранного инстанса доступны статистика, клиенты, ACL, конфигурация, Slowlog и Latency, а также консоли Redis и Sentinel с подсказками команд."
+  },
+  "Поддерживаются одиночные Redis, репликация, Sentinel и Redis Cluster.": {
+    "en": "Standalone Redis, replication, Sentinel and Redis Cluster are supported.",
+    "ru": "Поддерживаются одиночные Redis, репликация, Sentinel и Redis Cluster."
+  },
+  "ACL и пользователи Redis": {
+    "en": "ACL and Redis users",
+    "ru": "ACL и пользователи Redis"
+  },
+  "— правила доступа для пользователей: какие команды, ключи и каналы Pub/Sub им разрешены.": {
+    "en": "defines which commands, keys and Pub/Sub channels each user may access.",
+    "ru": "— правила доступа для пользователей: какие команды, ключи и каналы Pub/Sub им разрешены."
+  },
+  "— отдельный ACL-пользователь для администрирования в вашей инфраструктуре. Его права задаются конфигурацией Redis; само имя": {
+    "en": "is the configured administrative ACL user. Its privileges are assigned in Redis; the name",
+    "ru": "— отдельный ACL-пользователь для администрирования в вашей инфраструктуре. Его права задаются конфигурацией Redis; само имя"
+  },
+  "не предоставляет дополнительных прав.": {
+    "en": "does not grant additional privileges by itself.",
+    "ru": "не предоставляет дополнительных прав."
+  },
+  "— встроенный пользователь Redis 6+. При входе с паролем без указания имени используется именно он; его права тоже определяются ACL. В старых Redis такой вход соответствует настройке": {
+    "en": "is the built-in user in Redis 6+. Password authentication without a username uses this user; its permissions are also controlled by ACL. In older Redis versions, this corresponds to",
+    "ru": "— встроенный пользователь Redis 6+. При входе с паролем без указания имени используется именно он; его права тоже определяются ACL. В старых Redis такой вход соответствует настройке"
+  },
+  "Рекомендуем использовать ACL": {
+    "en": "We recommend ACL",
+    "ru": "Рекомендуем использовать ACL"
+  },
+  "с отдельными учётными записями для администрирования, приложений и служебных задач: это позволяет разделять права и независимо менять пароли.": {
+    "en": "with separate accounts for administration, applications and service tasks, so permissions and password rotation remain independent.",
+    "ru": "с отдельными учётными записями для администрирования, приложений и служебных задач: это позволяет разделять права и независимо менять пароли."
+  },
+  "Как использовать": {
+    "en": "Using",
+    "ru": "Как использовать"
+  },
+  "Оба режима доступны во вкладках": {
+    "en": "Both connection modes have their own tabs:",
+    "ru": "Оба режима доступны во вкладках"
+  },
+  ". Каталог разделяется по способу подключения, а не по наличию отдельного ACL-файла.": {
+    "en": ". The catalog is separated by connection mode, not by the existence of a separate ACL file.",
+    "ru": ". Каталог разделяется по способу подключения, а не по наличию отдельного ACL-файла."
+  },
+  "выберите вкладку, введите пароль и нажмите «Использовать пароль». Затем выберите или добавьте сервис. В текущей сессии этот пароль используется для подключений": {
+    "en": "select the tab, enter the password and click Use password. Then select or add a service. This session uses that password for connections as",
+    "ru": "выберите вкладку, введите пароль и нажмите «Использовать пароль». Затем выберите или добавьте сервис. В текущей сессии этот пароль используется для подключений"
+  },
+  "выберите вкладку и сервис, нажмите «Ввести пароль default» или «Пароли сервиса». Выберите область — весь сервис либо отдельный инстанс": {
+    "en": "select the tab and a service, then click Enter default password or Service passwords. Choose the entire service or a single",
+    "ru": "выберите вкладку и сервис, нажмите «Ввести пароль default» или «Пароли сервиса». Выберите область — весь сервис либо отдельный инстанс"
+  },
+  ", введите пароль и нажмите «Использовать пароль». Пароль": {
+    "en": ", enter the password and click Use password. The password for",
+    "ru": ", введите пароль и нажмите «Использовать пароль». Пароль"
+  },
+  "не требуется.": {
+    "en": "is not required.",
+    "ru": "не требуется."
+  },
+  "Пароли разных сервисов независимы; пароль инстанса имеет приоритет над паролем сервиса. При добавлении пароль": {
+    "en": "Service passwords are independent; an instance password overrides the service password. When adding a service, the",
+    "ru": "Пароли разных сервисов независимы; пароль инстанса имеет приоритет над паролем сервиса. При добавлении пароль"
+  },
+  "можно указать в форме для нужного Redis-порта.": {
+    "en": "password can be entered for a specific Redis port.",
+    "ru": "можно указать в форме для нужного Redis-порта."
+  },
+  "Переключение вкладок не меняет ACL на Redis и не разграничивает доступ сотрудников к панели. Подключения без авторизации также поддерживаются; Sentinel подключается без пароля.": {
+    "en": "Switching tabs does not change Redis ACL or separate employee access to the panel. Explicit unauthenticated connections are supported; Sentinel connects without credentials.",
+    "ru": "Переключение вкладок не меняет ACL на Redis и не разграничивает доступ сотрудников к панели. Подключения без авторизации также поддерживаются; Sentinel подключается без пароля."
+  },
+  "Данные и сессии": {
+    "en": "Data and sessions",
+    "ru": "Данные и сессии"
+  },
+  "Каталог общий для сотрудников; пароли и открытые консоли привязаны к вашей сессии браузера.": {
+    "en": "The catalog is shared; passwords and open consoles belong to your browser session.",
+    "ru": "Каталог общий для сотрудников; пароли и открытые консоли привязаны к вашей сессии браузера."
+  },
+  "Каталог хранится на вашем компьютере; пароли и открытые консоли привязаны к вашей сессии браузера.": {
+    "en": "The catalog is on your computer; passwords and open consoles belong to your browser session.",
+    "ru": "Каталог хранится на вашем компьютере; пароли и открытые консоли привязаны к вашей сессии браузера."
+  },
+  "На диске сохраняются каталог и настройки панели. Пароли Redis, вывод консоли и снимки состояния хранятся в памяти. После завершения сессии или перезапуска панели пароли нужно ввести заново.": {
+    "en": "Only catalog and panel settings are stored on disk. Redis passwords, console output and state snapshots remain in process memory. After session expiry or restart, enter passwords again.",
+    "ru": "На диске сохраняются каталог и настройки панели. Пароли Redis, вывод консоли и снимки состояния хранятся в памяти. После завершения сессии или перезапуска панели пароли нужно ввести заново."
+  },
+  "Вход в панель проверяется через LDAP и группу доступа. «Выйти из панели» завершает вашу сессию, удаляет её Redis-пароли и закрывает её консоли.": {
+    "en": "Panel sign-in checks LDAP credentials and group membership. Sign out of panel ends your session, forgets its Redis passwords and closes its consoles.",
+    "ru": "Вход в панель проверяется через LDAP и группу доступа. «Выйти из панели» завершает вашу сессию, удаляет её Redis-пароли и закрывает её консоли."
+  },
+  "Вход в панель отключён. Доступ ограничен разрешёнными сетями; используйте доверенную сеть или внешнюю аутентификацию.": {
+    "en": "Panel sign-in is disabled. Access is limited to the allowed networks; use a trusted network or an external authentication layer.",
+    "ru": "Вход в панель отключён. Доступ ограничен разрешёнными сетями; используйте доверенную сеть или внешнюю аутентификацию."
+  },
+  "Панель доступна локально по адресу": {
+    "en": "The panel is available locally at",
+    "ru": "Панель доступна локально по адресу"
+  },
+  "Сведения об установке": {
+    "en": "Installation details",
+    "ru": "Сведения об установке"
+  },
+  "Вход — Redis Farm": {
+    "en": "Sign in - Redis Farm",
+    "ru": "Вход — Redis Farm"
+  },
+  "Вход в панель": {
+    "en": "Sign in to panel",
+    "ru": "Вход в панель"
+  },
+  "Используйте свою учётную запись LDAP / FreeIPA.": {
+    "en": "Use your LDAP / directory account.",
+    "ru": "Используйте свою учётную запись LDAP / FreeIPA."
+  },
+  "Логин": {
+    "en": "Username",
+    "ru": "Логин"
+  },
+  "Войти": {
+    "en": "Sign in",
+    "ru": "Войти"
+  },
+  "Форма входа обновлена. Введите пароль ещё раз.": {
+    "en": "The sign-in form was refreshed. Enter your password again.",
+    "ru": "Форма входа обновлена. Введите пароль ещё раз."
+  },
+  "Слишком много попыток. Повторите через минуту.": {
+    "en": "Too many attempts. Try again in a minute.",
+    "ru": "Слишком много попыток. Повторите через минуту."
+  },
+  "Неверный логин, пароль или нет доступа к панели.": {
+    "en": "Invalid username, password, or panel access.",
+    "ru": "Неверный логин, пароль или нет доступа к панели."
+  },
+  "Служба входа недоступна. Обратитесь к администратору.": {
+    "en": "The sign-in service is unavailable. Contact your administrator.",
+    "ru": "Служба входа недоступна. Обратитесь к администратору."
+  },
+  "Fill in this field.": {
+    "en": "Fill in this field.",
+    "ru": "Заполните это поле."
+  },
+  "Check this value.": {
+    "en": "Check this value.",
+    "ru": "Проверьте значение."
+  },
+  "The password must not exceed 4096 characters or contain NUL.": {
+    "en": "The password must not exceed 4096 characters or contain NUL.",
+    "ru": "Введите пароль длиной до 4096 символов без NUL."
+  },
+  "Enter the password.": {
+    "en": "Enter the password.",
+    "ru": "Введите пароль."
+  },
+  "Installation complete. Run: ./start.sh": {
+    "en": "Installation complete. Run: ./start.sh",
+    "ru": "Установка завершена. Запуск: ./start.sh"
+  }
+}

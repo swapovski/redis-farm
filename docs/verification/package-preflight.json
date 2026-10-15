@@ -1,0 +1,11 @@
+{
+  "checks": [
+    "Nested source/destination release copy: no recursive releases directory",
+    "Clean copied release contains all three illustrations and all favicons",
+    "Installer allowlist includes bilingual docs, locales, demo renderer and no-login requirements",
+    "Original artwork dimensions and alpha channel verified",
+    "logo.png and add.png are byte-for-byte the supplied PNG originals",
+    "setup.webp retains exact RGBA pixels of the third original"
+  ],
+  "passed": 6
+}

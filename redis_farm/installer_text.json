@@ -1,0 +1,70 @@
+{
+  "host": {
+    "en": "Server interface IP",
+    "ru": "IP интерфейса сервера"
+  },
+  "port": {
+    "en": "HTTPS port",
+    "ru": "Порт HTTPS"
+  },
+  "dns_help": {
+    "en": "If Redis binds only to an internal interface, its public IP does not accept that redis-cli connection. With split DNS, a public resolver may return a public address while your internal resolver returns the reachable private address. Specify your internal DNS IP below. The panel host still needs a route/VPN and firewall access to that network: DNS alone does not provide access. Internal DNS is tried first, then the OS resolver on missing records or DNS errors; a successful answer is not replaced after a Redis/TCP error.",
+    "ru": "Если Redis слушает только внутренний интерфейс (bind), его внешний IP не принимает это подключение Redis. При split DNS обычный DNS может вернуть внешний адрес, а корпоративный - доступный внутренний. Укажите IP внутреннего DNS. На машине панели нужен маршрут/VPN и разрешение firewall; DNS сам доступ не создаёт. Если записи нет или DNS не отвечает, используется системный DNS. Успешный ответ не подменяется при ошибке Redis/TCP. Redis Farm  -> redis-cli -> Redis/Sentinel."
+  },
+  "dns": {
+    "en": "Internal DNS IPs (comma separated; Enter = OS DNS)",
+    "ru": "Внутренний DNS: IP через запяту; Enter - системный"
+  },
+  "net_help": {
+    "en": "Allow only the client networks that should reach this panel. This does not change the firewall.",
+    "ru": "Укажите клиентские сети, которым разрешён доступ к панели. Firewall не меняется."
+  },
+  "networks": {
+    "en": "Allowed client CIDRs (comma separated)",
+    "ru": "Разрешённые CIDR клиентов через запяту"
+  },
+  "cli": {
+    "en": "Absolute path to redis-cli",
+    "ru": "Полный путь к redis-cli"
+  },
+  "acl": {
+    "en": "Use a named administrative Redis ACL user? (yes/no)",
+    "ru": "Используется отдельный ACL-пользователь Redis? (yes/no)"
+  },
+  "admin": {
+    "en": "Administrative Redis username (tab label and --user)",
+    "ru": "Имя ACL-пользователя Redis (вкладка и --user)"
+  },
+  "acl_help": {
+    "en": "Both tabs remain available. No Redis password is requested or saved by the installer. Choosing no starts on default.",
+    "ru": "Обе вкладки остаются доступными. Установщик не запрашивает и не хранит пароли Redis. При no первой откроется default."
+  },
+  "auth": {
+    "en": "Panel sign-in (ldap/none)",
+    "ru": "Вход в панель (ldap/none)"
+  },
+  "noauth_warning": {
+    "en": "WARNING: without panel sign-in, any allowed client can use the shared catalog and unauthenticated Sentinel. Use a trusted network or authenticated reverse proxy.",
+    "ru": "ВНИМАНИЕ: без входа любой допущенный клиент имеет доступ к общему каталогу и Sentinel без пароля. Нужна доверенная сеть или reverse proxy с аутентификацией."
+  },
+  "noauth_confirm": {
+    "en": "Type NO_AUTH to confirm",
+    "ru": "Введите NO_AUTH для подтверждения"
+  },
+  "preserved": {
+    "en": "Existing settings preserved",
+    "ru": "Существующие настройки сохранены"
+  },
+  "saved": {
+    "en": "Settings saved",
+    "ru": "Настройки сохранены"
+  },
+  "retry": {
+    "en": "Invalid value. Please try again.",
+    "ru": "Некорректное значение. Повторите ввод."
+  },
+  "interrupted": {
+    "en": "Setup interrupted; no new configuration was written.",
+    "ru": "Настройка прервана; новая конфигурация не записана."
+  }
+}

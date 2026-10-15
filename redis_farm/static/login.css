@@ -1,0 +1,12 @@
+/* Server LDAP sign-in. No remote fonts/assets or inline executable code. */
+.login-page{min-height:100vh;display:grid;place-items:center;padding:24px;background:#f4f6f8}
+.login-card{width:min(100%,440px);padding:32px;background:#fff;border:1px solid #e1e6eb;border-radius:16px;box-shadow:0 12px 40px #18334c10}
+.login-brand{display:flex;align-items:center;gap:14px;margin-bottom:28px}
+.login-brand strong{font-size:22px}.login-brand p{margin:5px 0 0;color:#617082;font-size:13px}
+.login-card h1{font-size:25px;margin:0 0 10px}.login-lead{color:#536173;line-height:1.55;margin:0 0 20px}
+.login-card form{display:flex;flex-direction:column;gap:8px}.login-card label{font-size:13px;font-weight:650}
+.login-card input:not([type=hidden]){width:100%;min-height:44px;margin-bottom:10px}
+.login-card button{margin-top:8px;min-height:44px}.login-footnote{font-size:12px;line-height:1.6;color:#617082;margin:20px 0 0}
+.login-error{background:#fff0ef;border:1px solid #efbdb8;border-radius:8px;padding:12px;margin-bottom:16px;color:#8b2e25;font-size:13px;line-height:1.5}
+.login-version{text-align:right;font-size:11px;color:#89949f;margin-top:20px}
+@media(max-width:480px){.login-page{padding:16px}.login-card{padding:24px 20px}.login-card h1{font-size:23px}}

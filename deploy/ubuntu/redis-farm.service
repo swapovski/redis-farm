@@ -1,0 +1,49 @@
+[Unit]
+Description=Redis Farm HTTPS admin panel
+Wants=network-online.target
+After=network-online.target
+StartLimitIntervalSec=60
+StartLimitBurst=5
+
+[Service]
+Type=simple
+User=redis-farm
+Group=redis-farm
+WorkingDirectory=/opt/redis-farm/current
+Environment=REDIS_FARM_CONFIG=/etc/redis-farm/server.json
+Environment=PYTHONUNBUFFERED=1
+Environment=PYTHONDONTWRITEBYTECODE=1
+Environment=HOME=/var/lib/redis-farm
+UnsetEnvironment=REDISCLI_AUTH GUNICORN_CMD_ARGS WEB_CONCURRENCY
+ExecStart=/opt/redis-farm/current/.venv/bin/gunicorn --config /opt/redis-farm/current/deploy/ubuntu/gunicorn.conf.py redis_farm.server:create_server_app()
+Restart=on-failure
+RestartSec=3
+TimeoutStopSec=20
+KillMode=control-group
+UMask=0077
+LimitCORE=0
+LimitNOFILE=4096
+TasksMax=512
+RuntimeDirectory=redis-farm
+RuntimeDirectoryMode=0700
+StateDirectory=redis-farm
+StateDirectoryMode=0700
+NoNewPrivileges=true
+PrivateTmp=true
+PrivateDevices=true
+ProtectSystem=strict
+ProtectHome=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+CapabilityBoundingSet=
+AmbientCapabilities=
+ReadWritePaths=/var/lib/redis-farm /run/redis-farm
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=redis-farm
+
+[Install]
+WantedBy=multi-user.target

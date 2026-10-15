@@ -1,0 +1,1013 @@
+{
+  "services": [
+    {
+      "id": "demo-cache",
+      "name": "Application cache",
+      "group": "demo-production",
+      "mode": "sentinel",
+      "master_name": "app-cache",
+      "endpoints": [
+        {
+          "host": "192.0.2.11",
+          "port": 6379,
+          "kind": "redis",
+          "auth": "admin",
+          "tls": false,
+          "cacert": "",
+          "sni": "",
+          "id": "9bad7d1208881d79502ae099",
+          "address": "192.0.2.11:6379"
+        },
+        {
+          "host": "192.0.2.11",
+          "port": 26379,
+          "kind": "sentinel",
+          "auth": "none",
+          "tls": false,
+          "cacert": "",
+          "sni": "",
+          "id": "a6ebb2e0f5abe87559803c8d",
+          "address": "192.0.2.11:26379"
+        },
+        {
+          "host": "192.0.2.12",
+          "port": 6379,
+          "kind": "redis",
+          "auth": "admin",
+          "tls": false,
+          "cacert": "",
+          "sni": "",
+          "id": "145ca20be106d0ab6aa3b66c",
+          "address": "192.0.2.12:6379"
+        },
+        {
+          "host": "192.0.2.12",
+          "port": 26379,
+          "kind": "sentinel",
+          "auth": "none",
+          "tls": false,
+          "cacert": "",
+          "sni": "",
+          "id": "1cbb583785040f48189e5e56",
+          "address": "192.0.2.12:26379"
+        },
+        {
+          "host": "192.0.2.13",
+          "port": 6379,
+          "kind": "redis",
+          "auth": "admin",
+          "tls": false,
+          "cacert": "",
+          "sni": "",
+          "id": "4fd4749d24ecc8ece37ddbc7",
+          "address": "192.0.2.13:6379"
+        },
+        {
+          "host": "192.0.2.13",
+          "port": 26379,
+          "kind": "sentinel",
+          "auth": "none",
+          "tls": false,
+          "cacert": "",
+          "sni": "",
+          "id": "a5def7330906d6e02d152616",
+          "address": "192.0.2.13:26379"
+        }
+      ],
+      "seed": {
+        "host": "192.0.2.11",
+        "port": 6379,
+        "kind": "redis",
+        "auth": "admin",
+        "tls": false,
+        "cacert": "",
+        "sni": "",
+        "id": "9bad7d1208881d79502ae099",
+        "address": "192.0.2.11:6379"
+      },
+      "auth_mode": "admin",
+      "last_summary": {
+        "redis_up": 3,
+        "redis_total": 3,
+        "sentinel_up": 3,
+        "sentinel_total": 3,
+        "masters": [
+          "192.0.2.11:6379"
+        ],
+        "clients": 108,
+        "memory_all": 4026531840,
+        "memory_masters": 1342177280,
+        "ops_all": 2960,
+        "replication_down": [],
+        "sentinel_agree": true,
+        "sentinel_views": [
+          "192.0.2.11:6379",
+          "192.0.2.11:6379",
+          "192.0.2.11:6379"
+        ]
+      }
+    },
+    {
+      "id": "demo-session",
+      "name": "User sessions",
+      "group": "demo-production",
+      "mode": "sentinel",
+      "auth_mode": "admin",
+      "endpoints": [
+        {
+          "host": "192.0.2.11",
+          "port": 6380,
+          "kind": "redis",
+          "auth": "admin",
+          "tls": false,
+          "cacert": "",
+          "sni": "",
+          "id": "28c4abe11dbba2a64982fa28",
+          "address": "192.0.2.11:6380"
+        },
+        {
+          "host": "192.0.2.12",
+          "port": 6380,
+          "kind": "redis",
+          "auth": "admin",
+          "tls": false,
+          "cacert": "",
+          "sni": "",
+          "id": "c852bef6f2c58a70a0e70cc0",
+          "address": "192.0.2.12:6380"
+        },
+        {
+          "host": "192.0.2.13",
+          "port": 6380,
+          "kind": "redis",
+          "auth": "admin",
+          "tls": false,
+          "cacert": "",
+          "sni": "",
+          "id": "e27a731e88d9b819d7278bc5",
+          "address": "192.0.2.13:6380"
+        },
+        {
+          "host": "192.0.2.11",
+          "port": 26380,
+          "kind": "sentinel",
+          "auth": "none",
+          "tls": false,
+          "cacert": "",
+          "sni": "",
+          "id": "57151bf3571f4390236b1b74",
+          "address": "192.0.2.11:26380"
+        },
+        {
+          "host": "192.0.2.12",
+          "port": 26380,
+          "kind": "sentinel",
+          "auth": "none",
+          "tls": false,
+          "cacert": "",
+          "sni": "",
+          "id": "17b378576bdeaa5802b3172d",
+          "address": "192.0.2.12:26380"
+        },
+        {
+          "host": "192.0.2.13",
+          "port": 26380,
+          "kind": "sentinel",
+          "auth": "none",
+          "tls": false,
+          "cacert": "",
+          "sni": "",
+          "id": "bd1727f50219a799eb523e56",
+          "address": "192.0.2.13:26380"
+        }
+      ],
+      "seed": {
+        "host": "192.0.2.11",
+        "port": 6380,
+        "kind": "redis",
+        "auth": "admin",
+        "tls": false,
+        "cacert": "",
+        "sni": "",
+        "id": "28c4abe11dbba2a64982fa28",
+        "address": "192.0.2.11:6380"
+      },
+      "last_summary": {
+        "redis_total": 3,
+        "redis_up": 3,
+        "sentinel_total": 3,
+        "sentinel_up": 3
+      }
+    },
+    {
+      "id": "demo-queue",
+      "name": "Background jobs",
+      "group": "demo-production",
+      "mode": "sentinel",
+      "auth_mode": "admin",
+      "endpoints": [
+        {
+          "host": "192.0.2.11",
+          "port": 6381,
+          "kind": "redis",
+          "auth": "admin",
+          "tls": false,
+          "cacert": "",
+          "sni": "",
+          "id": "af8e4b8131154f476e7595fd",
+          "address": "192.0.2.11:6381"
+        },
+        {
+          "host": "192.0.2.12",
+          "port": 6381,
+          "kind": "redis",
+          "auth": "admin",
+          "tls": false,
+          "cacert": "",
+          "sni": "",
+          "id": "92af82c00372f8681ba87979",
+          "address": "192.0.2.12:6381"
+        },
+        {
+          "host": "192.0.2.13",
+          "port": 6381,
+          "kind": "redis",
+          "auth": "admin",
+          "tls": false,
+          "cacert": "",
+          "sni": "",
+          "id": "25879c33890df52b6e48fc60",
+          "address": "192.0.2.13:6381"
+        },
+        {
+          "host": "192.0.2.11",
+          "port": 26381,
+          "kind": "sentinel",
+          "auth": "none",
+          "tls": false,
+          "cacert": "",
+          "sni": "",
+          "id": "4b73e9902465dacdc4f57ea5",
+          "address": "192.0.2.11:26381"
+        },
+        {
+          "host": "192.0.2.12",
+          "port": 26381,
+          "kind": "sentinel",
+          "auth": "none",
+          "tls": false,
+          "cacert": "",
+          "sni": "",
+          "id": "e539c371a073af5844a700af",
+          "address": "192.0.2.12:26381"
+        },
+        {
+          "host": "192.0.2.13",
+          "port": 26381,
+          "kind": "sentinel",
+          "auth": "none",
+          "tls": false,
+          "cacert": "",
+          "sni": "",
+          "id": "9f6a68718888ff1373760369",
+          "address": "192.0.2.13:26381"
+        }
+      ],
+      "seed": {
+        "host": "192.0.2.11",
+        "port": 6381,
+        "kind": "redis",
+        "auth": "admin",
+        "tls": false,
+        "cacert": "",
+        "sni": "",
+        "id": "af8e4b8131154f476e7595fd",
+        "address": "192.0.2.11:6381"
+      },
+      "last_summary": {
+        "redis_total": 3,
+        "redis_up": 3,
+        "sentinel_total": 3,
+        "sentinel_up": 3
+      }
+    },
+    {
+      "id": "demo-shards",
+      "name": "Analytics",
+      "group": "demo-analytics",
+      "mode": "cluster",
+      "auth_mode": "admin",
+      "endpoints": [
+        {
+          "host": "198.51.100.21",
+          "port": 7000,
+          "kind": "redis",
+          "auth": "admin",
+          "tls": false,
+          "cacert": "",
+          "sni": "",
+          "id": "b60ec898f59dd41c226fcf20",
+          "address": "198.51.100.21:7000"
+        },
+        {
+          "host": "198.51.100.22",
+          "port": 7000,
+          "kind": "redis",
+          "auth": "admin",
+          "tls": false,
+          "cacert": "",
+          "sni": "",
+          "id": "b8e715eb45cdc77d4fd856cb",
+          "address": "198.51.100.22:7000"
+        },
+        {
+          "host": "198.51.100.23",
+          "port": 7000,
+          "kind": "redis",
+          "auth": "admin",
+          "tls": false,
+          "cacert": "",
+          "sni": "",
+          "id": "ff181a347546c3b93ef5d69e",
+          "address": "198.51.100.23:7000"
+        }
+      ],
+      "seed": {
+        "host": "198.51.100.21",
+        "port": 7000,
+        "kind": "redis",
+        "auth": "admin",
+        "tls": false,
+        "cacert": "",
+        "sni": "",
+        "id": "b60ec898f59dd41c226fcf20",
+        "address": "198.51.100.21:7000"
+      },
+      "last_summary": {
+        "redis_total": 3,
+        "redis_up": 3,
+        "sentinel_total": 0,
+        "sentinel_up": 0
+      }
+    },
+    {
+      "id": "demo-stage",
+      "name": "Integration cache",
+      "group": "demo-staging",
+      "mode": "standalone",
+      "auth_mode": "admin",
+      "endpoints": [
+        {
+          "host": "203.0.113.31",
+          "port": 6379,
+          "kind": "redis",
+          "auth": "admin",
+          "tls": false,
+          "cacert": "",
+          "sni": "",
+          "id": "c727fae3c0c04b2b117fe042",
+          "address": "203.0.113.31:6379"
+        }
+      ],
+      "seed": {
+        "host": "203.0.113.31",
+        "port": 6379,
+        "kind": "redis",
+        "auth": "admin",
+        "tls": false,
+        "cacert": "",
+        "sni": "",
+        "id": "c727fae3c0c04b2b117fe042",
+        "address": "203.0.113.31:6379"
+      },
+      "last_summary": {
+        "redis_total": 1,
+        "redis_up": 1,
+        "sentinel_total": 0,
+        "sentinel_up": 0
+      }
+    },
+    {
+      "id": "demo-default",
+      "name": "Team cache",
+      "group": "demo-team",
+      "mode": "standalone",
+      "auth_mode": "default",
+      "endpoints": [
+        {
+          "host": "203.0.113.41",
+          "port": 6379,
+          "kind": "redis",
+          "auth": "default",
+          "tls": false,
+          "cacert": "",
+          "sni": "",
+          "id": "8897d8c1c5b24f1ce2a00d0f",
+          "address": "203.0.113.41:6379"
+        }
+      ],
+      "seed": {
+        "host": "203.0.113.41",
+        "port": 6379,
+        "kind": "redis",
+        "auth": "default",
+        "tls": false,
+        "cacert": "",
+        "sni": "",
+        "id": "8897d8c1c5b24f1ce2a00d0f",
+        "address": "203.0.113.41:6379"
+      },
+      "credentials": {
+        "unlocked_endpoints": [],
+        "service_password_set": false
+      }
+    }
+  ],
+  "snapshot": {
+    "service_id": "demo-cache",
+    "nodes": [
+      {
+        "endpoint": {
+          "host": "192.0.2.11",
+          "port": 6379,
+          "kind": "redis",
+          "auth": "admin",
+          "tls": false,
+          "cacert": "",
+          "sni": "",
+          "id": "9bad7d1208881d79502ae099",
+          "address": "192.0.2.11:6379"
+        },
+        "endpoint_options": [
+          {
+            "host": "192.0.2.11",
+            "port": 6379,
+            "kind": "redis",
+            "auth": "admin",
+            "tls": false,
+            "cacert": "",
+            "sni": "",
+            "id": "9bad7d1208881d79502ae099",
+            "address": "192.0.2.11:6379"
+          }
+        ],
+        "endpoint_ids": [
+          "9bad7d1208881d79502ae099"
+        ],
+        "reachable": true,
+        "role": "master",
+        "info": {
+          "redis_version": "7.2.0",
+          "uptime_in_seconds": 864000,
+          "config_file": "/etc/redis/instances/redis-6379.conf",
+          "role": "master",
+          "connected_slaves": 2,
+          "master_host": "",
+          "master_port": 6379,
+          "master_link_status": "",
+          "master_repl_offset": 184026784,
+          "slave_repl_offset": 184026784,
+          "master_sync_in_progress": 0,
+          "used_memory": 1342177280,
+          "used_memory_rss": 1572864000,
+          "maxmemory": 4294967296,
+          "maxmemory_policy": "allkeys-lru",
+          "instantaneous_ops_per_sec": 1840,
+          "connected_clients": 84,
+          "blocked_clients": 0,
+          "rdb_last_bgsave_status": "ok",
+          "aof_enabled": 1,
+          "aof_last_write_status": "ok"
+        },
+        "connection": {
+          "address": "192.0.2.11:6379",
+          "connect_host": "192.0.2.11"
+        },
+        "error": "",
+        "sample_ms": 5,
+        "display": {
+          "host": "redis-cache-01.example.net",
+          "host_key": "192.0.2.11",
+          "ip": "192.0.2.11",
+          "address": "redis-cache-01.example.net:6379",
+          "note": "",
+          "mode": "hostname",
+          "source": "manual"
+        },
+        "acl": {
+          "state": "available",
+          "users": [
+            "admin",
+            "monitoring",
+            "replica_user",
+            "sentinel_user",
+            "app_cache"
+          ]
+        }
+      },
+      {
+        "endpoint": {
+          "host": "192.0.2.11",
+          "port": 26379,
+          "kind": "sentinel",
+          "auth": "none",
+          "tls": false,
+          "cacert": "",
+          "sni": "",
+          "id": "a6ebb2e0f5abe87559803c8d",
+          "address": "192.0.2.11:26379"
+        },
+        "endpoint_options": [
+          {
+            "host": "192.0.2.11",
+            "port": 26379,
+            "kind": "sentinel",
+            "auth": "none",
+            "tls": false,
+            "cacert": "",
+            "sni": "",
+            "id": "a6ebb2e0f5abe87559803c8d",
+            "address": "192.0.2.11:26379"
+          }
+        ],
+        "endpoint_ids": [
+          "a6ebb2e0f5abe87559803c8d"
+        ],
+        "reachable": true,
+        "role": "sentinel",
+        "info": {
+          "redis_version": "7.2.0",
+          "uptime_in_seconds": 864000,
+          "config_file": "/etc/redis/instances/redis-26379.conf",
+          "role": "sentinel",
+          "connected_slaves": 2,
+          "master_host": "",
+          "master_port": 6379,
+          "master_link_status": "",
+          "master_repl_offset": 184026784,
+          "slave_repl_offset": 184026784,
+          "master_sync_in_progress": 0,
+          "used_memory": 1342177280,
+          "used_memory_rss": 1572864000,
+          "maxmemory": 4294967296,
+          "maxmemory_policy": "allkeys-lru",
+          "instantaneous_ops_per_sec": 1840,
+          "connected_clients": 84,
+          "blocked_clients": 0,
+          "rdb_last_bgsave_status": "ok",
+          "aof_enabled": 1,
+          "aof_last_write_status": "ok"
+        },
+        "connection": {
+          "address": "192.0.2.11:26379",
+          "connect_host": "192.0.2.11"
+        },
+        "error": "",
+        "sample_ms": 5,
+        "display": {
+          "host": "redis-cache-01.example.net",
+          "host_key": "192.0.2.11",
+          "ip": "192.0.2.11",
+          "address": "redis-cache-01.example.net:26379",
+          "note": "",
+          "mode": "hostname",
+          "source": "manual"
+        },
+        "acl": {
+          "state": "available",
+          "users": [
+            "admin",
+            "monitoring",
+            "replica_user",
+            "sentinel_user",
+            "app_cache"
+          ]
+        }
+      },
+      {
+        "endpoint": {
+          "host": "192.0.2.12",
+          "port": 6379,
+          "kind": "redis",
+          "auth": "admin",
+          "tls": false,
+          "cacert": "",
+          "sni": "",
+          "id": "145ca20be106d0ab6aa3b66c",
+          "address": "192.0.2.12:6379"
+        },
+        "endpoint_options": [
+          {
+            "host": "192.0.2.12",
+            "port": 6379,
+            "kind": "redis",
+            "auth": "admin",
+            "tls": false,
+            "cacert": "",
+            "sni": "",
+            "id": "145ca20be106d0ab6aa3b66c",
+            "address": "192.0.2.12:6379"
+          }
+        ],
+        "endpoint_ids": [
+          "145ca20be106d0ab6aa3b66c"
+        ],
+        "reachable": true,
+        "role": "replica",
+        "info": {
+          "redis_version": "7.2.0",
+          "uptime_in_seconds": 864000,
+          "config_file": "/etc/redis/instances/redis-6379.conf",
+          "role": "replica",
+          "connected_slaves": 0,
+          "master_host": "192.0.2.11",
+          "master_port": 6379,
+          "master_link_status": "up",
+          "master_repl_offset": 184026784,
+          "slave_repl_offset": 184026784,
+          "master_sync_in_progress": 0,
+          "used_memory": 1342177280,
+          "used_memory_rss": 1572864000,
+          "maxmemory": 4294967296,
+          "maxmemory_policy": "allkeys-lru",
+          "instantaneous_ops_per_sec": 560,
+          "connected_clients": 12,
+          "blocked_clients": 0,
+          "rdb_last_bgsave_status": "ok",
+          "aof_enabled": 1,
+          "aof_last_write_status": "ok"
+        },
+        "connection": {
+          "address": "192.0.2.12:6379",
+          "connect_host": "192.0.2.12"
+        },
+        "error": "",
+        "sample_ms": 6,
+        "display": {
+          "host": "redis-cache-02.example.net",
+          "host_key": "192.0.2.12",
+          "ip": "192.0.2.12",
+          "address": "redis-cache-02.example.net:6379",
+          "note": "",
+          "mode": "hostname",
+          "source": "manual"
+        },
+        "acl": {
+          "state": "available",
+          "users": [
+            "admin",
+            "monitoring",
+            "replica_user",
+            "sentinel_user",
+            "app_cache"
+          ]
+        }
+      },
+      {
+        "endpoint": {
+          "host": "192.0.2.12",
+          "port": 26379,
+          "kind": "sentinel",
+          "auth": "none",
+          "tls": false,
+          "cacert": "",
+          "sni": "",
+          "id": "1cbb583785040f48189e5e56",
+          "address": "192.0.2.12:26379"
+        },
+        "endpoint_options": [
+          {
+            "host": "192.0.2.12",
+            "port": 26379,
+            "kind": "sentinel",
+            "auth": "none",
+            "tls": false,
+            "cacert": "",
+            "sni": "",
+            "id": "1cbb583785040f48189e5e56",
+            "address": "192.0.2.12:26379"
+          }
+        ],
+        "endpoint_ids": [
+          "1cbb583785040f48189e5e56"
+        ],
+        "reachable": true,
+        "role": "sentinel",
+        "info": {
+          "redis_version": "7.2.0",
+          "uptime_in_seconds": 864000,
+          "config_file": "/etc/redis/instances/redis-26379.conf",
+          "role": "sentinel",
+          "connected_slaves": 0,
+          "master_host": "192.0.2.11",
+          "master_port": 6379,
+          "master_link_status": "up",
+          "master_repl_offset": 184026784,
+          "slave_repl_offset": 184026784,
+          "master_sync_in_progress": 0,
+          "used_memory": 1342177280,
+          "used_memory_rss": 1572864000,
+          "maxmemory": 4294967296,
+          "maxmemory_policy": "allkeys-lru",
+          "instantaneous_ops_per_sec": 560,
+          "connected_clients": 12,
+          "blocked_clients": 0,
+          "rdb_last_bgsave_status": "ok",
+          "aof_enabled": 1,
+          "aof_last_write_status": "ok"
+        },
+        "connection": {
+          "address": "192.0.2.12:26379",
+          "connect_host": "192.0.2.12"
+        },
+        "error": "",
+        "sample_ms": 6,
+        "display": {
+          "host": "redis-cache-02.example.net",
+          "host_key": "192.0.2.12",
+          "ip": "192.0.2.12",
+          "address": "redis-cache-02.example.net:26379",
+          "note": "",
+          "mode": "hostname",
+          "source": "manual"
+        },
+        "acl": {
+          "state": "available",
+          "users": [
+            "admin",
+            "monitoring",
+            "replica_user",
+            "sentinel_user",
+            "app_cache"
+          ]
+        }
+      },
+      {
+        "endpoint": {
+          "host": "192.0.2.13",
+          "port": 6379,
+          "kind": "redis",
+          "auth": "admin",
+          "tls": false,
+          "cacert": "",
+          "sni": "",
+          "id": "4fd4749d24ecc8ece37ddbc7",
+          "address": "192.0.2.13:6379"
+        },
+        "endpoint_options": [
+          {
+            "host": "192.0.2.13",
+            "port": 6379,
+            "kind": "redis",
+            "auth": "admin",
+            "tls": false,
+            "cacert": "",
+            "sni": "",
+            "id": "4fd4749d24ecc8ece37ddbc7",
+            "address": "192.0.2.13:6379"
+          }
+        ],
+        "endpoint_ids": [
+          "4fd4749d24ecc8ece37ddbc7"
+        ],
+        "reachable": true,
+        "role": "replica",
+        "info": {
+          "redis_version": "7.2.0",
+          "uptime_in_seconds": 864000,
+          "config_file": "/etc/redis/instances/redis-6379.conf",
+          "role": "replica",
+          "connected_slaves": 0,
+          "master_host": "192.0.2.11",
+          "master_port": 6379,
+          "master_link_status": "up",
+          "master_repl_offset": 184026784,
+          "slave_repl_offset": 184026784,
+          "master_sync_in_progress": 0,
+          "used_memory": 1342177280,
+          "used_memory_rss": 1572864000,
+          "maxmemory": 4294967296,
+          "maxmemory_policy": "allkeys-lru",
+          "instantaneous_ops_per_sec": 560,
+          "connected_clients": 12,
+          "blocked_clients": 0,
+          "rdb_last_bgsave_status": "ok",
+          "aof_enabled": 1,
+          "aof_last_write_status": "ok"
+        },
+        "connection": {
+          "address": "192.0.2.13:6379",
+          "connect_host": "192.0.2.13"
+        },
+        "error": "",
+        "sample_ms": 7,
+        "display": {
+          "host": "redis-cache-03.example.net",
+          "host_key": "192.0.2.13",
+          "ip": "192.0.2.13",
+          "address": "redis-cache-03.example.net:6379",
+          "note": "",
+          "mode": "hostname",
+          "source": "manual"
+        },
+        "acl": {
+          "state": "available",
+          "users": [
+            "admin",
+            "monitoring",
+            "replica_user",
+            "sentinel_user",
+            "app_cache"
+          ]
+        }
+      },
+      {
+        "endpoint": {
+          "host": "192.0.2.13",
+          "port": 26379,
+          "kind": "sentinel",
+          "auth": "none",
+          "tls": false,
+          "cacert": "",
+          "sni": "",
+          "id": "a5def7330906d6e02d152616",
+          "address": "192.0.2.13:26379"
+        },
+        "endpoint_options": [
+          {
+            "host": "192.0.2.13",
+            "port": 26379,
+            "kind": "sentinel",
+            "auth": "none",
+            "tls": false,
+            "cacert": "",
+            "sni": "",
+            "id": "a5def7330906d6e02d152616",
+            "address": "192.0.2.13:26379"
+          }
+        ],
+        "endpoint_ids": [
+          "a5def7330906d6e02d152616"
+        ],
+        "reachable": true,
+        "role": "sentinel",
+        "info": {
+          "redis_version": "7.2.0",
+          "uptime_in_seconds": 864000,
+          "config_file": "/etc/redis/instances/redis-26379.conf",
+          "role": "sentinel",
+          "connected_slaves": 0,
+          "master_host": "192.0.2.11",
+          "master_port": 6379,
+          "master_link_status": "up",
+          "master_repl_offset": 184026784,
+          "slave_repl_offset": 184026784,
+          "master_sync_in_progress": 0,
+          "used_memory": 1342177280,
+          "used_memory_rss": 1572864000,
+          "maxmemory": 4294967296,
+          "maxmemory_policy": "allkeys-lru",
+          "instantaneous_ops_per_sec": 560,
+          "connected_clients": 12,
+          "blocked_clients": 0,
+          "rdb_last_bgsave_status": "ok",
+          "aof_enabled": 1,
+          "aof_last_write_status": "ok"
+        },
+        "connection": {
+          "address": "192.0.2.13:26379",
+          "connect_host": "192.0.2.13"
+        },
+        "error": "",
+        "sample_ms": 7,
+        "display": {
+          "host": "redis-cache-03.example.net",
+          "host_key": "192.0.2.13",
+          "ip": "192.0.2.13",
+          "address": "redis-cache-03.example.net:26379",
+          "note": "",
+          "mode": "hostname",
+          "source": "manual"
+        },
+        "acl": {
+          "state": "available",
+          "users": [
+            "admin",
+            "monitoring",
+            "replica_user",
+            "sentinel_user",
+            "app_cache"
+          ]
+        }
+      }
+    ],
+    "summary": {
+      "redis_up": 3,
+      "redis_total": 3,
+      "sentinel_up": 3,
+      "sentinel_total": 3,
+      "masters": [
+        "192.0.2.11:6379"
+      ],
+      "clients": 108,
+      "memory_all": 4026531840,
+      "memory_masters": 1342177280,
+      "ops_all": 2960,
+      "replication_down": [],
+      "sentinel_agree": true,
+      "sentinel_views": [
+        "192.0.2.11:6379",
+        "192.0.2.11:6379",
+        "192.0.2.11:6379"
+      ]
+    },
+    "endpoints": [
+      {
+        "host": "192.0.2.11",
+        "port": 6379,
+        "kind": "redis",
+        "auth": "admin",
+        "tls": false,
+        "cacert": "",
+        "sni": "",
+        "id": "9bad7d1208881d79502ae099",
+        "address": "192.0.2.11:6379"
+      },
+      {
+        "host": "192.0.2.11",
+        "port": 26379,
+        "kind": "sentinel",
+        "auth": "none",
+        "tls": false,
+        "cacert": "",
+        "sni": "",
+        "id": "a6ebb2e0f5abe87559803c8d",
+        "address": "192.0.2.11:26379"
+      },
+      {
+        "host": "192.0.2.12",
+        "port": 6379,
+        "kind": "redis",
+        "auth": "admin",
+        "tls": false,
+        "cacert": "",
+        "sni": "",
+        "id": "145ca20be106d0ab6aa3b66c",
+        "address": "192.0.2.12:6379"
+      },
+      {
+        "host": "192.0.2.12",
+        "port": 26379,
+        "kind": "sentinel",
+        "auth": "none",
+        "tls": false,
+        "cacert": "",
+        "sni": "",
+        "id": "1cbb583785040f48189e5e56",
+        "address": "192.0.2.12:26379"
+      },
+      {
+        "host": "192.0.2.13",
+        "port": 6379,
+        "kind": "redis",
+        "auth": "admin",
+        "tls": false,
+        "cacert": "",
+        "sni": "",
+        "id": "4fd4749d24ecc8ece37ddbc7",
+        "address": "192.0.2.13:6379"
+      },
+      {
+        "host": "192.0.2.13",
+        "port": 26379,
+        "kind": "sentinel",
+        "auth": "none",
+        "tls": false,
+        "cacert": "",
+        "sni": "",
+        "id": "a5def7330906d6e02d152616",
+        "address": "192.0.2.13:26379"
+      }
+    ],
+    "sampled_at": 1784548800,
+    "events": []
+  },
+  "terminal": {
+    "id": "demo-terminal",
+    "alive": true,
+    "service_id": "demo-cache",
+    "endpoint": {
+      "host": "192.0.2.11",
+      "port": 6379,
+      "kind": "redis",
+      "auth": "admin",
+      "tls": false,
+      "cacert": "",
+      "sni": "",
+      "id": "9bad7d1208881d79502ae099",
+      "address": "192.0.2.11:6379"
+    },
+    "initial_db": 0,
+    "buffer": "192.0.2.11:6379> INFO replication\n# Replication\nrole:master\nconnected_slaves:2\nslave0:ip=192.0.2.12,port=6379,state=online,offset=184026784,lag=0\nslave1:ip=192.0.2.13,port=6379,state=online,offset=184026784,lag=0\nmaster_repl_offset:184026784\n\n192.0.2.11:6379> "
+  }
+}

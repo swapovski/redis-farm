@@ -1,0 +1,19 @@
+/* HF14: ordinary-looking artwork with a hidden mouse-hold preview. */
+.image-trigger{display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto;padding:0;margin:0;background:transparent;border:0;border-radius:0;cursor:default;line-height:0;user-select:none;-webkit-user-select:none}
+.image-trigger .brand-logo,.image-trigger .dialog-logo{height:54px;width:auto;max-width:none;background:transparent;cursor:default;user-select:none;-webkit-user-select:none;-webkit-user-drag:none}
+#aboutDialog .installation-layout{display:grid;grid-template-columns:minmax(0,1fr) 212px;gap:20px;align-items:center;margin-top:18px}
+#aboutDialog #aboutContent{min-width:0}
+#aboutDialog #aboutContent .kv{grid-template-columns:85px minmax(0,1fr);gap:8px;margin:0;font-size:11px}
+#aboutDialog #aboutContent dd{overflow-wrap:anywhere;min-width:0}
+.installation-image{width:212px;height:180px;max-width:none;justify-self:center;object-fit:contain}
+.installation-image[data-image-hold]{cursor:default;user-select:none;-webkit-user-select:none;-webkit-user-drag:none}
+/* The floating box is image-sized, not a full-screen overlay. */
+.image-hold-preview{position:fixed;inset:auto;box-sizing:content-box;margin:0;padding:0;border:0;border-radius:0;background:transparent;box-shadow:none;outline:0;max-width:none;max-height:none;overflow:visible;pointer-events:none!important;z-index:2147483647;user-select:none;animation:none;transition:none;transform:none}
+.image-hold-preview[hidden]{display:none!important}
+.image-hold-preview::backdrop{display:none!important;background:transparent!important;pointer-events:none!important;backdrop-filter:none!important}
+.image-hold-preview img{display:block;max-width:none;max-height:none;min-width:0;min-height:0;margin:0;padding:0;border:0;border-radius:0;background:transparent;pointer-events:none!important;transform-origin:33.333333% 33.333333%;will-change:transform;filter:drop-shadow(0 5px 8px rgba(13,33,27,.12));user-select:none;-webkit-user-select:none;-webkit-user-drag:none;animation:none;transition:none}
+@media(max-width:600px){#aboutDialog .installation-layout{grid-template-columns:1fr;gap:16px}}
+@media(prefers-reduced-motion:reduce){.image-hold-preview img{transform:none!important;will-change:auto}}
+
+/* Reserve a little breathing room at the end of the revealed section. */
+#aboutDialog details[data-installation-reveal]{scroll-margin-bottom:12px}

@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="{{ language }}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>Redis Farm — {{ t("серверная панель") if server_mode else t("локальная панель") }}</title>
+  {% include '_favicons.html' %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='app.css', v=version) }}">
+  <script defer src="{{ url_for('static', filename='app.js', v=version) }}"></script>
+  <script defer src="{{ url_for('static', filename='tls-options.js', v=version) }}"></script>
+  <link rel="stylesheet" href="{{ url_for('static', filename='images.css', v=version) }}">
+  <script defer src="{{ url_for('static', filename='images.js', v=version) }}"></script>
+  <script type="application/json" id="uiCatalog">{{ ui_catalog|tojson }}</script>
+  <script src="{{ url_for('static', filename='i18n.js', v=version) }}"></script>
+</head>
+<body data-admin-user="{{ admin_user }}" data-initial-profile="{{ 'admin' if use_acl_user else 'default' }}" data-server-mode="{{ 'true' if server_mode else 'false' }}">
+<header class="topbar">
+  <div class="brand">{% if brand_logo %}<span class="image-trigger" data-image-hold><img class="brand-logo" src="{{ url_for('static', filename='logo.png', v=version) }}" alt="{{ t('Логотип') }}" decoding="async" draggable="false"></span>{% else %}<span class="brand-mark">RF</span>{% endif %}<div><strong>Redis Farm</strong><span class="brand-sub">{{ t("Весь редис на одной грядке") }}</span></div></div>
+  <div class="top-actions">{% if panel_user %}<span class="panel-identity">{{ panel_user }}</span><button id="panelLogoutButton" type="button" class="ghost small">{{ t("Выйти из панели") }}</button>{% endif %}<span class="local-badge"><i></i> {{ t("Серверный режим · HTTPS") if server_mode else t("Локальный режим") }}</span><button id="aboutButton" class="ghost">{{ t("О приложении") }}</button><span class="version">v{{ version }}</span></div>
+</header>
+<section class="credential-bar" aria-label="{{ t('Подключение к Redis') }}">
+  <span class="eyebrow redis-cli-user-label">redis-cli user:</span>
+  <div class="segmented auth-tabs" id="authTabs" aria-label="Redis authentication">
+    <button type="button" data-auth="admin" class="active">{{ admin_user }}</button>
+    <button type="button" data-auth="default">default</button>
+  </div>
+  <form id="credentialForm" autocomplete="off">
+    <input id="redisPassword" type="password" autocomplete="off" placeholder="{{ t('Пароль') }}" aria-label="{{ t('Пароль') }}" required>
+    <button type="submit" id="unlockButton">{{ t("Использовать пароль") }}</button>
+  </form>
+  <div id="defaultCredentialControls" class="default-credential-controls" hidden><span id="defaultCredentialTarget" class="subtle"></span><button id="defaultAccessButton" type="button">{{ t("Пароли сервиса") }}</button></div>
+  <span id="credentialStatus" class="credential-status"><i class="dot"></i> {{ t("Пароль не введён") }}</span>
+  <button id="lockButton" class="ghost" disabled>{{ t("Разлогиниться") }}</button>
+</section>
+<div class="app-layout">
+  <aside class="sidebar">
+    <div class="catalog-edit-row"><button id="editButton" class="ghost small" disabled title="{{ t('Имя и группа') }}">{{ t("Править") }}</button></div>
+    <div class="sidebar-heading"><strong>{{ t("Каталог") }}</strong><span id="catalogCount" class="count">0</span></div>
+    <input id="catalogSearch" type="search" placeholder="{{ t('Сервис, хост или порт…') }}" aria-label="{{ t('Поиск по каталогу') }}">
+    <button id="addButton" class="add-button">{{ t("＋ Добавить ноду / кластер") }}</button>
+    <button id="toggleAllGroups" type="button" class="ghost small catalog-toggle-all" aria-controls="catalog" disabled>{{ t("Развернуть всё") }}</button>
+    <div id="catalog" class="catalog" aria-label="{{ t('Сохранённые сервисы') }}"></div>
+    <div class="sidebar-bottom">
+      <div class="button-row"><button id="exportButton" class="ghost small">{{ t("Экспорт") }}</button><button id="importButton" type="button" class="ghost small">{{ t("Импорт") }}</button></div>
+      <input id="importFile" type="file" accept=".json,application/json" hidden>
+      <span id="cliBadge" class="cli-badge">{{ t("Проверка redis-cli…") }}</span>
+    </div>
+  </aside>
+  <main class="workspace">
+    <section id="welcome" class="welcome">
+      <img class="welcome-logo" src="{{ url_for('static', filename='logo.png', v=version) }}" alt="" draggable="false"><p class="eyebrow">{{ t("ВАША ИНФРАСТРУКТУРА В ОДНОМ ОКНЕ") }}</p>
+      <h1>{{ t("Начните с любой ноды") }}</h1>
+      <p>{{ t("Добавьте имя ноды без порта: панель найдёт Redis, Sentinel и связанные") }}<br class="desktop-only"> {{ t("ноды, роли и инстансы и сохранит их") }} {{ t("в общем каталоге на сервере") if server_mode else t("в локальном каталоге") }}.</p>
+      <button id="welcomeAdd">{{ t("＋ Обнаружить сервис") }}</button>
+      <div class="welcome-features"><span>Standalone / Replication</span><span>Sentinel</span><span>Redis Cluster</span></div>
+      <p class="subtle">{{ t("Подключения выполняет redis-cli") }} {{ t("на сервере панели") if server_mode else t("на этом компьютере") }}{{ t(". SSH не используется.") }}</p>
+    </section>
+    <div id="serviceWorkspace" hidden>
+      <div class="service-heading">
+        <div><p id="serviceBreadcrumb" class="eyebrow"></p><h1 id="serviceTitle"></h1><p id="serviceSubtitle" class="subtle"></p></div>
+        <div class="service-actions"><label class="check-label"><input id="autoRefresh" type="checkbox" checked> {{ t("Автообновление") }}</label><button id="refreshButton" class="secondary">{{ t("↻ Обновить") }}</button></div>
+      </div>
+      <div id="summary" class="summary-grid"></div>
+      <section class="panel">
+        <div class="panel-heading"><div><h2>{{ t("Топология") }}</h2><span id="sampleStatus" class="subtle">{{ t("Ещё не опрошено") }}</span></div><span class="subtle">{{ t("Выберите хост и порт инстанса") }}</span></div>
+        <div id="topology" class="topology"></div>
+        <div id="topologyNote" class="panel-note" hidden></div>
+      </section>
+      <div class="two-columns">
+        <section class="panel"><div class="panel-heading"><h2>{{ t("Роль и репликация") }}</h2><span id="selectedRole" class="pill">—</span></div><div id="replicationStats"></div></section>
+        <section class="panel"><div class="panel-heading"><h2>{{ t("Ресурсы и состояние") }}</h2><span id="selectedAddress" class="mono subtle"></span></div><div id="resourceStats"></div></section>
+      </div>
+      <section id="consolePanel" class="panel console-panel">
+        <div class="panel-heading">
+          <div class="console-heading"><h2>{{ t("Консоль") }}</h2><div class="segmented" id="consoleTabs"><button data-kind="redis" class="active">Redis</button><button data-kind="sentinel">Sentinel</button></div></div>
+          <div class="button-row"><span class="subtle desktop-only">{{ t("Прямое выполнение команд") }}</span><button id="expandConsole" class="ghost small" title="{{ t('Развернуть консоль') }}">⤢</button></div>
+        </div>
+        <div class="console-layout">
+          <div class="console-main">
+            <div class="console-controls"><label>{{ t("Инстанс") }}<select id="consoleEndpoint" aria-label="{{ t('Инстанс для открытия консоли') }}"></select></label><label id="dbControl" class="db-control">{{ t("DB при открытии") }}<input id="databaseNumber" type="number" value="0" min="0" max="65535"></label><label id="redirectControl" class="check-label"><input id="clusterRedirect" type="checkbox"> -c</label><button id="connectButton">{{ t("Открыть") }}</button><button id="disconnectButton" class="ghost" disabled>{{ t("Закрыть") }}</button></div>
+            <div id="consoleContext" class="console-context">{{ t("Соединение не открыто") }}</div>
+            <div id="consoleMismatch" class="console-mismatch" hidden></div>
+            <pre id="terminalLog" class="terminal-output" aria-label="{{ t('Вывод redis-cli') }}">{{ t("Откройте консоль для выбранного инстанса.") }}
+</pre>
+            <form id="commandForm" class="command-form">
+              <textarea id="commandInput" rows="2" spellcheck="false" autocomplete="off" placeholder="{{ t('Команда Redis… Enter — выполнить, Shift+Enter — новая строка') }}" aria-label="{{ t('Команда redis-cli') }}" disabled></textarea>
+              <div class="command-actions">
+                <button id="sendButton" type="submit" disabled>{{ t("Выполнить ↵") }}</button>
+                <button id="clearConsole" type="button" class="secondary small">{{ t("Очистить вывод") }}</button>
+              </div>
+            </form>
+          </div>
+          <aside class="command-help"><div class="help-heading"><strong>{{ t("Команды") }} <span id="helpKind">Redis</span></strong><span>{{ t("Щелчок вставляет, не выполняет") }}</span></div><input id="snippetSearch" type="search" placeholder="{{ t('Найти команду…') }}" aria-label="{{ t('Поиск подсказок') }}"><div id="snippetList" class="snippet-list"></div></aside>
+        </div>
+      </section>
+      <section class="panel details-panel">
+        <div class="detail-tabs" id="detailTabs"><button data-topic="acl" class="active">{{ t("Пользователи ACL") }}</button><button data-topic="clients">{{ t("Клиенты") }}</button><button data-topic="config">{{ t("Конфигурация") }}</button><button data-topic="slowlog">Slowlog</button><button data-topic="latency">Latency</button><button data-topic="info">INFO</button><button data-topic="events">{{ t("События") }}</button></div>
+        <div class="detail-toolbar"><span id="detailStatus" class="subtle">{{ t("Выберите инстанс") }}</span><div class="button-row"><input id="detailFilter" type="search" placeholder="{{ t('Фильтр строк…') }}" aria-label="{{ t('Фильтр таблицы') }}"><button id="detailRefresh" class="ghost small">{{ t("↻ Обновить") }}</button></div></div>
+        <div id="detailContent" class="detail-content"></div>
+      </section>
+    </div>
+    <footer class="workspace-footer">Redis Farm <span>•</span> {{ t("Только redis-cli") }} <span>•</span> {{ t("Общий каталог сервера") if server_mode else t("Локальный каталог") }} <span>•</span> {{ t("Без SSH") }}</footer>
+  </main>
+</div>
+<dialog id="addDialog" aria-labelledby="addDialogTitle">
+  <div class="dialog-heading"><div><p class="eyebrow">{{ t("Каталог Redis кластеров") }}</p><div class="add-dialog-title">{% if add_logo %}<span class="image-trigger" data-image-hold><img class="dialog-logo" src="{{ url_for('static', filename='add.png', v=version) }}" alt="{{ t('Значок добавления') }}" decoding="async" draggable="false"></span>{% endif %}<h2 id="addDialogTitle">{{ t("Добавить сервис") }}</h2></div></div><button class="ghost" id="closeAdd">✕</button></div>
+  <section id="additionSuccess" class="addition-success" role="status" aria-live="polite" tabindex="-1" hidden>
+    <strong>{{ t("Добавление завершено") }}</strong>
+    <div class="button-row addition-success-actions"><button id="additionOpen" type="button" class="addition-open-button">{{ t("Перейти в каталог") }}</button></div>
+  </section>
+  <form id="discoveryForm" autocomplete="off">
+    <div id="discoveryModes" class="segmented discovery-modes" aria-label="{{ t('Способ добавления') }}"><button type="button" data-mode="node" class="active">{{ t("Нода: найти все инстансы") }}</button><button type="button" data-mode="ports">{{ t("Указать порт / кластер") }}</button></div>
+    <label class="seed-host-label">{{ t("Хост / IP") }}<input id="seedHost" name="host" placeholder="redis-01.example.net" required></label>
+    <div id="nodeScanFields"><p id="scanRangeSummary" class="scan-summary"></p>
+      <details id="scanRangeSettings" class="tls-settings"><summary>{{ t("Изменить диапазоны сканирования") }}</summary><div class="form-grid scan-range-grid">
+        <label>{{ t("Redis: первый порт") }}<input id="scanRedisStart" type="number" min="1" max="65535" value="6379" required></label><label>{{ t("Redis: последний порт") }}<input id="scanRedisEnd" type="number" min="1" max="65535" value="6478" required></label>
+        <label>{{ t("Sentinel: первый порт") }}<input id="scanSentinelStart" type="number" min="1" max="65535" value="26379" required></label><label>{{ t("Sentinel: последний порт") }}<input id="scanSentinelEnd" type="number" min="1" max="65535" value="26478" required></label>
+      </div><p class="subtle">{{ t("Каждый диапазон проверяется целиком, включая порты после пропусков. Не более 512 портов в одном диапазоне.") }}</p></details>
+    </div>
+    <div id="explicitPortFields" hidden><div class="form-grid">
+      <label>{{ t("Порт или список портов") }}<input id="seedPorts" name="ports" value="6379" placeholder="6389,6390–6394" disabled></label>
+      <label>{{ t("Тип точки входа") }}<select id="seedKind" disabled><option value="auto">{{ t("Определить автоматически") }}</option><option value="redis">Redis</option><option value="sentinel">Sentinel</option></select></label>
+      <label>{{ t("Порт Sentinel") }} <span class="subtle">{{ t("(необязательно)") }}</span><input id="seedSentinelPort" type="number" min="1" max="65535" placeholder="{{ t('Авто: 6389 → 26389') }}" disabled></label>
+    </div><label class="check-label discovery-check"><input id="findSentinel" type="checkbox" checked disabled> {{ t("Искать связанный Sentinel по правилу «2 + порт Redis»") }}</label></div>
+    <div class="form-grid"><label>{{ t("Название") }}<input id="seedName" placeholder="{{ t('Из Sentinel или адреса') }}"></label><label>{{ t("Группа / кластер") }}<input id="seedGroup" placeholder="production-cache" maxlength="256"></label>
+      <label class="wide">{{ t("Доступ к Redis") }}<select id="seedAuth"><option value="admin">{{ admin_user }}</option><option value="default">default</option><option value="none">{{ t("Без авторизации — выбрать явно") }}</option></select></label>
+    </div>
+    <div id="defaultSeedFields" class="default-seed-fields" hidden><div class="form-grid">
+      <label>{{ t("Пароль (необязательно)") }}<input id="seedDefaultPassword" type="password" autocomplete="off" placeholder="{{ t('Пароль') }}"></label>
+      <label>{{ t("Redis-порт для этого пароля") }}<input id="seedPasswordPort" type="number" min="1" max="65535" value="6379"></label>
+    </div><p class="subtle">{{ t("При сканировании пароль применяется только к указанному Redis-порту и связанным участникам его сервиса. Другие инстансы добавятся без пароля — его можно ввести позже. Оставьте поле пустым для обнаружения без пароля.") }}</p></div>
+    <label class="check-label discovery-check"><input id="autoAddDiscovered" type="checkbox" checked> {{ t("Добавить найденные сервисы в каталог автоматически") }}</label>
+    <!-- redis-farm-tls-ui-hf5:begin -->
+    <details id="seedTlsSettings" class="tls-settings tls-connection">
+      <summary id="seedTlsSummary" aria-describedby="seedTlsHelp">
+        <span>{{ t("TLS-параметры") }}</span>
+        <button id="seedTlsHelpButton" type="button" class="tls-help-button" aria-label="{{ t('Для чего нужны TLS-параметры') }}" aria-describedby="seedTlsHelp" aria-expanded="false" aria-controls="seedTlsHelp">?</button>
+        <span id="seedTlsHelp" class="tls-help-popup" role="tooltip" hidden>{{ t("Шифрование соединения Redis Farm → Redis/Sentinel. Включайте для TLS-портов; при обычном подключении оставьте выключенным. Не относится к HTTPS панели или LDAP.") }}</span>
+      </summary>
+      <div class="tls-card">
+        <label class="tls-enable" for="seedTls">
+          <input id="seedTls" type="checkbox" aria-controls="seedTlsFields" aria-describedby="seedTlsEnableHint">
+          <span class="tls-enable-text"><strong>{{ t("Использовать TLS") }}</strong><span id="seedTlsEnableHint">{{ t("Для Redis и Sentinel, настроенных на TLS-подключения.") }}</span></span>
+        </label>
+        <fieldset id="seedTlsFields" class="tls-fields" disabled>
+          <legend class="tls-visually-hidden">{{ t("Параметры TLS-подключения") }}</legend>
+          <div class="tls-fields-grid">
+            <label class="tls-field" for="seedCa">
+              <span class="tls-field-title">{{ t("CA-файл") }} <span class="tls-optional">{{ t("необязательно") }}</span></span>
+              <input id="seedCa" placeholder="/etc/redis-farm/ca/redis-ca.pem" autocomplete="off" spellcheck="false" aria-describedby="seedCaHelp">
+              <span class="tls-field-help" id="seedCaHelp">{{ t("Путь на сервере панели") if server_mode else t("Путь на компьютере, где запущен Redis Farm") }}{{ t(". PEM-сертификат доверенного CA; если CA уже доверен redis-cli, поле можно оставить пустым.") }}</span>
+            </label>
+            <label class="tls-field" for="seedSni">
+              <span class="tls-field-title">{{ t("Имя сервера (SNI)") }} <span class="tls-optional">{{ t("необязательно") }}</span></span>
+              <input id="seedSni" placeholder="redis.example.internal" autocomplete="off" spellcheck="false" aria-describedby="seedSniHelp">
+              <span class="tls-field-help" id="seedSniHelp">{{ t("Имя, передаваемое при TLS-соединении. Укажите, если этого требует Redis или TLS-прокси.") }}</span>
+            </label>
+          </div>
+        </fieldset>
+      </div>
+    </details>
+    <!-- redis-farm-tls-ui-hf5:end -->
+    <p class="subtle">{{ t("Диапазоны сканируются только на введённой ноде. Участники её кластеров обнаруживаются по данным Redis и Sentinel, в том числе вне указанных диапазонов.") }}</p>
+    <div class="dialog-actions"><span class="subtle">{{ t("Sentinel — без пароля") }}</span><button id="cancelDiscovery" type="button" class="ghost" hidden>{{ t("Остановить поиск") }}</button><button id="discoverButton" type="submit">{{ t("Сканировать и добавить") }}</button></div>
+  </form>
+  <div id="discoveryProgress" class="scan-progress" role="status" aria-live="polite" hidden><div><strong id="scanProgressLabel">{{ t("Сканирование") }}</strong><span id="scanProgressCount"></span></div><progress id="scanProgressBar" max="1" value="0"></progress><p id="scanProgressDetails" class="subtle"></p></div>
+  <div id="discoveryResults" class="discovery-results" hidden></div>
+  <div id="saveDiscoveryRow" class="dialog-actions" hidden><span id="discoveredCount"></span><button id="saveDiscovery">{{ t("Добавить выбранные") }}</button></div>
+</dialog>
+<dialog id="defaultAccessDialog" class="compact-dialog">
+  <div class="dialog-heading"><h2>{{ t("Доступ default") }}</h2><button id="closeDefaultAccess" class="ghost" type="button">✕</button></div>
+  <p id="defaultAccessName" class="credential-target"></p>
+  <form id="defaultAccessForm" autocomplete="off">
+    <label>{{ t("Область пароля") }}<select id="defaultAccessScope"></select></label>
+    <label>{{ t("Пароль default") }}<input id="defaultAccessPassword" type="password" autocomplete="off" required placeholder="{{ t('Пароль') }}"></label>
+    <div id="defaultAccessError" class="error-note" role="alert" hidden></div>
+    <div class="dialog-actions"><button id="forgetDefaultScope" type="button" class="ghost">{{ t("Забыть пароль") }}</button><button id="saveDefaultAccess" type="submit">{{ t("Использовать пароль") }}</button></div>
+  </form>
+</dialog>
+<dialog id="editDialog" class="compact-dialog">
+  <div class="dialog-heading"><h2>{{ t("Запись каталога") }}</h2><button id="closeEdit" class="ghost">✕</button></div>
+  <form id="editForm"><label>{{ t("Название") }}<input id="editName" required maxlength="256"></label><label>{{ t("Группа") }}<input id="editGroup" maxlength="256"></label><div class="dialog-actions"><button type="button" id="deleteService" class="danger-ghost">{{ t("Удалить из каталога") }}</button><button type="submit">{{ t("Сохранить") }}</button></div></form>
+  <p class="subtle">{{ t("Изменяется только локальная запись, не удалённые Redis.") }}</p>
+</dialog>
+<dialog id="aboutDialog" class="compact-dialog">
+  <div class="dialog-heading"><h2>{{ t("О приложении") }}</h2><button id="closeAbout" class="ghost" type="button" aria-label="{{ t('Закрыть') }}">✕</button></div>
+  <div class="about-description">
+    <p class="about-intro"><strong>Redis Farm</strong> {{ t("— панель для работы с Redis и Sentinel. Подключения и команды выполняются через") }} <code>redis-cli</code>{{ t(", без SSH.") }}</p>
+    <section>
+      <h3>{{ t("Возможности") }}</h3>
+      <p>{{ t("Добавляйте ноды по имени или IP: панель найдёт инстансы в заданном диапазоне портов и соберёт связанных участников. Можно указать конкретный порт и объединить сервисы в группы.") }}</p>
+      <p>{{ t("В топологии видны ноды, порты, роли master/replica и доступность. Для выбранного инстанса доступны статистика, клиенты, ACL, конфигурация, Slowlog и Latency, а также консоли Redis и Sentinel с подсказками команд.") }}</p>
+      <p>{{ t("Поддерживаются одиночные Redis, репликация, Sentinel и Redis Cluster.") }}</p>
+    </section>
+<!-- redis-farm-about-acl-hf4:begin -->
+    <section id="aboutAcl">
+      <h3>{{ t("ACL и пользователи Redis") }}</h3>
+      <p><strong>Redis ACL</strong> {{ t("— правила доступа для пользователей: какие команды, ключи и каналы Pub/Sub им разрешены.") }}</p>
+      <p><strong>{{ admin_user }}</strong> {{ t("— отдельный ACL-пользователь для администрирования в вашей инфраструктуре. Его права задаются конфигурацией Redis; само имя") }} <code>{{ admin_user }}</code> {{ t("не предоставляет дополнительных прав.") }}</p>
+      <p><strong>default</strong> {{ t("— встроенный пользователь Redis 6+. При входе с паролем без указания имени используется именно он; его права тоже определяются ACL. В старых Redis такой вход соответствует настройке") }} <code>requirepass</code>.</p>
+      <p><strong>{{ t("Рекомендуем использовать ACL") }}</strong> {{ t("с отдельными учётными записями для администрирования, приложений и служебных задач: это позволяет разделять права и независимо менять пароли.") }}</p>
+    </section>
+    <section id="aboutAuthModes">
+      <h3>{{ t("Как использовать") }} {{ admin_user }} / default</h3>
+      <p>{{ t("Оба режима доступны во вкладках") }} <strong>{{ admin_user }} / default</strong>{{ t(". Каталог разделяется по способу подключения, а не по наличию отдельного ACL-файла.") }}</p>
+      <p><strong>{{ admin_user }}:</strong> {{ t("выберите вкладку, введите пароль и нажмите «Использовать пароль». Затем выберите или добавьте сервис. В текущей сессии этот пароль используется для подключений") }} <code>{{ admin_user }}</code>.</p>
+      <p><strong>default:</strong> {{ t("выберите вкладку и сервис, нажмите «Ввести пароль default» или «Пароли сервиса». Выберите область — весь сервис либо отдельный инстанс") }} <code>host:port</code>{{ t(", введите пароль и нажмите «Использовать пароль». Пароль") }} <code>{{ admin_user }}</code> {{ t("не требуется.") }}</p>
+      <p>{{ t("Пароли разных сервисов независимы; пароль инстанса имеет приоритет над паролем сервиса. При добавлении пароль") }} <code>default</code> {{ t("можно указать в форме для нужного Redis-порта.") }}</p>
+      <p class="subtle">{{ t("Переключение вкладок не меняет ACL на Redis и не разграничивает доступ сотрудников к панели. Подключения без авторизации также поддерживаются; Sentinel подключается без пароля.") }}</p>
+    </section>
+    <!-- redis-farm-about-acl-hf4:end -->
+    <section>
+      <h3>{{ t("Данные и сессии") }}</h3>
+      <p>{% if server_mode %}{{ t("Каталог общий для сотрудников; пароли и открытые консоли привязаны к вашей сессии браузера.") }}{% else %}{{ t("Каталог хранится на вашем компьютере; пароли и открытые консоли привязаны к вашей сессии браузера.") }}{% endif %}</p>
+      <p>{{ t("На диске сохраняются каталог и настройки панели. Пароли Redis, вывод консоли и снимки состояния хранятся в памяти. После завершения сессии или перезапуска панели пароли нужно ввести заново.") }}</p>
+      <p class="subtle">{% if panel_login %}{{ t("Вход в панель проверяется через LDAP и группу доступа. «Выйти из панели» завершает вашу сессию, удаляет её Redis-пароли и закрывает её консоли.") }}{% elif server_mode %}{{ t("Вход в панель отключён. Доступ ограничен разрешёнными сетями; используйте доверенную сеть или внешнюю аутентификацию.") }}{% else %}{{ t("Панель доступна локально по адресу") }} <code>127.0.0.1</code>.{% endif %}</p>
+    </section>
+  </div>
+  <details class="about-installation" data-installation-reveal><summary>{{ t("Сведения об установке") }}</summary><div class="installation-layout"><div id="aboutContent"></div><img class="installation-image" data-image-hold draggable="false" src="{{ url_for('static', filename='setup.webp', v=version) }}" width="212" height="180" alt="" loading="lazy" decoding="async"></div></details>
+</dialog>
+<!-- HF15: held images lift from their source and follow from the center. -->
+<div id="toast" class="toast" role="status" hidden></div>
+</body>
+</html>

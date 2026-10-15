@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="{{ language }}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ t("Вход — Redis Farm") }}</title>
+  {% include '_favicons.html' %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='app.css', v=version) }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='login.css', v=version) }}">
+  <meta name="referrer" content="same-origin">
+  <script type="application/json" id="uiCatalog">{{ ui_catalog|tojson }}</script>
+  <script src="{{ url_for('static', filename='login-session.js', v=version ~ '-hf7') }}" defer></script>
+  <script src="{{ url_for('static', filename='i18n.js', v=version) }}"></script>
+</head>
+<body class="login-page" data-admin-user="{{ admin_user }}">
+  <main class="login-card">
+    <h1>{{ t("Вход в панель") }}</h1>
+    <p class="login-lead">{{ t("Используйте свою учётную запись LDAP / FreeIPA.") }}</p>
+    <div id="loginError" class="login-error" role="alert" data-code="{{ error_code|default('') }}"{% if not error %} hidden{% endif %}>{{ error }}</div>
+    <form id="loginForm" method="post" action="{{ url_for('login') }}">
+      <input type="hidden" name="csrf" value="{{ csrf }}">
+      <label for="username">{{ t("Логин") }}</label>
+      <input id="username" name="username" type="text" autocomplete="username" value="{{ username }}" maxlength="128" required autofocus>
+      <label for="password">{{ t("Пароль") }}</label>
+      <input id="password" name="password" type="password" autocomplete="current-password" maxlength="4096" required>
+      <button type="submit">{{ t("Войти") }}</button>
+    </form>
+    <div class="login-version">v{{ version }}</div>
+  </main>
+</body>
+</html>

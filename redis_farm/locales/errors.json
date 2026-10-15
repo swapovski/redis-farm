@@ -1,0 +1,158 @@
+{
+  "password_required": {
+    "en": "Enter the password.",
+    "ru": "Введите пароль."
+  },
+  "default_password_required": {
+    "en": "Enter the password for the selected service or instance.",
+    "ru": "Введите пароль для выбранного сервиса или инстанса."
+  },
+  "session_expired": {
+    "en": "Your session has expired. Reload the page.",
+    "ru": "Сессия завершена. Обновите страницу."
+  },
+  "login_required": {
+    "en": "Sign in to the panel.",
+    "ru": "Войдите в панель."
+  },
+  "csrf": {
+    "en": "The session token has expired. Reload the page.",
+    "ru": "Токен сессии устарел. Обновите страницу."
+  },
+  "origin": {
+    "en": "The request origin does not match this panel. Open its configured address.",
+    "ru": "Источник запроса не совпадает с адресом панели. Откройте её настроенный адрес."
+  },
+  "host_denied": {
+    "en": "Host or port is not allowed for this panel.",
+    "ru": "Имя хоста или порт не разрешены для этой панели."
+  },
+  "client_denied": {
+    "en": "Your address is outside the allowed client networks.",
+    "ru": "Ваш адрес не входит в разрешённые клиентские сети."
+  },
+  "invalid_password": {
+    "en": "Enter a password of at most 4096 characters without NUL.",
+    "ru": "Введите пароль длиной до 4096 символов без NUL."
+  },
+  "cancelled": {
+    "en": "Operation stopped.",
+    "ru": "Операция остановлена."
+  },
+  "timeout": {
+    "en": "redis-cli timed out. The result is not confirmed; commands are not retried.",
+    "ru": "Истекло время ожидания redis-cli. Результат не подтверждён; команды не повторяются."
+  },
+  "endpoint_required": {
+    "en": "Select an instance of this service.",
+    "ru": "Выберите инстанс этого сервиса."
+  },
+  "invalid_host": {
+    "en": "Enter a hostname or IP, without a URL or port.",
+    "ru": "Введите имя хоста или IP, без URL и порта."
+  },
+  "invalid_port": {
+    "en": "Enter a valid port from 1 to 65535 in the selected range.",
+    "ru": "Укажите порт от 1 до 65535 в выбранном диапазоне."
+  },
+  "invalid_scope": {
+    "en": "Choose service or instance password scope.",
+    "ru": "Выберите область пароля: сервис или инстанс."
+  },
+  "invalid_services": {
+    "en": "Select the discovered services to add.",
+    "ru": "Выберите найденные сервисы для добавления."
+  },
+  "busy": {
+    "en": "The operation limit has been reached. Wait or close an unused task.",
+    "ru": "Достигнут лимит операций. Подождите или закройте ненужную задачу."
+  },
+  "credentials_expired": {
+    "en": "Discovery credentials expired. Enter a password from the catalog.",
+    "ru": "Пароль обнаружения больше не доступен. Введите пароль в каталоге."
+  },
+  "cli_unavailable": {
+    "en": "redis-cli is unavailable. Check the configured executable.",
+    "ru": "redis-cli недоступен. Проверьте путь к клиенту."
+  },
+  "terminal_closed": {
+    "en": "Console closed. Open a new connection; no command is retried.",
+    "ru": "Консоль закрыта. Откройте новое подключение; команды не повторяются."
+  },
+  "terminal_limit": {
+    "en": "Close an unused console before opening another.",
+    "ru": "Закройте ненужную консоль перед открытием новой."
+  },
+  "not_found": {
+    "en": "The requested object was not found. Refresh the catalog.",
+    "ru": "Объект не найден. Обновите каталог."
+  },
+  "https_required": {
+    "en": "This server requires HTTPS.",
+    "ru": "Для этого сервера требуется HTTPS."
+  },
+  "invalid_command": {
+    "en": "Enter a Redis command.",
+    "ru": "Введите команду Redis."
+  },
+  "port_range": {
+    "en": "Check the port range (up to 512 ports).",
+    "ru": "Проверьте диапазон портов (до 512 портов)."
+  },
+  "internal_error": {
+    "en": "An internal request error occurred.",
+    "ru": "Внутренняя ошибка запроса."
+  },
+  "invalid_auth": {
+    "en": "Invalid request parameters. Check the selected values.",
+    "ru": "Некорректные параметры. Проверьте выбранные значения."
+  },
+  "invalid_catalog": {
+    "en": "Invalid request parameters. Check the selected values.",
+    "ru": "Некорректные параметры. Проверьте выбранные значения."
+  },
+  "invalid_cursor": {
+    "en": "Invalid request parameters. Check the selected values.",
+    "ru": "Некорректные параметры. Проверьте выбранные значения."
+  },
+  "invalid_db": {
+    "en": "Invalid request parameters. Check the selected values.",
+    "ru": "Некорректные параметры. Проверьте выбранные значения."
+  },
+  "invalid_endpoint": {
+    "en": "Invalid request parameters. Check the selected values.",
+    "ru": "Некорректные параметры. Проверьте выбранные значения."
+  },
+  "invalid_json": {
+    "en": "Invalid request parameters. Check the selected values.",
+    "ru": "Некорректные параметры. Проверьте выбранные значения."
+  },
+  "invalid_kind": {
+    "en": "Invalid request parameters. Check the selected values.",
+    "ru": "Некорректные параметры. Проверьте выбранные значения."
+  },
+  "invalid_service": {
+    "en": "Invalid request parameters. Check the selected values.",
+    "ru": "Некорректные параметры. Проверьте выбранные значения."
+  },
+  "invalid_spec": {
+    "en": "Invalid request parameters. Check the selected values.",
+    "ru": "Некорректные параметры. Проверьте выбранные значения."
+  },
+  "invalid_topic": {
+    "en": "Invalid request parameters. Check the selected values.",
+    "ru": "Некорректные параметры. Проверьте выбранные значения."
+  },
+  "discovery_limit": {
+    "en": "The configured operation or data-size limit was reached.",
+    "ru": "Достигнут настроенный лимит операции или объёма данных."
+  },
+  "input_limit": {
+    "en": "The configured operation or data-size limit was reached.",
+    "ru": "Достигнут настроенный лимит операции или объёма данных."
+  },
+  "output_limit": {
+    "en": "The configured operation or data-size limit was reached.",
+    "ru": "Достигнут настроенный лимит операции или объёма данных."
+  }
+}
