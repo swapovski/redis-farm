@@ -14,14 +14,15 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
         with:
           python-version: '3.11'
           cache: pip
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         with:
           node-version: '22'
+          package-manager-cache: false
       - name: Install Python dependencies
         run: |
           python -m pip install --upgrade pip
@@ -31,8 +32,39 @@ jobs:
           python -m compileall -q redis_farm tests tools
           bash -n install.sh start.sh install-server.sh
           find redis_farm/static -type f -name '*.js' -print0 | xargs -0 -r -n 1 node --check
+      - name: Verify executable CLI test fixture
+        run: |
+          if [ ! -x tests/fake_cli.py ]; then
+            echo '::error file=tests/fake_cli.py::Missing executable bit. Run git update-index --chmod=+x tests/fake_cli.py and commit the mode change.'
+            exit 1
+          fi
+          ./tests/fake_cli.py --version
       - name: Unit and Flask test suite
+        id: unit_tests
         run: python tools/test_all.py --report /tmp/redis-farm-ci-tests
+      - name: Show failed unit test reports
+        if: ${{ failure() && steps.unit_tests.outcome == 'failure' }}
+        run: |
+          python - <<'PY_REPORT'
+          import json
+          from pathlib import Path
+          root = Path('/tmp/redis-farm-ci-tests')
+          result_file = root / 'results.json'
+          if not result_file.is_file():
+              print('No results.json; inspect the preceding test step.')
+          else:
+              for item in json.loads(result_file.read_text()):
+                  if item.get('status') == 'passed':
+                      continue
+                  name = Path(item['module']).stem
+                  print(f'::group::Failed tests: {name}')
+                  log = root / f'{name}.log'
+                  if log.is_file():
+                      print(log.read_text(errors='replace'))
+                  else:
+                      print('Test log was not produced.')
+                  print('::endgroup::')
+          PY_REPORT
       - name: Install Chromium for demo integration
         run: python -m playwright install --with-deps chromium
       - name: Render bilingual demo screenshots
@@ -50,7 +82,7 @@ jobs:
           PY2
       - name: Upload unittest reports on failure
         if: failure()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: redis-farm-test-results
           path: /tmp/redis-farm-ci-tests/

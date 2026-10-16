@@ -12,3 +12,9 @@ The third was provided as an attachment. Artwork and characters remain the prope
 Before publishing the repository, determine whether you have the necessary permission for the artwork, replace it with appropriately licensed illustrations, or distribute a code-only version. The code's MIT license does not resolve artwork rights. The same qualification applies to the illustrations embedded in README screenshots. Changing image files does not require changing the application logic.
 
 `logo.png` and `add.png` preserve the supplied original PNGs. `setup.webp` is a lossless format conversion of the third supplied PNG. Images are served locally; no browser request to the reference sites is required.
+
+## Scope of the code license
+
+Scope: this license applies to project code and documentation text. It does
+not grant rights to the third-party illustrations or their derivatives
+(favicons and illustrations visible in screenshots). See NOTICE.md.
