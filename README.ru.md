@@ -1,5 +1,12 @@
 # Redis Farm 0.2.0
 
+<!-- redis-farm:badges:start -->
+[![CI](https://github.com/swapovski/redis-farm/actions/workflows/ci.yml/badge.svg?branch=main&event=push)](https://github.com/swapovski/redis-farm/actions/workflows/ci.yml)
+[![Python 3.10+](https://img.shields.io/badge/Python-3.10%2B-blue?logo=python&logoColor=white)](#подготовка-redis-cli)
+[![Code license: MIT](https://img.shields.io/badge/Code%20license-MIT-green)](LICENSE)
+[![GitHub stars](https://img.shields.io/github/stars/swapovski/redis-farm?style=flat)](https://github.com/swapovski/redis-farm/stargazers)
+<!-- redis-farm:badges:end -->
+
 **Весь редис на одной грядке.** Веб-панель на Flask для администраторов Redis, Sentinel и Redis Cluster. Все обращения к Redis выполняются через локальные процессы `redis-cli`: без SSH, агентов на нодах и redis-py.
 
 [English](README.md) · [Диагностика](docs/TROUBLESHOOTING.md) · [Архитектура](docs/ARCHITECTURE.md) · [Отчёт о проверках](docs/TEST_REPORT.md)

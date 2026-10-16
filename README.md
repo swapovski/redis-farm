@@ -1,5 +1,12 @@
 # Redis Farm 0.2.0
 
+<!-- redis-farm:badges:start -->
+[![CI](https://github.com/swapovski/redis-farm/actions/workflows/ci.yml/badge.svg?branch=main&event=push)](https://github.com/swapovski/redis-farm/actions/workflows/ci.yml)
+[![Python 3.10+](https://img.shields.io/badge/Python-3.10%2B-blue?logo=python&logoColor=white)](#requirements)
+[![Code license: MIT](https://img.shields.io/badge/Code%20license-MIT-green)](LICENSE)
+[![GitHub stars](https://img.shields.io/github/stars/swapovski/redis-farm?style=flat)](https://github.com/swapovski/redis-farm/stargazers)
+<!-- redis-farm:badges:end -->
+
 **All your Redis in one garden.** A Flask web workspace for administrators of Redis, Redis Sentinel and Redis Cluster. Every Redis operation is executed by a local `redis-cli` process: no SSH agent, redis-py or separate network Redis client.
 
 [Russian / Русский](README.ru.md) · [Troubleshooting](docs/TROUBLESHOOTING.md) · [Architecture](docs/ARCHITECTURE.md) · [Test report](docs/TEST_REPORT.md)
