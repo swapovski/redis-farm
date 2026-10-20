@@ -1,4 +1,4 @@
-/* HF15: lift the source image under the pointer; centered hold preview. */
+/* Lift the radish by the leaf base; the body swings beneath the grip. */
 "use strict";
 (() => {
   const triggers = [...document.querySelectorAll("[data-image-hold]")];
@@ -55,7 +55,7 @@
     const dt = Math.max(8, Math.min(64, now - s.lastMove));
     const vx = clamp((x - s.moveX) / dt / 1.1);
     const vy = clamp((y - s.moveY) / dt / 1.1);
-    if (x !== s.moveX || y !== s.moveY) s.drive = [-vy * 10, vx * 12, vx * 4];
+    if (x !== s.moveX || y !== s.moveY) s.drive = [-vy * 5, vx * 5, -vx * 17];
     s.moveX = x;
     s.moveY = y;
     s.lastMove = now;
@@ -79,7 +79,7 @@
       // Gentle continuous roll remains visible when a long gesture stops.
       // It exists only during a hold; a normal hover never starts animation.
       const sway = [Math.sin(t * 2.5) * 2.2, Math.sin(t * 2.1 + 0.5) * 2.8,
-                    Math.sin(t * 2.9) * 1.5];
+                    Math.sin(t * 2.8) * 3.5];
       const target = s.drive.map((angle, i) => angle + sway[i] * entry);
       const blend = 1 - Math.exp(-elapsed / 70);
       s.angles = s.angles.map((angle, i) => angle + (target[i] - angle) * blend);
@@ -103,9 +103,12 @@
     event.preventDefault(); // No native drag or focus change.
     const width = original.naturalWidth;
     const height = original.naturalHeight;
-    // Every image is picked up by its visual center.
-    const anchorX = width / 2;
-    const anchorY = height / 2;
+    // Grab just above the leaf base. 19 CSS px is about 0.5 CSS cm,
+    // not a promise of physical centimetres on every monitor / zoom level.
+    const fx = Number(trigger.dataset.leafX || "0.5");
+    const fy = Number(trigger.dataset.leafY || "0.31");
+    const anchorX = width * Math.max(0, Math.min(1, fx));
+    const anchorY = Math.max(0, height * Math.max(0, Math.min(1, fy)) - 19);
     const layer = document.createElement("div");
     layer.className = "image-hold-preview";
     layer.setAttribute("aria-hidden", "true");
@@ -120,7 +123,7 @@
     image.height = height;
     image.style.width = `${width}px`;
     image.style.height = `${height}px`;
-    // Rotation pivot is the image center, exactly under the cursor.
+    // Leaf grip remains exactly under the cursor while the body swings below.
     image.style.transformOrigin = `${anchorX}px ${anchorY}px`;
     layer.append(image);
     const dialog = original.closest("dialog[open]");

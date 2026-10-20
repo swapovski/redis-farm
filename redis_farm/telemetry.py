@@ -3,7 +3,7 @@ from collections import deque
 import threading
 import time
 from .cli import RedisCLI
-from .models import Endpoint, FarmError
+from .models import Endpoint, FarmError, service_peer
 from .parsers import info, pairs, number, cluster_nodes, client_list, acl_rows
 from .settings import Settings
 from .topology_view import topology_view
@@ -40,11 +40,11 @@ class Telemetry:
 
     def _sample(self, ep, password, owner, cancel, service):
         row = {'endpoint': ep.to_dict(), 'reachable': False, 'role': 'unknown', 'error': '',
-               'info': {}, 'sample_ms': None, 'sampled_at': time.time(), 'aliases': []}
+               'info': {}, 'sample_ms': None, 'sampled_at': time.time(), 'aliases': [], 'access_state': 'unknown', 'authenticated': None, 'transport_reachable': None}
         try:
             reply = self._run(ep, ['INFO'], password, owner, cancel)
             data = info(reply.value)
-            row.update(reachable=True, info=data, sample_ms=reply.elapsed_ms, connection=reply.connection,
+            row.update(reachable=True, access_state='ready', authenticated=True, transport_reachable=True, info=data, sample_ms=reply.elapsed_ms, connection=reply.connection,
                        role='sentinel' if data.get('redis_mode') == 'sentinel' else data.get('role', 'unknown'))
             if row['role'] == 'slave':
                 row['role'] = 'replica'
@@ -73,12 +73,18 @@ class Telemetry:
                     row['sentinel_error'] = str(exc)
         except FarmError as exc:
             row['error'], row['error_code'] = str(exc), exc.code
+            row['access_state'] = exc.code
+            if exc.code in ('authentication_required', 'authentication_failed', 'permission_denied', 'unsupported_command'):
+                row['transport_reachable'] = True
+                row['authenticated'] = exc.code in ('permission_denied', 'unsupported_command')
+            elif exc.code not in ('password_required', 'sentinel_password_required', 'default_password_required'):
+                row['transport_reachable'] = False
         return row
 
     def snapshot(self, service, password, owner, cancel):
         endpoints = {e.id: e for e in map(Endpoint.from_dict, service['endpoints'])}
         profile = next((e for e in endpoints.values() if e.kind == 'redis'),
-                       Endpoint(Endpoint.from_dict(service['seed']).host, 6379, auth='admin'))
+                       service_peer(service, service['seed']['host'], 6379))
         # At least one Redis auth policy is retained in Sentinel-discovered services.
         def sample(ep):
             return self._sample(ep, password, owner, cancel, service)
@@ -89,21 +95,21 @@ class Telemetry:
                 for observed in [row.get('sentinel', {})] + row.get('sentinel_replicas', []):
                     if observed.get('ip') and observed.get('port'):
                         try:
-                            ep = profile.peer(observed['ip'], observed['port'])
+                            ep = service_peer(service, observed['ip'], observed['port'])
                             extra[ep.id] = ep
                         except FarmError:
                             pass
                 for observed in row.get('sentinel_peers', []):
                     if observed.get('ip') and observed.get('port'):
                         try:
-                            ep = Endpoint.from_dict(row['endpoint']).peer(observed['ip'], observed['port'], 'sentinel')
+                            ep = service_peer(service, observed['ip'], observed['port'], 'sentinel')
                             extra[ep.id] = ep
                         except FarmError:
                             pass
                 for observed in row.get('cluster_nodes', []):
                     if observed.get('host') and observed.get('port') and 'noaddr' not in observed.get('flags', []):
                         try:
-                            ep = profile.peer(observed['host'], observed['port'])
+                            ep = service_peer(service, observed['host'], observed['port'])
                             extra[ep.id] = ep
                         except FarmError:
                             pass
@@ -116,7 +122,7 @@ class Telemetry:
                         candidates.append({'ip': data['master_host'], 'port': data['master_port']})
                     for observed in candidates:
                         try:
-                            ep = profile.peer(observed['ip'], observed['port'])
+                            ep = service_peer(service, observed['ip'], observed['port'])
                             extra[ep.id] = ep
                         except (FarmError, KeyError):
                             pass
@@ -191,7 +197,7 @@ class Telemetry:
         def run(command, output='raw'):
             return self._run(ep, command, password, owner, cancel, output).value
         if topic == 'acl':
-            rows = acl_rows(run(['ACL', 'LIST'], 'json'), admin_user=self.settings.redis_admin_user)
+            rows = acl_rows(run(['ACL', 'LIST'], 'json'), admin_user=ep.username or self.settings.redis_admin_user)
             try:
                 aclfile = pairs(run(['CONFIG', 'GET', 'aclfile'], 'json')).get('aclfile', '')
                 file_state = 'external' if aclfile else 'not_configured'

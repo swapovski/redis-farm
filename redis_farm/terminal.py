@@ -166,7 +166,8 @@ class Terminals:
         with self.lock:
             ids = [tid for tid, t in self.items.items() if t.owner == owner and
                    (service_id is None or t.service_id == service_id) and
-                   (profile is None or t.profile == profile)]
+                   (profile is None or (profile == 'admin' and t.endpoint.kind == 'redis' and t.endpoint.auth == 'admin') or
+                    (profile != 'admin' and t.profile == profile))]
         for tid in ids:
             try:
                 self.close(owner, tid)

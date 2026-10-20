@@ -10,7 +10,7 @@ from .access import AccessPolicy
 from .cli import RedisCLI
 from .commands import WIDGETS, snippets
 from .discovery import Discovery
-from .models import Endpoint, FarmError, service_auth
+from .models import Endpoint, FarmError, service_auth, service_connection, connection_profile, CONNECTION_FIELDS, auth_identity
 from .credentials import DiscoveryCredentials, password_for, validate_password
 from .runtime import Jobs, Sessions
 from .settings import Settings
@@ -243,15 +243,16 @@ def create_app(settings: Settings, *, cli=None, authenticator=None):
         return jsonify(redis_unlocked=False)
 
     def credential_target(service, data):
-        if service_auth(service) != 'default':
-            raise FarmError('This service does not use password-only authentication.', 'invalid_auth')
+        kind = data.get('kind', 'redis')
+        if kind not in ('redis', 'sentinel'):
+            raise FarmError('Choose Redis or Sentinel.', 'invalid_kind')
         scope = data.get('scope', 'service')
         if scope == 'service':
             return None
         if scope != 'endpoint':
             raise FarmError('Choose service or endpoint credential scope.', 'invalid_scope')
         raw = next((e for e in service['endpoints'] if e['id'] == data.get('endpoint_id')
-                    and e['kind'] == 'redis'), None)
+                    and e['kind'] == kind), None)
         if raw is None:
             raise FarmError('Select a Redis endpoint in this service.', 'endpoint_required')
         ep = Endpoint.from_dict(raw)
@@ -263,7 +264,7 @@ def create_app(settings: Settings, *, cli=None, authenticator=None):
             try:
                 address = resolver.resolve(ep.host).connect_host
                 for other in service['endpoints']:
-                    if other['kind'] == 'redis' and other['port'] == ep.port:
+                    if other['kind'] == kind and other['port'] == ep.port and connection_profile(other, kind) == connection_profile(raw, kind):
                         try:
                             if resolver.resolve(other['host']).connect_host == address:
                                 ids.add(other['id'])
@@ -273,23 +274,66 @@ def create_app(settings: Settings, *, cli=None, authenticator=None):
                 pass
         return sorted(ids)
 
+    def access_endpoint(service, data):
+        kind = data.get('kind', 'redis')
+        ids = credential_target(service, data)
+        if ids is None:
+            return Endpoint('localhost', 6379, kind, **service_connection(service, kind)), None
+        return Endpoint.from_dict(next(e for e in service['endpoints'] if e['id'] in ids)), ids
+
     @app.post('/api/services/<sid>/credentials')
     def service_unlock(sid):
         service, data = store.get(sid), body()
+        ep, ids = access_endpoint(service, data)
+        if ep.auth not in ('user', 'default'):
+            raise FarmError('Choose a service-specific authentication profile.', 'invalid_auth')
         password = data.get('password')
         validate_password(password)
-        ids = credential_target(service, data)
         invalidate(g.browser.id, service_id=sid)
-        sessions.set_default(g.browser.id, sid, password, ids)
+        sessions.set_access(g.browser.id, sid, ep, password, ids)
         return jsonify(credentials=sessions.credential_state(g.browser.id, service))
 
     @app.delete('/api/services/<sid>/credentials')
     def service_lock(sid):
         service, data = store.get(sid), body()
-        ids = credential_target(service, data)
+        ep, ids = access_endpoint(service, data)
         invalidate(g.browser.id, service_id=sid)
-        sessions.forget_default(g.browser.id, sid, ids)
+        sessions.forget_access(g.browser.id, sid, ep.kind, ids)
         return jsonify(credentials=sessions.credential_state(g.browser.id, service))
+
+    @app.post('/api/services/<sid>/connection')
+    def service_connection_edit(sid):
+        service, data = store.get(sid), body()
+        ep, ids = access_endpoint(service, data)
+        kind = ep.kind
+        config = connection_profile(data.get('connection', {}), kind)
+        password = data.get('password') or None
+        if password is not None:
+            validate_password(password)
+            if config['auth'] not in ('default', 'user'):
+                raise FarmError('A password requires a matching connection profile.', 'invalid_auth')
+        changed = []
+        old_profile = service_connection(service, kind)
+        for raw in service['endpoints']:
+            # Service edits update inheriting endpoints, not explicit overrides.
+            match = raw['kind'] == kind and (raw['id'] in ids if ids is not None else
+                    connection_profile(raw, kind) == old_profile)
+            changed.append({**raw, **config} if match else raw)
+        updated = {**service, 'endpoints': changed}
+        if ids is None:
+            updated[kind + '_connection'] = config
+            if kind == 'redis':
+                updated['auth_mode'] = config['auth']
+        updated['seed'] = next((e for e in changed if e['id'] == service['seed']['id']), service['seed'])
+        # Persist only allowlisted metadata, never the submitted password.
+        updated = store.save(updated, sid)
+        invalidate(g.browser.id, service_id=sid)
+        after = Endpoint(ep.host, ep.port, kind, **config)
+        if auth_identity(ep) != auth_identity(after):
+            sessions.forget_access(g.browser.id, sid, kind, ids if ids is not None else ['service'])
+        if password is not None:
+            sessions.set_access(g.browser.id, sid, after, password, ids)
+        return jsonify(service=updated, credentials=sessions.credential_state(g.browser.id, updated))
 
     @app.post('/api/session/touch')
     def touch():
@@ -360,21 +404,25 @@ def create_app(settings: Settings, *, cli=None, authenticator=None):
         if not isinstance(auto_add, bool):
             raise FarmError('auto_add must be true or false.', 'invalid_spec')
         owner = g.browser.id
-        secret = data.pop('default_password', None)
-        port = data.pop('password_port', plan['profile'].port)
-        if secret == '':
-            secret = None
-        if secret is not None and plan['profile'].auth != 'default':
-            raise FarmError('Default password requires the default profile.', 'invalid_auth')
-        if secret is not None:
-            from .models import validate_port
-            port = validate_port(port)
-            if port not in {ep.port for ep, hint in plan['probes'] if hint != 'sentinel'}:
-                raise FarmError('Password port must be a Redis port in the selected scan range.', 'invalid_port')
+        secret = data.pop('redis_password', data.pop('default_password', None)) or None
+        sentinel_secret = data.pop('sentinel_password', None) or None
+        from .models import validate_port
+        port = validate_port(data.pop('password_port', plan['profile'].port))
+        sentinel_ports = [ep.port for ep, hint in plan['probes'] if hint == 'sentinel']
+        sport = validate_port(data.pop('sentinel_password_port',
+                              sentinel_ports[0] if sentinel_ports else 26379))
+        if secret is not None and plan['profile'].auth not in ('default', 'user'):
+            raise FarmError('A password requires a matching connection profile.', 'invalid_auth')
+        if secret is not None and data.get('kind') != 'sentinel' and port not in {
+                ep.port for ep, hint in plan['probes'] if hint != 'sentinel'}:
+            raise FarmError('Password port must be a Redis port in the selected scan range.', 'invalid_port')
+        if sentinel_secret is not None and plan['sentinel_profile'].auth not in ('default', 'user'):
+            raise FarmError('A password requires a matching connection profile.', 'invalid_auth')
         credentials = DiscoveryCredentials(
             admin=sessions.password(owner) if plan['profile'].auth == 'admin' else None,
             seed=replace(plan['profile'], port=port), password=secret,
-            resolver=getattr(cli, 'resolver', None))
+            sentinel_seed=replace(plan['sentinel_profile'], port=sport), sentinel_password=sentinel_secret,
+            sentinel_seeds=plan['sentinel_seeds'], resolver=getattr(cli, 'resolver', None))
         token = sessions.hold_discovery(owner, credentials)
         def scan(owner, pw, cancel):
             return discovery.discover(data, pw, owner, cancel,
@@ -429,7 +477,9 @@ def create_app(settings: Settings, *, cli=None, authenticator=None):
     def command_snippets(sid, kind):
         if kind not in ('redis', 'sentinel'):
             raise FarmError('Unsupported console kind.', 'invalid_kind')
-        return jsonify(snippets=snippets(kind, store.get(sid), settings.redis_admin_user))
+        service = store.get(sid)
+        user = service_connection(service, kind).get('username') or settings.redis_admin_user
+        return jsonify(snippets=snippets(kind, service, user))
 
     @app.get('/api/terminals')
     def terminal_list():
@@ -449,9 +499,11 @@ def create_app(settings: Settings, *, cli=None, authenticator=None):
         service, ep = target(data)
         owner, generation = g.browser.id, g.browser.generation
         credentials = sessions.credentials(owner, service['id'])
+        if service['mode'] == 'cluster' and data.get('db', 0) not in (0, '0'):
+            raise FarmError('Redis Cluster supports DB 0 only.', 'invalid_db')
         terminal = terminals.open(owner, ep, password_for(credentials, ep),
                                   data.get('db', 0), data.get('cluster_redirect', False),
-                                  service_id=service['id'], profile=service_auth(service))
+                                  service_id=service['id'], profile='admin' if service_auth(service) in ('admin', 'user') else 'default')
         current = sessions.get(owner)
         if current is None or current.generation != generation:
             try:

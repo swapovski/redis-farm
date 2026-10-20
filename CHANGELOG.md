@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.2.0 - connections-r1 repository revision
+
+- Independent Redis/Sentinel credentials; shared Redis profile remains supported.
+- Named per-service/per-endpoint Redis users and separate Sentinel auth modes.
+- Independent TLS with optional client certificate/key paths.
+- Explicit extra Sentinel seeds/master filter; protected manual ports need a type.
+- Access-state categories, bilingual guidance, README and refreshed screenshots.
+- English slogan: All your Redis. One place. Leaf-grip image pickup with sway.
+- No automatic remote ACL changes, password persistence or movement of release tags.
+- Validation and limitations: docs/TEST_REPORT.md.
+
 ## 0.2.0
 
 GitHub publication includes a CI workflow for syntax checks, Python tests and bilingual demo screenshot generation, the catalog action buttons on one row, and LDAP sign-in screenshots in both READMEs.

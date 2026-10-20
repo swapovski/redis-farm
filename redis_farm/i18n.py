@@ -32,7 +32,7 @@ class Translator:
         if not text:
             return text
         # Raw Redis and resolver diagnostics remain exact for troubleshooting.
-        if code in ('redis_error', 'parse_error', 'dns_error', 'dns_timeout', 'dns_busy', 'cli_error'):
+        if code in ('redis_error', 'authentication_required', 'authentication_failed', 'permission_denied', 'unsupported_command', 'connection_failed', 'parse_error', 'dns_error', 'dns_timeout', 'dns_busy', 'cli_error'):
             return text
         if text in self.catalog:
             return self(text)

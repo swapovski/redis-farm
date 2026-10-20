@@ -15,6 +15,9 @@
           "tls": false,
           "cacert": "",
           "sni": "",
+          "username": "",
+          "certfile": "",
+          "keyfile": "",
           "id": "9bad7d1208881d79502ae099",
           "address": "192.0.2.11:6379"
         },
@@ -26,6 +29,9 @@
           "tls": false,
           "cacert": "",
           "sni": "",
+          "username": "",
+          "certfile": "",
+          "keyfile": "",
           "id": "a6ebb2e0f5abe87559803c8d",
           "address": "192.0.2.11:26379"
         },
@@ -37,6 +43,9 @@
           "tls": false,
           "cacert": "",
           "sni": "",
+          "username": "",
+          "certfile": "",
+          "keyfile": "",
           "id": "145ca20be106d0ab6aa3b66c",
           "address": "192.0.2.12:6379"
         },
@@ -48,6 +57,9 @@
           "tls": false,
           "cacert": "",
           "sni": "",
+          "username": "",
+          "certfile": "",
+          "keyfile": "",
           "id": "1cbb583785040f48189e5e56",
           "address": "192.0.2.12:26379"
         },
@@ -59,6 +71,9 @@
           "tls": false,
           "cacert": "",
           "sni": "",
+          "username": "",
+          "certfile": "",
+          "keyfile": "",
           "id": "4fd4749d24ecc8ece37ddbc7",
           "address": "192.0.2.13:6379"
         },
@@ -70,6 +85,9 @@
           "tls": false,
           "cacert": "",
           "sni": "",
+          "username": "",
+          "certfile": "",
+          "keyfile": "",
           "id": "a5def7330906d6e02d152616",
           "address": "192.0.2.13:26379"
         }
@@ -82,6 +100,9 @@
         "tls": false,
         "cacert": "",
         "sni": "",
+        "username": "",
+        "certfile": "",
+        "keyfile": "",
         "id": "9bad7d1208881d79502ae099",
         "address": "192.0.2.11:6379"
       },
@@ -122,6 +143,9 @@
           "tls": false,
           "cacert": "",
           "sni": "",
+          "username": "",
+          "certfile": "",
+          "keyfile": "",
           "id": "28c4abe11dbba2a64982fa28",
           "address": "192.0.2.11:6380"
         },
@@ -133,6 +157,9 @@
           "tls": false,
           "cacert": "",
           "sni": "",
+          "username": "",
+          "certfile": "",
+          "keyfile": "",
           "id": "c852bef6f2c58a70a0e70cc0",
           "address": "192.0.2.12:6380"
         },
@@ -144,6 +171,9 @@
           "tls": false,
           "cacert": "",
           "sni": "",
+          "username": "",
+          "certfile": "",
+          "keyfile": "",
           "id": "e27a731e88d9b819d7278bc5",
           "address": "192.0.2.13:6380"
         },
@@ -155,6 +185,9 @@
           "tls": false,
           "cacert": "",
           "sni": "",
+          "username": "",
+          "certfile": "",
+          "keyfile": "",
           "id": "57151bf3571f4390236b1b74",
           "address": "192.0.2.11:26380"
         },
@@ -166,6 +199,9 @@
           "tls": false,
           "cacert": "",
           "sni": "",
+          "username": "",
+          "certfile": "",
+          "keyfile": "",
           "id": "17b378576bdeaa5802b3172d",
           "address": "192.0.2.12:26380"
         },
@@ -177,6 +213,9 @@
           "tls": false,
           "cacert": "",
           "sni": "",
+          "username": "",
+          "certfile": "",
+          "keyfile": "",
           "id": "bd1727f50219a799eb523e56",
           "address": "192.0.2.13:26380"
         }
@@ -189,6 +228,9 @@
         "tls": false,
         "cacert": "",
         "sni": "",
+        "username": "",
+        "certfile": "",
+        "keyfile": "",
         "id": "28c4abe11dbba2a64982fa28",
         "address": "192.0.2.11:6380"
       },
@@ -214,6 +256,9 @@
           "tls": false,
           "cacert": "",
           "sni": "",
+          "username": "",
+          "certfile": "",
+          "keyfile": "",
           "id": "af8e4b8131154f476e7595fd",
           "address": "192.0.2.11:6381"
         },
@@ -225,6 +270,9 @@
           "tls": false,
           "cacert": "",
           "sni": "",
+          "username": "",
+          "certfile": "",
+          "keyfile": "",
           "id": "92af82c00372f8681ba87979",
           "address": "192.0.2.12:6381"
         },
@@ -236,6 +284,9 @@
           "tls": false,
           "cacert": "",
           "sni": "",
+          "username": "",
+          "certfile": "",
+          "keyfile": "",
           "id": "25879c33890df52b6e48fc60",
           "address": "192.0.2.13:6381"
         },
@@ -247,6 +298,9 @@
           "tls": false,
           "cacert": "",
           "sni": "",
+          "username": "",
+          "certfile": "",
+          "keyfile": "",
           "id": "4b73e9902465dacdc4f57ea5",
           "address": "192.0.2.11:26381"
         },
@@ -258,6 +312,9 @@
           "tls": false,
           "cacert": "",
           "sni": "",
+          "username": "",
+          "certfile": "",
+          "keyfile": "",
           "id": "e539c371a073af5844a700af",
           "address": "192.0.2.12:26381"
         },
@@ -269,6 +326,9 @@
           "tls": false,
           "cacert": "",
           "sni": "",
+          "username": "",
+          "certfile": "",
+          "keyfile": "",
           "id": "9f6a68718888ff1373760369",
           "address": "192.0.2.13:26381"
         }
@@ -281,6 +341,9 @@
         "tls": false,
         "cacert": "",
         "sni": "",
+        "username": "",
+        "certfile": "",
+        "keyfile": "",
         "id": "af8e4b8131154f476e7595fd",
         "address": "192.0.2.11:6381"
       },
@@ -306,6 +369,9 @@
           "tls": false,
           "cacert": "",
           "sni": "",
+          "username": "",
+          "certfile": "",
+          "keyfile": "",
           "id": "b60ec898f59dd41c226fcf20",
           "address": "198.51.100.21:7000"
         },
@@ -317,6 +383,9 @@
           "tls": false,
           "cacert": "",
           "sni": "",
+          "username": "",
+          "certfile": "",
+          "keyfile": "",
           "id": "b8e715eb45cdc77d4fd856cb",
           "address": "198.51.100.22:7000"
         },
@@ -328,6 +397,9 @@
           "tls": false,
           "cacert": "",
           "sni": "",
+          "username": "",
+          "certfile": "",
+          "keyfile": "",
           "id": "ff181a347546c3b93ef5d69e",
           "address": "198.51.100.23:7000"
         }
@@ -340,6 +412,9 @@
         "tls": false,
         "cacert": "",
         "sni": "",
+        "username": "",
+        "certfile": "",
+        "keyfile": "",
         "id": "b60ec898f59dd41c226fcf20",
         "address": "198.51.100.21:7000"
       },
@@ -365,6 +440,9 @@
           "tls": false,
           "cacert": "",
           "sni": "",
+          "username": "",
+          "certfile": "",
+          "keyfile": "",
           "id": "c727fae3c0c04b2b117fe042",
           "address": "203.0.113.31:6379"
         }
@@ -377,6 +455,9 @@
         "tls": false,
         "cacert": "",
         "sni": "",
+        "username": "",
+        "certfile": "",
+        "keyfile": "",
         "id": "c727fae3c0c04b2b117fe042",
         "address": "203.0.113.31:6379"
       },
@@ -402,6 +483,9 @@
           "tls": false,
           "cacert": "",
           "sni": "",
+          "username": "",
+          "certfile": "",
+          "keyfile": "",
           "id": "8897d8c1c5b24f1ce2a00d0f",
           "address": "203.0.113.41:6379"
         }
@@ -414,6 +498,9 @@
         "tls": false,
         "cacert": "",
         "sni": "",
+        "username": "",
+        "certfile": "",
+        "keyfile": "",
         "id": "8897d8c1c5b24f1ce2a00d0f",
         "address": "203.0.113.41:6379"
       },
@@ -435,6 +522,9 @@
           "tls": false,
           "cacert": "",
           "sni": "",
+          "username": "",
+          "certfile": "",
+          "keyfile": "",
           "id": "9bad7d1208881d79502ae099",
           "address": "192.0.2.11:6379"
         },
@@ -447,6 +537,9 @@
             "tls": false,
             "cacert": "",
             "sni": "",
+            "username": "",
+            "certfile": "",
+            "keyfile": "",
             "id": "9bad7d1208881d79502ae099",
             "address": "192.0.2.11:6379"
           }
@@ -514,6 +607,9 @@
           "tls": false,
           "cacert": "",
           "sni": "",
+          "username": "",
+          "certfile": "",
+          "keyfile": "",
           "id": "a6ebb2e0f5abe87559803c8d",
           "address": "192.0.2.11:26379"
         },
@@ -526,6 +622,9 @@
             "tls": false,
             "cacert": "",
             "sni": "",
+            "username": "",
+            "certfile": "",
+            "keyfile": "",
             "id": "a6ebb2e0f5abe87559803c8d",
             "address": "192.0.2.11:26379"
           }
@@ -593,6 +692,9 @@
           "tls": false,
           "cacert": "",
           "sni": "",
+          "username": "",
+          "certfile": "",
+          "keyfile": "",
           "id": "145ca20be106d0ab6aa3b66c",
           "address": "192.0.2.12:6379"
         },
@@ -605,6 +707,9 @@
             "tls": false,
             "cacert": "",
             "sni": "",
+            "username": "",
+            "certfile": "",
+            "keyfile": "",
             "id": "145ca20be106d0ab6aa3b66c",
             "address": "192.0.2.12:6379"
           }
@@ -672,6 +777,9 @@
           "tls": false,
           "cacert": "",
           "sni": "",
+          "username": "",
+          "certfile": "",
+          "keyfile": "",
           "id": "1cbb583785040f48189e5e56",
           "address": "192.0.2.12:26379"
         },
@@ -684,6 +792,9 @@
             "tls": false,
             "cacert": "",
             "sni": "",
+            "username": "",
+            "certfile": "",
+            "keyfile": "",
             "id": "1cbb583785040f48189e5e56",
             "address": "192.0.2.12:26379"
           }
@@ -751,6 +862,9 @@
           "tls": false,
           "cacert": "",
           "sni": "",
+          "username": "",
+          "certfile": "",
+          "keyfile": "",
           "id": "4fd4749d24ecc8ece37ddbc7",
           "address": "192.0.2.13:6379"
         },
@@ -763,6 +877,9 @@
             "tls": false,
             "cacert": "",
             "sni": "",
+            "username": "",
+            "certfile": "",
+            "keyfile": "",
             "id": "4fd4749d24ecc8ece37ddbc7",
             "address": "192.0.2.13:6379"
           }
@@ -830,6 +947,9 @@
           "tls": false,
           "cacert": "",
           "sni": "",
+          "username": "",
+          "certfile": "",
+          "keyfile": "",
           "id": "a5def7330906d6e02d152616",
           "address": "192.0.2.13:26379"
         },
@@ -842,6 +962,9 @@
             "tls": false,
             "cacert": "",
             "sni": "",
+            "username": "",
+            "certfile": "",
+            "keyfile": "",
             "id": "a5def7330906d6e02d152616",
             "address": "192.0.2.13:26379"
           }
@@ -930,6 +1053,9 @@
         "tls": false,
         "cacert": "",
         "sni": "",
+        "username": "",
+        "certfile": "",
+        "keyfile": "",
         "id": "9bad7d1208881d79502ae099",
         "address": "192.0.2.11:6379"
       },
@@ -941,6 +1067,9 @@
         "tls": false,
         "cacert": "",
         "sni": "",
+        "username": "",
+        "certfile": "",
+        "keyfile": "",
         "id": "a6ebb2e0f5abe87559803c8d",
         "address": "192.0.2.11:26379"
       },
@@ -952,6 +1081,9 @@
         "tls": false,
         "cacert": "",
         "sni": "",
+        "username": "",
+        "certfile": "",
+        "keyfile": "",
         "id": "145ca20be106d0ab6aa3b66c",
         "address": "192.0.2.12:6379"
       },
@@ -963,6 +1095,9 @@
         "tls": false,
         "cacert": "",
         "sni": "",
+        "username": "",
+        "certfile": "",
+        "keyfile": "",
         "id": "1cbb583785040f48189e5e56",
         "address": "192.0.2.12:26379"
       },
@@ -974,6 +1109,9 @@
         "tls": false,
         "cacert": "",
         "sni": "",
+        "username": "",
+        "certfile": "",
+        "keyfile": "",
         "id": "4fd4749d24ecc8ece37ddbc7",
         "address": "192.0.2.13:6379"
       },
@@ -985,6 +1123,9 @@
         "tls": false,
         "cacert": "",
         "sni": "",
+        "username": "",
+        "certfile": "",
+        "keyfile": "",
         "id": "a5def7330906d6e02d152616",
         "address": "192.0.2.13:26379"
       }
@@ -1004,6 +1145,9 @@
       "tls": false,
       "cacert": "",
       "sni": "",
+      "username": "",
+      "certfile": "",
+      "keyfile": "",
       "id": "9bad7d1208881d79502ae099",
       "address": "192.0.2.11:6379"
     },

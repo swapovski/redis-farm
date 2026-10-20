@@ -8,7 +8,7 @@ import threading
 import time
 import uuid
 from pathlib import Path
-from .models import FarmError, clean_service, Endpoint, host_display_policy, service_auth
+from .models import FarmError, clean_service, Endpoint, host_display_policy, service_auth, service_connection
 
 
 class Inventory:
@@ -63,7 +63,7 @@ class Inventory:
                         addresses[host] = str(ipaddress.ip_address(self.resolver.resolve(host).connect_host))
                     except (FarmError, OSError, ValueError):
                         pass
-        return ep['kind'], addresses[host], ep['port']
+        return (ep['kind'], addresses[host], ep['port'], ep.get('auth', 'admin'), ep.get('username', ''))
 
     def _matches(self, a, b, addresses=None):
         addresses = {} if addresses is None else addresses
@@ -115,7 +115,9 @@ class Inventory:
                     if candidate['mode'] == 'sentinel' and clean['mode'] != 'sentinel':
                         clean = {**clean, 'mode': candidate['mode'],
                                  'master_name': candidate['master_name'], 'seed': candidate['seed']}
-                    clean = {**clean, 'endpoints': list(merged.values())}
+                    clean = {**clean, 'endpoints': list(merged.values()),
+                             'redis_connection': service_connection(candidate, 'redis'),
+                             'sentinel_connection': service_connection(candidate, 'sentinel')}
                     if preserve_labels:
                         # Explicit non-empty scan group assigns the cluster folder.
                         # Empty group keeps a previously assigned folder.
@@ -157,7 +159,7 @@ class Inventory:
                     continue
                 known.add(key)
                 if len(merged) < self.max_nodes or item.id in merged:
-                    merged[item.id] = item.to_dict()
+                    merged.setdefault(item.id, item.to_dict())
             if len(merged) == len(existing['endpoints']):
                 return existing
             return self.save({**existing, 'endpoints': list(merged.values())}, sid)

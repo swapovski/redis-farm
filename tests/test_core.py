@@ -257,7 +257,7 @@ class TopologyTests(unittest.TestCase):
         self.discovery=Discovery(self.cli,self.settings)
 
     def discover(self, **spec):
-        return self.discovery.discover({'host':'redis-b.example','ports':'6389',**spec},'fixture-password','owner',threading.Event())
+        return self.discovery.discover({'host':'redis-b.example','ports':'6389','kind':'redis',**spec},'fixture-password','owner',threading.Event())
 
     def test_discovery_from_replica_finds_sentinel_and_all_nodes(self):
         result=self.discover()
@@ -293,8 +293,12 @@ class TopologyTests(unittest.TestCase):
 
     def test_wrong_password_does_not_switch_to_open_profile(self):
         result=self.discovery.discover({'host':'redis-a.example','ports':'6389','kind':'redis'},'wrong','owner',threading.Event())
-        self.assertFalse(result['services']);self.assertTrue(result['errors'])
-        self.assertFalse(any(ep.auth=='none' for ep,cmd,out in self.cli.calls))
+        # Explicit Redis type may be saved as locked; credentials are not changed.
+        self.assertTrue(result['services'])
+        self.assertTrue(all(not row['reachable'] for item in result['services'] for row in item['observations']))
+        self.assertTrue(all(ep['auth']=='admin' for item in result['services'] for ep in item['service']['endpoints']))
+        self.assertEqual(self.cli.calls[0][0].auth,'none')
+        self.assertTrue(all(ep.auth=='admin' for ep,cmd,out in self.cli.calls[1:]))
 
     def test_snapshot_counts_views_acl_and_memory(self):
         found=self.discover()['services'][0]['service'];found['id']='svc'

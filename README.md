@@ -1,13 +1,11 @@
 # Redis Farm 0.2.0
 
-<!-- redis-farm:badges:start -->
-[![CI](https://github.com/swapovski/redis-farm/actions/workflows/ci.yml/badge.svg?branch=main&event=push)](https://github.com/swapovski/redis-farm/actions/workflows/ci.yml)
-[![Python 3.10+](https://img.shields.io/badge/Python-3.10%2B-blue?logo=python&logoColor=white)](#requirements)
-[![Code license: MIT](https://img.shields.io/badge/Code%20license-MIT-green)](LICENSE)
-[![GitHub stars](https://img.shields.io/github/stars/swapovski/redis-farm?style=flat)](https://github.com/swapovski/redis-farm/stargazers)
-<!-- redis-farm:badges:end -->
+[![CI](https://github.com/swapovski/redis-farm/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/swapovski/redis-farm/actions/workflows/ci.yml)
+[![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-blue)](https://www.python.org/)
+[![Code license: MIT](https://img.shields.io/badge/code_license-MIT-green)](LICENSE)
+[![GitHub stars](https://img.shields.io/github/stars/swapovski/redis-farm)](https://github.com/swapovski/redis-farm/stargazers)
 
-**All your Redis in one garden.** A Flask web workspace for administrators of Redis, Redis Sentinel and Redis Cluster. Every Redis operation is executed by a local `redis-cli` process: no SSH agent, redis-py or separate network Redis client.
+**All your Redis. One place.** A Flask web workspace for administrators of Redis, Redis Sentinel and Redis Cluster. Every Redis operation is executed by a local `redis-cli` process: no SSH agent, redis-py or separate network Redis client.
 
 [Russian / Русский](README.ru.md) · [Troubleshooting](docs/TROUBLESHOOTING.md) · [Architecture](docs/ARCHITECTURE.md) · [Test report](docs/TEST_REPORT.md)
 
@@ -41,6 +39,12 @@ Example of the application JavaScript template.
 <details><summary>LDAP sign-in</summary>
 
 ![LDAP sign-in](docs/images/login-en.png)
+
+</details>
+
+<details><summary>Sentinel access</summary>
+
+![Sentinel authentication and transport](docs/images/sentinel-access-en.png)
 
 </details>
 
@@ -172,17 +176,49 @@ Authentication binds directly as `<attribute>=<login>,<BASE_DN>`, then checks me
 
 This is DN-based LDAP with group `member` checks; it is not an OIDC/SAML provider or automatic Active Directory UPN discovery. Existing sessions are not continuously revalidated against directory group changes. Sign out/session expiry ends access; restart the panel for immediate invalidation of all its sessions.
 
-## Redis access and everyday use
+## Redis and Sentinel connection profiles
 
-The **named-user tab** is `admin` by default, or the configured username such as `operations`. The UI label and `redis-cli --user` change together. The internal catalog profile remains stable so upgrades do not rewrite identities. One named username is configured per installation.
+The named-user tab keeps the installation's shared Redis user (default `admin`). Existing services still use this account and one shared password per browser session. A service or endpoint may instead use **Username and password**, **Password** (the Redis `default` user), or **No authentication**. Named overrides stay in the named-user catalog; password-only and open Redis services stay in the default catalog.
 
-The **default** tab sends a password without `--user`. It has separate service passwords and optional per-endpoint overrides; the latter take precedence. Switching tabs does not open a password dialog. Select a locked service/instance or use its access button. The admin password is not required for default.
+### One shared Redis account, open Sentinel
 
-Choose Add node/cluster, enter a hostname/IP and optional group. Discover from a node or specify exact ports. After successful saving, use **Go to catalog**. Select the service, then a particular Redis or Sentinel port. An open console remains bound to its starting connection until explicitly reopened; selecting another card does not silently move it.
+Keep **Global Redis user** for Redis and **No authentication** for Sentinel. Enter the shared Redis password once. This is the unchanged default for older catalogs; existing Sentinel entries are not silently given Redis credentials.
 
-All Redis access uses the CLI. Passwords reside only in process memory per web session, passed via the environment of the appropriate child process, not through URLs or `-a`. The app does not persist them in SQLite, cookies, browser storage, connectors or exports. LDAP passwords are used only for login and never as Redis passwords. Redis CLI history files are disabled. Operating-system swap, core dumps and external monitoring remain deployment considerations.
+### Different users or passwords between services
 
-The catalog is shared, while credentials and terminal buffers are session-specific. Export/import includes non-secret catalog settings. Sentinel is currently supported **without Sentinel authentication**. Per-service TLS supports `--tls`, CA and SNI, not client-certificate mTLS. Persistent consoles are line-oriented stdin/stdout, not a full PTY or SSH shell.
+Select a service, open **Connection settings**, choose **Redis** and the scope **Entire service**, then select **Username and password**. Enter the account name, optionally enter its password for this session, and click **Apply**. To override one node, select its endpoint in the scope selector instead. The **Access** button above the console opens settings for that selected endpoint.
+
+Changing the service profile updates endpoints still inheriting the old profile; explicit endpoint overrides are kept. A specific password takes priority over the common service password. The global Redis account is used only when explicitly selected—failed passwords are not retried with another account. The panel changes connection metadata, not Redis users, ACLs or passwords.
+
+### Sentinel authentication
+
+Sentinel has an independent profile with **No authentication**, **Password**, and **Username and password**. Set it in **Sentinel connection** when adding a service, or open **Connection settings → Sentinel** later. Its password is never taken from Redis, even if both accounts have the same name. For a different Sentinel node password, select that endpoint's scope. This configures **Redis Farm → Sentinel**, not the Sentinel daemon's credentials for connecting to Redis.
+
+During node scanning, optional passwords are bound to their selected Redis or Sentinel port; the two protocols do not share them. Related peers discovered within the same topology can inherit that protocol's profile. Other independent ports need their own credentials. A locked endpoint can be saved before a password is available. Changing its access settings and refreshing obtains available diagnostics; repeat discovery with access to reconcile the full service topology and service type.
+
+For **manual ports with authentication**, explicitly choose Redis or Sentinel as the entry type. A server returning `NOAUTH` before identification cannot safely be classified by port number; the panel will ask for an explicit type rather than try both sets of credentials. Host/range mode already distinguishes the Redis and Sentinel ranges.
+
+Under **Separate Sentinel hosts / master group**, enter one explicit `host:port` per line and optionally a master name. Those Sentinel seeds use the selected Sentinel credentials and are checked at the exact listed ports, not scanned across a new host range. Independent master groups remain separate catalog services. This release has no shared reusable Sentinel-profile object across different catalog services; credentials are kept per service/endpoint.
+
+### Separate TLS profiles
+
+Redis and Sentinel each have their own TCP/TLS switch, CA path, SNI name and optional client certificate/private-key paths (`--cert` / `--key`). Supply both client files for mutual TLS. These are paths on the machine running Redis Farm, not paths on the browser's computer. They do not configure the panel's HTTPS or LDAP TLS.
+
+The application never uploads private-key contents into the catalog. TLS certificate/key files remain files provisioned by the administrator, not session passwords. Protect them with appropriate OS permissions. Certificate validation is not disabled automatically.
+
+### Password lifetime and access states
+
+Usernames, endpoint addresses and transport settings are shared catalog metadata. **Redis and Sentinel passwords exist only in the panel process's memory, isolated by browser session, service, protocol and endpoint.** Passwords are not written to SQLite, cookies, localStorage, connectors, exports or command-line arguments. The child CLI receives `REDISCLI_AUTH` in its private environment; CLI file history remains disabled. OS swap, core dumps and external diagnostics require separate operational controls.
+
+**Apply** accepts connection settings and, when supplied, the session password. An empty password does not erase an existing matching secret. **Forget password** removes session credentials for that scope; it never changes a remote password. Changing a username cannot reuse another username's secret. Logout/session expiry/restart clears the session's secrets and consoles.
+
+The interface distinguishes **Password required**, **Authentication failed**, **Command not permitted**, **Command not supported**, and connection failure. An `INFO` permission error is not reported as proof that a Redis process is down. Metadata may still be unavailable without the permissions required by that view. Raw CLI responses remain untranslated; the panel's status categories and guidance are localized.
+
+The console remains attached to its chosen endpoint. Redis Cluster consoles accept database **0** only. Commands such as `CONNECT`, `SELECT` and CLI `-c` redirects still execute inside the CLI; they do not inherit application-side address rewriting or redefine an existing terminal's original metadata.
+
+### Image Easter egg
+
+Hold the left mouse button on any of the three illustrations to lift it by its leaves. The natural-sized copy follows the pointer and sways around the grip; the original returns on release, Escape or loss of focus. Normal hover does nothing. Motion respects reduced-motion preferences. This changes no Redis state.
 
 ## Updating an existing installation
 

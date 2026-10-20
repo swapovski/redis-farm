@@ -10,7 +10,7 @@
     return String(value).replace(/\{(\d+)\}/g,(m,i)=>Number(i)<args.length ? String(args[Number(i)]) : m);
   }
   function error(text, code) {
-    if (['redis_error','parse_error','dns_error','dns_timeout','dns_busy','cli_error'].includes(code)) return text;
+    if (['redis_error','authentication_required','authentication_failed','permission_denied','unsupported_command','connection_failed','parse_error','dns_error','dns_timeout','dns_busy','cli_error'].includes(code)) return text;
     return Object.prototype.hasOwnProperty.call(messages,text) ? t(text) : (errors[code] || text);
   }
   window.RFI18n = {t, error, locale:config.language==='ru'?'ru-RU':'en-US'};

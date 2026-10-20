@@ -11,6 +11,7 @@ import threading
 import time
 from .models import Endpoint, FarmError
 from .settings import Settings
+from .credentials import required_error
 from .resolver import HostResolver, ResolutionError
 
 
@@ -77,11 +78,10 @@ class RedisCLI:
         env['REDISCLI_HISTFILE'] = os.devnull
         env['REDISCLI_RCFILE'] = os.devnull
         env['TERM'] = 'dumb'
-        if endpoint.kind == 'redis' and endpoint.auth in ('admin', 'default'):
+        if endpoint.auth != 'none':
             if password is None:
-                if endpoint.auth == 'default':
-                    raise CliError('Enter the default password for this service or instance.', 'default_password_required', 401)
-                raise CliError('Enter the password.', 'password_required', 401)
+                exc = required_error(endpoint)
+                raise CliError(str(exc), exc.code, exc.status)
             env['REDISCLI_AUTH'] = password
         return env
 
@@ -106,10 +106,14 @@ class RedisCLI:
         args = [self.path, '-h', ip, '-p', str(endpoint.port)]
         if endpoint.kind == 'redis' and endpoint.auth == 'admin':
             args += ['--user', self.settings.redis_admin_user]
+        elif endpoint.auth == 'user':
+            args += ['--user', endpoint.username]
         if endpoint.tls:
             args += ['--tls']
             if endpoint.cacert:
                 args += ['--cacert', endpoint.cacert]
+            if endpoint.certfile:
+                args += ['--cert', endpoint.certfile, '--key', endpoint.keyfile]
             # Preserve explicit SNI; otherwise retain the hostname when -h becomes an IP.
             sni = endpoint.sni or (endpoint.host if resolution.source in ('dns', 'system_fallback') else '')
             if sni:
@@ -130,6 +134,17 @@ class RedisCLI:
         if password:
             text = text.replace(password, '[hidden]')
         return text[:1600]
+
+    @classmethod
+    def reply_error(cls, text, password=None):
+        upper = text.upper()
+        code = ('authentication_failed' if any(v in upper for v in ('WRONGPASS', 'AUTH FAILED', 'INVALID PASSWORD')) else
+                'authentication_required' if 'NOAUTH' in upper else
+                'permission_denied' if 'NOPERM' in upper else
+                'unsupported_command' if 'UNKNOWN COMMAND' in upper else
+                'connection_failed' if any(v in upper for v in ('COULD NOT CONNECT', 'CONNECTION REFUSED', 'CONNECTION RESET')) else
+                'redis_error')
+        return CliError(cls._safe_error(text, password), code, 502)
 
     def run(self, endpoint: Endpoint, command: list[str], password: str | None, *,
             output: str = 'raw', owner: str | None = None,
@@ -158,10 +173,10 @@ class RedisCLI:
             text = stdout.decode('utf-8', 'replace').strip()
             error = stderr.decode('utf-8', 'replace').strip()
             if process.returncode != 0 or 'AUTH failed' in error:
-                raise CliError(self._safe_error(error or text or 'redis-cli exited with an error.', password), 'redis_error', 502)
+                raise self.reply_error(error or text or 'redis-cli exited with an error.', password)
             # Older CLI builds may return zero for Redis errors. Do not mark them successful.
             if text.startswith(('NOAUTH ', 'WRONGPASS ', 'NOPERM ', 'ERR ', '(error) ', 'error:')):
-                raise CliError(self._safe_error(text, password), 'redis_error', 502)
+                raise self.reply_error(text, password)
             if output == 'json':
                 try:
                     value = json.loads(text)
@@ -169,7 +184,7 @@ class RedisCLI:
                     raise CliError(self._safe_error('Invalid JSON reply from redis-cli: ' + text[:250], password),
                                    'parse_error', 502) from None
                 if isinstance(value, dict) and set(value) == {'error'}:
-                    raise CliError(self._safe_error(str(value['error']), password), 'redis_error', 502)
+                    raise self.reply_error(str(value['error']), password)
             else:
                 value = text
             return Reply(value, round((time.monotonic() - started) * 1000, 1), connection)

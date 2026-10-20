@@ -8,7 +8,7 @@ from dataclasses import replace
 import ipaddress
 import threading
 from .cli import RedisCLI, CliError
-from .models import Endpoint, FarmError, sentinel_port, parse_ports, clean_service, validate_port
+from .models import Endpoint, FarmError, sentinel_port, parse_ports, clean_service, validate_port, connection_profile
 from .parsers import info, pairs, replicas, cluster_nodes
 from .settings import Settings
 from .display import HostLabels, literal_ip
@@ -38,10 +38,25 @@ class Discovery:
         kind, auth = spec.get('kind', 'auto'), spec.get('auth', 'admin')
         if kind not in ('auto', 'redis', 'sentinel'):
             raise FarmError('Choose auto, redis or sentinel.', 'invalid_kind')
-        if auth not in ('admin', 'default', 'none'):
+        if auth not in ('admin', 'user', 'default', 'none'):
             raise FarmError('Choose admin, default or no authentication.', 'invalid_auth')
-        profile = Endpoint(spec.get('host', ''), 6379, 'redis', auth,
-                           spec.get('tls', False), spec.get('cacert', ''), spec.get('sni', ''))
+        redis_data = spec.get('redis_connection', {k: spec[k] for k in
+                          ('auth', 'username', 'tls', 'cacert', 'sni', 'certfile', 'keyfile') if k in spec})
+        redis_config = connection_profile(redis_data, 'redis')
+        sentinel_config = connection_profile(spec.get('sentinel_connection', {'auth': 'none'}), 'sentinel')
+        profile = Endpoint(spec.get('host', ''), 6379, 'redis', **redis_config)
+        sentinel_profile = Endpoint(profile.host, 26379, 'sentinel', **sentinel_config)
+        master = spec.get('sentinel_master', '')
+        if not isinstance(master, str) or len(master) > 256 or any(ord(c) < 32 for c in master):
+            raise FarmError('Invalid Sentinel master group name.', 'invalid_service')
+        seeds_data = spec.get('sentinel_endpoints', [])
+        if not isinstance(seeds_data, list) or len(seeds_data) > 32:
+            raise FarmError('Provide at most 32 explicit Sentinel endpoints.', 'invalid_endpoint')
+        sentinel_seeds = []
+        for value in seeds_data:
+            if not isinstance(value, dict):
+                raise FarmError('Invalid Sentinel endpoint.', 'invalid_endpoint')
+            sentinel_seeds.append(Endpoint(value.get('host', ''), value.get('port', 26379), 'sentinel', **sentinel_config))
         if not isinstance(spec.get('find_sentinel', True), bool):
             raise FarmError('find_sentinel must be true or false.', 'invalid_spec')
         ranges = None
@@ -57,7 +72,7 @@ class Discovery:
                 for offset, port in enumerate(range(start, end + 1)):
                     targets[port] = (offset, 'auto' if port in targets else family)
             ordered = sorted(targets.items(), key=lambda x: (x[1][0], x[0]))
-            probes = [(replace(profile, port=port), hint) for port, (_, hint) in ordered]
+            probes = [(replace(sentinel_profile if hint == 'sentinel' else profile, port=port), hint) for port, (_, hint) in ordered]
         else:
             ports = parse_ports(supplied if supplied is not None else '', self.settings.max_scan_ports)
             explicit = spec.get('sentinel_port')
@@ -65,12 +80,16 @@ class Discovery:
                 validate_port(explicit)
                 if len(ports) != 1:
                     raise FarmError('Explicit Sentinel port requires a single Redis seed port.', 'invalid_port')
-            probes = [(replace(profile, port=port), kind) for port in ports]
-        return {'mode': mode, 'profile': profile, 'probes': probes, 'ranges': ranges}
+            probes = [(replace(sentinel_profile if kind == 'sentinel' else profile, port=port), kind) for port in ports]
+        probes += [(ep, 'sentinel') for ep in sentinel_seeds if ep.id not in {p.id for p, _ in probes}]
+        return {'mode': mode, 'profile': profile, 'probes': probes, 'ranges': ranges,
+                'sentinel_profile': sentinel_profile, 'sentinel_seeds': sentinel_seeds}
 
     def discover(self, spec, password, owner, cancel, progress=None):
         plan = self.plan(spec)
-        ctx = _Probe(self.cli, self.settings, password, owner, cancel)
+        ctx = _Probe(self.cli, self.settings, password, owner, cancel,
+                     redis_profile=plan['profile'], sentinel_profile=plan['sentinel_profile'],
+                     sentinel_seeds=plan['sentinel_seeds'], master_name=spec.get('sentinel_master', ''))
         status = {'phase': 'scan', 'completed': 0, 'total': len(plan['probes']),
                   'redis_found': 0, 'sentinel_found': 0, 'topology_completed': 0,
                   'topology_total': 0, 'services_found': 0, 'current': ''}
@@ -116,7 +135,8 @@ class Discovery:
             report(current=seed.address)
             try:
                 if seed.kind == 'sentinel':
-                    found = ctx.from_sentinel(seed, plan['profile'])
+                    found = ([ctx._service(seed, 'standalone', {seed.id: seed})] if hit.get('locked')
+                             else ctx.from_sentinel(seed, plan['profile']))
                 else:
                     known_ids = {e['id'] for s in services for e in s['endpoints'] if e['kind'] == 'redis'}
                     known_runs = {ctx.observe(Endpoint.from_dict(e)).get('run_id')
@@ -154,7 +174,9 @@ class Discovery:
         previews = []
         for service in services[:self.settings.max_services]:
             check_cancel()
-            clean = clean_service({**service, 'display_seed_host': plan['profile'].host}, self.settings.max_nodes)
+            clean = clean_service({**service, 'display_seed_host': plan['profile'].host,
+                'redis_connection': connection_profile(plan['profile'].to_dict()),
+                'sentinel_connection': connection_profile(plan['sentinel_profile'].to_dict(), 'sentinel')}, self.settings.max_nodes)
             observations = [dict(ctx.observe(Endpoint.from_dict(v))) for v in clean['endpoints']]
             # Only the entered host is an explicit user name. Peer names from
             # Sentinel/INFO are not labels, and no PTR request is made.
@@ -177,24 +199,30 @@ class Discovery:
 
     def _classify(self, ctx, seed, hint, mode):
         timeout = self.settings.scan_timeout if mode == 'node' else None
-        ep = replace(seed, kind='sentinel', auth='none') if hint == 'sentinel' else seed
-        unauth = mode == 'node' or hint == 'auto' or seed.auth == 'default'
-        probe = replace(ep, auth='none') if unauth else ep
+        ep = ctx.as_kind(seed, 'sentinel') if hint == 'sentinel' else seed
+        probe = replace(ep, auth='none', username='')
         try:
             data = info(ctx.run(probe, ['INFO', 'SERVER'], timeout=timeout))
-        except CliError as exc:
-            if hint == 'sentinel' or not unauth or 'NOAUTH' not in str(exc).upper():
+        except FarmError as exc:
+            auth_related = exc.code == 'authentication_required' or 'NOAUTH' in str(exc).upper()
+            if not auth_related:
                 raise
+            if hint == 'auto':
+                raise FarmError('Choose Redis or Sentinel explicitly for a protected port.', 'endpoint_type_required')
+            # A protected port cannot prove its type before authentication.
+            # Use the explicit type/range hint, never try the other protocol's secret.
             try:
-                data = info(ctx.run(seed, ['INFO', 'SERVER'], timeout=timeout))
+                data = info(ctx.run(ep, ['INFO', 'SERVER'], timeout=timeout))
             except FarmError as auth_error:
-                if seed.auth != 'default' or not (auth_error.code == 'default_password_required' or
-                        any(v in str(auth_error).upper() for v in ('WRONGPASS', 'NOAUTH', 'AUTH FAILED', 'INVALID PASSWORD'))):
-                    raise
-                return {'endpoint': seed, 'data': {}, 'locked': True}
+                if auth_error.code in ('password_required', 'default_password_required', 'sentinel_password_required',
+                                       'authentication_failed', 'authentication_required', 'permission_denied') or any(
+                        v in str(auth_error).upper() for v in ('WRONGPASS', 'NOAUTH', 'AUTH FAILED', 'NOPERM')):
+                    return {'endpoint': ep, 'data': {}, 'locked': True}
+                raise
         if not data.get('redis_version'):
             raise FarmError('Port did not return Redis INFO metadata.', 'not_redis')
-        ep = replace(seed, kind='sentinel', auth='none') if data.get('redis_mode') == 'sentinel' else seed
+        actual = 'sentinel' if data.get('redis_mode') == 'sentinel' else 'redis'
+        ep = ctx.as_kind(seed, actual)
         return {'endpoint': ep, 'data': data}
 
     @staticmethod
@@ -205,7 +233,7 @@ class Discovery:
             for value in redis or service['endpoints']:
                 ep = Endpoint.from_dict(value)
                 result.add(('endpoint', ep.id))
-                if ep.auth == 'default':
+                if ep.auth in ('default', 'user'):
                     result.add(('physical', ctx.physical_key(ep)))
                 run_id = ctx.observe(ep).get('run_id')
                 if run_id:
@@ -248,8 +276,13 @@ class Discovery:
 
 
 class _Probe:
-    def __init__(self, cli, settings, password, owner, cancel):
+    def __init__(self, cli, settings, password, owner, cancel, *, redis_profile=None,
+                 sentinel_profile=None, sentinel_seeds=(), master_name=''):
         self.cli, self.settings, self.password, self.owner, self.cancel = cli, settings, password, owner, cancel
+        self.redis_profile = redis_profile
+        self.sentinel_profile = sentinel_profile
+        self.sentinel_seeds = sentinel_seeds
+        self.master_name = master_name
         self.lock = threading.RLock()
         self.cache = {}
         self.observations = {}
@@ -257,6 +290,12 @@ class _Probe:
         self.notes = []
         self.limited = False
         self.touched = set()
+
+    def as_kind(self, ep, kind):
+        template = self.sentinel_profile if kind == 'sentinel' else self.redis_profile
+        if template is None:
+            return ep if ep.kind == kind else ep.peer(ep.host, ep.port, kind)
+        return template.peer(ep.host, ep.port, kind)
 
     def run(self, ep, command, output='raw', timeout=None):
         if self.cancel.is_set():
@@ -285,7 +324,8 @@ class _Probe:
             self.cache[key] = result
             return result
         except FarmError as exc:
-            if exc.code != 'default_password_required':
+            if exc.code not in ('password_required', 'default_password_required', 'sentinel_password_required',
+                                'authentication_required', 'authentication_failed'):
                 self.cache[key] = exc
             raise
 
@@ -304,14 +344,14 @@ class _Probe:
             if exc.code == 'cancelled':
                 raise
             result = {'endpoint': ep.to_dict(), 'reachable': False, 'role': 'unknown',
-                      'version': '', 'run_id': '', 'error': str(exc), 'info': {}}
-        if not (ep.auth == 'default' and not result['reachable']):
+                      'version': '', 'run_id': '', 'error': str(exc), 'error_code': exc.code, 'info': {}}
+        if result['reachable'] or ep.auth == 'none':
             self.observations[ep] = result
         return result
 
     def physical_key(self, ep):
         resolver = getattr(self.cli, 'resolver', None)
-        if ep.auth == 'default' and resolver is not None:
+        if ep.auth in ('default', 'user') and resolver is not None:
             try:
                 return (ep.kind, resolver.resolve(ep.host).connect_host, ep.port)
             except FarmError:
@@ -328,7 +368,7 @@ class _Probe:
     def from_redis(self, seed, find_sentinel=True, explicit_port=None):
         data = info(self.run(seed, ['INFO']))
         if data.get('redis_mode') == 'sentinel':
-            return self.from_sentinel(replace(seed, kind='sentinel', auth='none'), seed)
+            return self.from_sentinel(self.as_kind(seed, 'sentinel'), seed)
         if data.get('cluster_enabled') == '1' or data.get('redis_mode') == 'cluster':
             endpoints = {seed.id: seed}
             pending, visited = [seed], set()
@@ -376,12 +416,12 @@ class _Probe:
                 if self._add(endpoints, peer) and peer.id not in visited:
                     queue.append(peer)
         if find_sentinel:
-            candidates = []
+            candidates = list(self.sentinel_seeds)
             for ep in list(endpoints.values()):
                 sport = explicit_port or sentinel_port(ep.port)
                 if sport:
-                    # Sentinel endpoints have their own authentication policy (none).
-                    candidates.append(ep.peer(ep.host, sport, 'sentinel'))
+                    # Sentinel endpoints have a separately configured access policy.
+                    candidates.append(self.as_kind(ep.peer(ep.host, sport, 'sentinel'), 'sentinel'))
             for sentinel in candidates:
                 try:
                     result = self.from_sentinel(sentinel, seed,
@@ -412,7 +452,7 @@ class _Probe:
         for raw in masters:
             master = pairs(raw)
             name = str(master.get('name', ''))
-            if not name:
+            if not name or (self.master_name and name != self.master_name):
                 continue
             reps = self._replicas(sentinel, name)
             if redis_ids is not None:
@@ -440,6 +480,8 @@ class _Probe:
                         row = pairs(raw_peer)
                         if row.get('ip') and row.get('port'):
                             peer = current.peer(row['ip'], row['port'], 'sentinel')
+                            if isinstance(self.password, DiscoveryCredentials):
+                                self.password.inherit(current, peer)
                             if self._add(endpoints, peer) and peer.id not in visited:
                                 pending.append(peer)
                 except FarmError as exc:
@@ -471,7 +513,7 @@ class _Probe:
         for ep in endpoints.values():
             obs = self.observe(ep)
             run_id = obs.get('run_id')
-            key = self.physical_key(ep) if ep.auth == 'default' else None
+            key = self.physical_key(ep) if ep.auth in ('default', 'user') else None
             if key is not None and key in physical:
                 continue
             if run_id and (ep.kind, run_id) in seen:

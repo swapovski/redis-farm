@@ -1,6 +1,6 @@
 {
   "Весь редис на одной грядке": {
-    "en": "All your Redis in one garden",
+    "en": "All your Redis. One place.",
     "ru": "Весь редис на одной грядке"
   },
   "Пароли сервиса": {
@@ -1450,5 +1450,301 @@
   "Installation complete. Run: ./start.sh": {
     "en": "Installation complete. Run: ./start.sh",
     "ru": "Установка завершена. Запуск: ./start.sh"
+  },
+  "Connection settings": {
+    "en": "Connection settings",
+    "ru": "Настройки подключения"
+  },
+  "Access": {
+    "en": "Access",
+    "ru": "Доступ"
+  },
+  "Global Redis user ({0})": {
+    "en": "Global Redis user ({0})",
+    "ru": "Общий пользователь Redis ({0})"
+  },
+  "User and password for this service": {
+    "en": "User and password for this service",
+    "ru": "Пользователь и пароль для этого сервиса"
+  },
+  "Username and password": {
+    "en": "Username and password",
+    "ru": "Пользователь и пароль"
+  },
+  "Username": {
+    "en": "Username",
+    "ru": "Пользователь"
+  },
+  "Password": {
+    "en": "Password",
+    "ru": "Пароль"
+  },
+  "Password (optional)": {
+    "en": "Password (optional)",
+    "ru": "Пароль (необязательно)"
+  },
+  "No authentication": {
+    "en": "No authentication",
+    "ru": "Без авторизации"
+  },
+  "Redis TLS settings": {
+    "en": "Redis TLS settings",
+    "ru": "TLS-параметры Redis"
+  },
+  "Redis transport only. Configure Sentinel separately below.": {
+    "en": "Redis transport only. Configure Sentinel separately below.",
+    "ru": "Только соединения с Redis. Параметры Sentinel задаются отдельно ниже."
+  },
+  "Client certificate path": {
+    "en": "Client certificate path",
+    "ru": "Путь к клиентскому сертификату"
+  },
+  "Client private key path": {
+    "en": "Client private key path",
+    "ru": "Путь к приватному ключу клиента"
+  },
+  "Sentinel connection": {
+    "en": "Sentinel connection",
+    "ru": "Подключение к Sentinel"
+  },
+  "Authentication": {
+    "en": "Authentication",
+    "ru": "Авторизация"
+  },
+  "Sentinel port for this password": {
+    "en": "Sentinel port for this password",
+    "ru": "Порт Sentinel для этого пароля"
+  },
+  "Sentinel has its own credentials. The Redis password is never reused automatically.": {
+    "en": "Sentinel has its own credentials. The Redis password is never reused automatically.",
+    "ru": "У Sentinel собственные реквизиты. Пароль Redis не подставляется автоматически."
+  },
+  "Sentinel TLS settings": {
+    "en": "Sentinel TLS settings",
+    "ru": "TLS-параметры Sentinel"
+  },
+  "Use TLS": {
+    "en": "Use TLS",
+    "ru": "Использовать TLS"
+  },
+  "CA file": {
+    "en": "CA file",
+    "ru": "CA-файл"
+  },
+  "Server name (SNI)": {
+    "en": "Server name (SNI)",
+    "ru": "Имя сервера (SNI)"
+  },
+  "Certificate paths refer to the machine running Redis Farm, not the browser. Client certificate and key must be supplied together.": {
+    "en": "Certificate paths refer to the machine running Redis Farm, not the browser. Client certificate and key must be supplied together.",
+    "ru": "Пути к сертификатам указываются на машине, где работает Redis Farm, а не браузер. Клиентский сертификат и ключ задаются вместе."
+  },
+  "Separate Sentinel hosts / master group": {
+    "en": "Separate Sentinel hosts / master group",
+    "ru": "Отдельные хосты Sentinel / master-группа"
+  },
+  "Sentinel endpoints (optional)": {
+    "en": "Sentinel endpoints (optional)",
+    "ru": "Адреса Sentinel (необязательно)"
+  },
+  "Master group name (optional)": {
+    "en": "Master group name (optional)",
+    "ru": "Имя master-группы (необязательно)"
+  },
+  "One host:port per line. These explicit Sentinel endpoints use the chosen Sentinel credentials; other ports are not scanned on these hosts.": {
+    "en": "One host:port per line. These explicit Sentinel endpoints use the chosen Sentinel credentials; other ports are not scanned on these hosts.",
+    "ru": "Один host:port на строку. Указанные Sentinel используют выбранные реквизиты; другие порты на этих хостах не сканируются."
+  },
+  "How to choose access": {
+    "en": "How to choose access",
+    "ru": "Как выбрать доступ"
+  },
+  "Use the global Redis user when several clusters share one account. Choose a service user or default when the credentials differ. Passwords are entered for this session; username and connection settings belong to the shared catalog.": {
+    "en": "Use the global Redis user when several clusters share one account. Choose a service user or default when the credentials differ. Passwords are entered for this session; username and connection settings belong to the shared catalog.",
+    "ru": "Выберите общего пользователя Redis для кластеров с одинаковыми реквизитами. Для других реквизитов выберите пользователя сервиса или default. Пароли вводятся на сессию; имена пользователей и параметры подключения относятся к общему каталогу."
+  },
+  "Without a password, protected endpoints can be added, but discovery may be incomplete. Choose the correct endpoint type for a protected port, then enter its credentials and repeat discovery.": {
+    "en": "Without a password, protected endpoints can be added, but discovery may be incomplete. Choose the correct endpoint type for a protected port, then enter its credentials and repeat discovery.",
+    "ru": "Закрытые инстансы можно добавить без пароля, но топология может быть неполной. Для защищённого порта выберите правильный тип подключения, укажите реквизиты и повторите обнаружение."
+  },
+  "Separate Redis / Sentinel access": {
+    "en": "Separate Redis / Sentinel access",
+    "ru": "Раздельный доступ к Redis / Sentinel"
+  },
+  "Connection": {
+    "en": "Connection",
+    "ru": "Подключение"
+  },
+  "Scope": {
+    "en": "Scope",
+    "ru": "Область действия"
+  },
+  "Entire service": {
+    "en": "Entire service",
+    "ru": "Весь сервис"
+  },
+  "Redis access": {
+    "en": "Redis access",
+    "ru": "Доступ к Redis"
+  },
+  "Sentinel access": {
+    "en": "Sentinel access",
+    "ru": "Доступ к Sentinel"
+  },
+  "Close": {
+    "en": "Close",
+    "ru": "Закрыть"
+  },
+  "TLS settings": {
+    "en": "TLS settings",
+    "ru": "TLS-параметры"
+  },
+  "Forget password": {
+    "en": "Forget password",
+    "ru": "Забыть пароль"
+  },
+  "Apply": {
+    "en": "Apply",
+    "ru": "Применить"
+  },
+  "Changing a service profile updates inheriting endpoints; explicit endpoint overrides are kept. Saving changes does not modify Redis users or ACL rules.": {
+    "en": "Changing a service profile updates inheriting endpoints; explicit endpoint overrides are kept. Saving changes does not modify Redis users or ACL rules.",
+    "ru": "Изменение профиля сервиса обновляет наследующие его инстансы. Явные переопределения инстансов сохраняются. Применение настроек не меняет пользователей и ACL на Redis."
+  },
+  "Connection profiles": {
+    "en": "Connection profiles",
+    "ru": "Профили подключения"
+  },
+  "Use a shared Redis account or override the username and password per service or endpoint. Sentinel supports no authentication, password authentication, and its own named user. Configure Redis and Sentinel TLS independently. All passwords remain in session memory.": {
+    "en": "Use a shared Redis account or override the username and password per service or endpoint. Sentinel supports no authentication, password authentication, and its own named user. Configure Redis and Sentinel TLS independently. All passwords remain in session memory.",
+    "ru": "Используйте общий аккаунт Redis либо отдельные имя и пароль для сервиса или инстанса. Sentinel поддерживает подключение без авторизации, по паролю и со своим именованным пользователем. TLS Redis и Sentinel настраивается независимо. Все пароли остаются в памяти сессии."
+  },
+  "Uses the shared Redis password entered in this session.": {
+    "en": "Uses the shared Redis password entered in this session.",
+    "ru": "Используется общий пароль Redis из текущей сессии."
+  },
+  "No password is sent.": {
+    "en": "No password is sent.",
+    "ru": "Пароль не передаётся."
+  },
+  "Leave blank to keep the current session password, or enter a new one.": {
+    "en": "Leave blank to keep the current session password, or enter a new one.",
+    "ru": "Для замены пароля в сессии введите новый; иначе оставьте поле пустым."
+  },
+  "Password forgotten for this session.": {
+    "en": "Password forgotten for this session.",
+    "ru": "Пароль удалён из сессии."
+  },
+  "Connection settings updated.": {
+    "en": "Connection settings updated.",
+    "ru": "Настройки подключения обновлены."
+  },
+  "Use one host:port per line.": {
+    "en": "Use one host:port per line.",
+    "ru": "Укажите один host:port на строку."
+  },
+  "Password required": {
+    "en": "Password required",
+    "ru": "Нужен пароль"
+  },
+  "Authentication required": {
+    "en": "Authentication required",
+    "ru": "Требуется авторизация"
+  },
+  "Authentication failed": {
+    "en": "Authentication failed",
+    "ru": "Ошибка авторизации"
+  },
+  "Permission denied": {
+    "en": "Permission denied",
+    "ru": "Нет разрешения"
+  },
+  "Unsupported command": {
+    "en": "Unsupported command",
+    "ru": "Команда не поддерживается"
+  },
+  "Not sampled": {
+    "en": "Not sampled",
+    "ru": "Не опрошен"
+  },
+  "Available": {
+    "en": "Available",
+    "ru": "Доступен"
+  },
+  "No response": {
+    "en": "No response",
+    "ru": "Нет ответа"
+  },
+  "Enter the Sentinel password.": {
+    "en": "Enter the Sentinel password.",
+    "ru": "Введите пароль Sentinel."
+  },
+  "Enter the password for this service or instance.": {
+    "en": "Enter the password for this service or instance.",
+    "ru": "Введите пароль сервиса или инстанса."
+  },
+  "Enter a valid Redis username.": {
+    "en": "Enter a valid Redis username.",
+    "ru": "Введите корректное имя пользователя Redis."
+  },
+  "Provide both the client certificate and private key paths.": {
+    "en": "Provide both the client certificate and private key paths.",
+    "ru": "Укажите оба пути: к клиентскому сертификату и приватному ключу."
+  },
+  "Invalid connection settings.": {
+    "en": "Invalid connection settings.",
+    "ru": "Некорректные настройки подключения."
+  },
+  "Sentinel needs its own authentication profile.": {
+    "en": "Sentinel needs its own authentication profile.",
+    "ru": "Для Sentinel нужен отдельный профиль авторизации."
+  },
+  "Provide at most 32 explicit Sentinel endpoints.": {
+    "en": "Provide at most 32 explicit Sentinel endpoints.",
+    "ru": "Можно указать не более 32 адресов Sentinel."
+  },
+  "Invalid Sentinel endpoint.": {
+    "en": "Invalid Sentinel endpoint.",
+    "ru": "Некорректный адрес Sentinel."
+  },
+  "A password requires a matching connection profile.": {
+    "en": "A password requires a matching connection profile.",
+    "ru": "Укажите пароль только для соответствующего профиля подключения."
+  },
+  "Choose Redis or Sentinel.": {
+    "en": "Choose Redis or Sentinel.",
+    "ru": "Выберите Redis или Sentinel."
+  },
+  "Choose a service-specific authentication profile.": {
+    "en": "Choose a service-specific authentication profile.",
+    "ru": "Выберите собственный профиль авторизации сервиса."
+  },
+  "Redis Cluster supports DB 0 only.": {
+    "en": "Redis Cluster supports DB 0 only.",
+    "ru": "Redis Cluster поддерживает только DB 0."
+  },
+  "Settings saved. Enter a password to connect.": {
+    "en": "Settings saved. Enter a password to connect.",
+    "ru": "Настройки сохранены. Для подключения введите пароль."
+  },
+  "Choose Redis or Sentinel explicitly for a protected port.": {
+    "en": "Choose Redis or Sentinel explicitly for a protected port.",
+    "ru": "Для защищённого порта выберите тип явно: Redis или Sentinel."
+  },
+  "Invalid Sentinel master group name.": {
+    "en": "Invalid Sentinel master group name.",
+    "ru": "Некорректное имя master-группы Sentinel."
+  },
+  "Select a service or endpoint, open Connection settings, enter its password and Apply. The global Redis password is not needed.": {
+    "en": "Select a service or endpoint, open Connection settings, enter its password and Apply. The global Redis password is not needed.",
+    "ru": "Выберите сервис или инстанс, откройте «Настройки подключения», введите пароль и нажмите «Применить». Общий пароль Redis не требуется."
+  },
+  "Passwords are independent per service. An endpoint password overrides the service password. Sentinel has a separate access profile.": {
+    "en": "Passwords are independent per service. An endpoint password overrides the service password. Sentinel has a separate access profile.",
+    "ru": "У каждого сервиса свой пароль. Пароль инстанса приоритетнее пароля сервиса. У Sentinel отдельный профиль доступа."
+  },
+  "Switching tabs does not change Redis ACL or define staff permissions in the panel.": {
+    "en": "Switching tabs does not change Redis ACL or define staff permissions in the panel.",
+    "ru": "Переключение вкладок не меняет Redis ACL и не разграничивает доступ сотрудников к панели."
   }
 }

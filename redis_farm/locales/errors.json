@@ -154,5 +154,21 @@
   "output_limit": {
     "en": "The configured operation or data-size limit was reached.",
     "ru": "Достигнут настроенный лимит операции или объёма данных."
+  },
+  "sentinel_password_required": {
+    "en": "Enter the Sentinel password.",
+    "ru": "Введите пароль Sentinel."
+  },
+  "invalid_username": {
+    "en": "Enter a valid Redis username.",
+    "ru": "Введите корректное имя пользователя Redis."
+  },
+  "invalid_tls": {
+    "en": "Provide both the client certificate and private key paths.",
+    "ru": "Укажите оба пути: к клиентскому сертификату и приватному ключу."
+  },
+  "endpoint_type_required": {
+    "en": "Choose Redis or Sentinel explicitly for a protected port.",
+    "ru": "Для защищённого порта выберите тип явно: Redis или Sentinel."
   }
 }

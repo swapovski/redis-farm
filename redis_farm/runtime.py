@@ -5,8 +5,8 @@ import secrets
 import threading
 import time
 from typing import Callable
-from .models import FarmError
-from .credentials import CredentialSet, validate_password
+from .models import FarmError, auth_identity
+from .credentials import CredentialSet, Secret, validate_password
 from .settings import Settings
 
 
@@ -20,6 +20,7 @@ class BrowserSession:
     user_dn: str | None = None
     password: str | None = field(default=None, repr=False)
     generation: int = 0
+    access_passwords: dict = field(default_factory=dict, repr=False)
     defaults: dict = field(default_factory=dict, repr=False)
     discovery_secrets: dict = field(default_factory=dict, repr=False)
 
@@ -75,7 +76,8 @@ class Sessions:
             if item is None:
                 raise FarmError('Browser session expired.', 'session_expired', 401)
             values = item.defaults.get(service_id, {})
-            return CredentialSet(item.password, values.get('service'), dict(values.get('endpoints', {})))
+            scoped = {k: dict(v) for k, v in item.access_passwords.get(service_id, {}).items()}
+            return CredentialSet(item.password, values.get('service'), dict(values.get('endpoints', {})), scoped)
 
     def set_default(self, sid, service_id, password, endpoint_ids=None):
         validate_password(password)
@@ -101,15 +103,52 @@ class Sessions:
                 else:
                     values = item.defaults.get(service_id, {})
                     for eid in endpoint_ids:
-                        values.get('endpoints', {}).pop(eid, None)
+                        if eid == 'service':
+                            values['service'] = None
+                        else:
+                            values.get('endpoints', {}).pop(eid, None)
                 item.generation += 1
+
+    def set_access(self, sid, service_id, endpoint, password, endpoint_ids=None):
+        validate_password(password)
+        with self.lock:
+            item = self.get(sid)
+            if item is None:
+                raise FarmError('Browser session expired.', 'session_expired', 401)
+            values = item.access_passwords.setdefault(service_id, {}).setdefault(endpoint.kind, {})
+            secret = Secret(auth_identity(endpoint), password)
+            for key in endpoint_ids if endpoint_ids is not None else ['service']:
+                values[key] = secret
+            item.generation += 1
+            item.active = time.monotonic()
+
+    def forget_access(self, sid, service_id, kind, endpoint_ids=None):
+        with self.lock:
+            item = self.get(sid)
+            if item is None:
+                return
+            values = item.access_passwords.get(service_id, {}).get(kind, {})
+            if endpoint_ids is None:
+                values.clear()
+            else:
+                for eid in endpoint_ids:
+                    values.pop(eid, None)
+            # Existing 0.2.0 default passwords use the legacy memory slots.
+            if kind == 'redis':
+                self.forget_default(sid, service_id, endpoint_ids)
+            item.generation += 1
 
     def credential_state(self, sid, service):
         credentials = self.credentials(sid, service['id'])
-        return {'service_password': credentials.default is not None,
+        return {'service_password': credentials.default is not None or bool(credentials.scoped.get('redis', {}).get('service')),
                 'endpoint_overrides': list(credentials.overrides),
-                'unlocked_endpoints': [e['id'] for e in service['endpoints']
-                    if e['kind'] == 'redis' and credentials.available(e)]}
+                'unlocked_endpoints': [e['id'] for e in service['endpoints'] if credentials.available(e)],
+                'profiles': {kind: {
+                    'service_password': bool(credentials.scoped.get(kind, {}).get('service')) or
+                        (kind == 'redis' and credentials.default is not None),
+                    'endpoint_overrides': [k for k in credentials.scoped.get(kind, {}) if k != 'service'] +
+                        (list(credentials.overrides) if kind == 'redis' else [])
+                    } for kind in ('redis', 'sentinel')}}
 
     def hold_discovery(self, sid, credentials):
         with self.lock:
@@ -151,6 +190,7 @@ class Sessions:
                 item.password = None
                 if all_profiles:
                     item.defaults.clear()
+                    item.access_passwords.clear()
                     item.discovery_secrets.clear()
                 item.generation += 1
 
@@ -160,6 +200,7 @@ class Sessions:
             if item:
                 item.password = None
                 item.defaults.clear()
+                item.access_passwords.clear()
                 item.discovery_secrets.clear()
 
     def expired(self) -> list[str]:

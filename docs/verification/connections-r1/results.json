@@ -1,0 +1,110 @@
+[
+  {
+    "module": "test_connection_profiles.py",
+    "status": "passed",
+    "tests": 36,
+    "skipped": 0
+  },
+  {
+    "module": "test_connections_http.py",
+    "status": "passed",
+    "tests": 12,
+    "skipped": 12
+  },
+  {
+    "module": "test_core.py",
+    "status": "passed",
+    "tests": 39,
+    "skipped": 0
+  },
+  {
+    "module": "test_default_auth.py",
+    "status": "passed",
+    "tests": 38,
+    "skipped": 9
+  },
+  {
+    "module": "test_deploy.py",
+    "status": "passed",
+    "tests": 8,
+    "skipped": 0
+  },
+  {
+    "module": "test_discovery_auto.py",
+    "status": "passed",
+    "tests": 25,
+    "skipped": 0
+  },
+  {
+    "module": "test_display.py",
+    "status": "passed",
+    "tests": 28,
+    "skipped": 0
+  },
+  {
+    "module": "test_dns.py",
+    "status": "passed",
+    "tests": 26,
+    "skipped": 0
+  },
+  {
+    "module": "test_install_regression.py",
+    "status": "passed",
+    "tests": 26,
+    "skipped": 0
+  },
+  {
+    "module": "test_install_wizard.py",
+    "status": "passed",
+    "tests": 18,
+    "skipped": 0
+  },
+  {
+    "module": "test_ldap_auth.py",
+    "status": "passed",
+    "tests": 16,
+    "skipped": 0
+  },
+  {
+    "module": "test_ldap_config.py",
+    "status": "passed",
+    "tests": 23,
+    "skipped": 0
+  },
+  {
+    "module": "test_ldap_web.py",
+    "status": "passed",
+    "tests": 17,
+    "skipped": 17
+  },
+  {
+    "module": "test_manual_names.py",
+    "status": "passed",
+    "tests": 18,
+    "skipped": 0
+  },
+  {
+    "module": "test_release_020.py",
+    "status": "passed",
+    "tests": 19,
+    "skipped": 0
+  },
+  {
+    "module": "test_server.py",
+    "status": "passed",
+    "tests": 35,
+    "skipped": 7
+  },
+  {
+    "module": "test_web.py",
+    "status": "passed",
+    "tests": 12,
+    "skipped": 12
+  },
+  {
+    "module": "test_web_access_020.py",
+    "status": "passed",
+    "tests": 15,
+    "skipped": 15
+  }
+]

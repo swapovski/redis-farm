@@ -101,7 +101,8 @@ class AutoScanTests(unittest.TestCase):
     def test_manual_single_list_range_and_sentinel(self):
         for spec,count in [({'ports':'6379'},1),({'port':6383},1),({'ports':'6379,6381'},2),({'ports':'6379-6381'},2),({'ports':'26379','kind':'sentinel'},1)]:
             with self.subTest(spec=spec):
-                r=self.scan(**spec);self.assertEqual(r['scan']['mode'],'ports');self.assertEqual(len(r['services']),count)
+                # Protected ports must explicitly declare the protocol before AUTH.
+                r=self.scan(**dict({'kind':'redis'},**spec));self.assertEqual(r['scan']['mode'],'ports');self.assertEqual(len(r['services']),count)
     def test_no_range_scan_on_peer_hosts(self):
         self.scan();self.assertFalse(any(c==('INFO','SERVER') and e.host!='seed.example' for e,c,t in self.cli.calls))
         self.assertFalse(any(e.host.startswith('peer-') and e.port==6383 for e,c,t in self.cli.calls))

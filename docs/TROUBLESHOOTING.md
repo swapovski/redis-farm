@@ -49,3 +49,19 @@ Clean 0.2.0 packages contain logo.png, add.png, setup.webp and favicon files. Up
 ## Restart implications
 
 A panel restart ends its web sessions and CLI processes and discards their in-memory passwords and output. It does not restart Redis/Sentinel. Export non-secret catalog data before planned maintenance. Finish active administrative commands before restarting the panel: ending a client process does not undo a command already accepted by Redis.
+
+## Sentinel requires a password / NOAUTH
+
+Choose **Connection settings -> Sentinel** and the correct service/endpoint scope. Select Password or Username and password. The shared Redis password is intentionally not used for Sentinel. Plainly selecting the Sentinel tab does not rewrite access settings. TLS is also configured independently; a TCP/TLS mismatch is not fixed by changing a password.
+
+## Discovery asks for Redis or Sentinel
+
+An unknown protected port can return NOAUTH without identifying its process type. In manual port mode choose the correct **Entry type**, not Auto. Node scanning has separate Redis and Sentinel ranges and does not need this extra selection. This avoids sending Redis credentials to an unidentified Sentinel.
+
+## Saved password is not shown / works only in one browser
+
+Passwords are memory-only per browser session, service, protocol and endpoint. Blank forms do not expose a stored password. Apply with a blank password keeps a matching secret; Forget password clears that scope. The catalog is shared but each browser has its own secrets. New login after expiry/restart requires new passwords.
+
+## NOPERM or unknown command
+
+The UI displays command permission/compatibility separately from transport availability. Metadata requires the commands used by that view. Redis CLI output is left intact. The application neither changes ACLs nor repeats a failed command using another account.

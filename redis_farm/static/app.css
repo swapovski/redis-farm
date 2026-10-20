@@ -102,3 +102,45 @@
 .catalog-actions-row{display:flex;align-items:center;gap:8px;min-width:0;margin:8px 0 10px}
 .catalog-actions-row .catalog-toggle-all{flex:1 1 auto;width:auto;margin:0;justify-content:flex-start;min-width:0;padding-left:9px}
 .catalog-actions-row .catalog-edit-button{flex:0 0 auto;margin:0;min-height:30px;padding:6px 10px}
+
+/* Independent Redis / Sentinel connection settings. */
+.connection-section { border:1px solid var(--line, #dce4dd); border-radius:12px; padding:14px 16px; margin:16px 0; }
+.connection-section > summary { cursor:pointer; font-weight:650; display:flex; gap:12px; align-items:center; }
+.connection-fields { display:grid; gap:14px; padding-top:16px; }
+.connection-fields p { margin:0; }
+.connection-help { margin:12px 0; font-size:12px; line-height:1.6; color:var(--muted, #647269); }
+.connection-help summary { cursor:pointer; }
+.connection-help p { margin:8px 0; }
+.connection-dialog { width:min(640px, calc(100vw - 32px)); }
+.connection-dialog .credential-target { margin:12px 0 20px; overflow-wrap:anywhere; }
+.connection-dialog form > label { display:grid; gap:7px; margin:14px 0; }
+.connection-dialog #accessPasswordState { min-height:1.4em; margin:8px 0; }
+.connection-dialog .tls-settings { margin:12px 0; }
+.connection-dialog .form-grid { margin:12px 0; }
+.endpoint-status.access-warning { color:var(--warning, #9d6600); }
+.service-actions { flex-wrap:wrap; }
+@media (max-width:620px) { .connection-dialog .form-grid { grid-template-columns:1fr; } }
+
+.dot.access-warning { background:#bf8b1a; }
+
+/* Checkboxes/fieldsets must not inherit full-width text-input sizing. */
+.connection-dialog .tls-settings,
+#sentinelConnectionSettings .tls-settings { padding:12px 14px; background:#fbfdfc; border:1px solid var(--line); border-radius:9px; min-width:0; }
+.connection-dialog .tls-settings > summary,
+#sentinelConnectionSettings .tls-settings > summary { line-height:1.5; cursor:pointer; }
+.connection-dialog .tls-settings > label.check-label,
+#sentinelConnectionSettings .tls-settings > label.check-label { display:flex; flex-direction:row; align-items:center; gap:10px; margin:14px 0; white-space:normal; }
+.connection-dialog input[type=checkbox],
+#sentinelConnectionSettings input[type=checkbox] { width:16px; min-width:16px; max-width:16px; height:16px; flex:0 0 16px; margin:0; padding:0; }
+.connection-dialog .tls-fields,
+#sentinelConnectionSettings .tls-fields { border:0; margin:0; padding:0; min-width:0; width:100%; }
+.connection-dialog .tls-fields .form-grid,
+#sentinelConnectionSettings .tls-fields .form-grid { margin:12px 0; row-gap:16px; column-gap:16px; }
+.connection-dialog .tls-fields label,
+#sentinelConnectionSettings .tls-fields label { min-width:0; gap:6px; }
+.connection-dialog .tls-fields input,
+#sentinelConnectionSettings .tls-fields input { width:100%; min-width:0; }
+.connection-dialog .tls-fields:disabled input,
+#sentinelConnectionSettings .tls-fields:disabled input { background:#f1f5f4; color:var(--muted); }
+.connection-dialog .tls-settings > p,
+#sentinelConnectionSettings .tls-settings > p { margin-top:10px; line-height:1.6; }

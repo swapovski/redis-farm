@@ -1,45 +1,70 @@
-# Redis Farm 0.2.0 - verification report
+# Verification — 0.2.0 connections-r1
 
-Build date: 2026-10-14. All test data are synthetic. No production endpoint or employee credential was used.
+This is the report for the repository overlay, not a claim of a live deployment.
+The application version remains **0.2.0**. Source baseline: the issued
+`redis-farm-0.2.0-release.tar.gz`; downstream Git history/configuration is not edited.
 
-## What ran
+## Executed
 
-| Check | Result | Scope |
-|---|---:|---|
-| Python tests, isolated unittest modules | 303 executed, passed | Models, parsing, storage, credentials, discovery, configuration, installer helpers, manual names, localization, LDAP logic with doubles |
-| Python tests needing Flask | 60 skipped | Missing Flask in the preparation environment; not claimed as successful HTTP tests |
-| Chromium UI assertions | 51 passed | Actual Jinja templates, project CSS/JavaScript and the supplied original artwork, English and Russian |
-| Distribution/artwork preflight | 6 passed | Copy with nested release destination, required files, image size/alpha, exact original pixels |
-| Python 3.10 grammar | 52 source files passed | ast.parse feature_version=(3,10); not execution under Python 3.10 |
-| JavaScript syntax | Passed | node --check on every bundled JavaScript file |
-| Shell syntax | Passed | bash -n install.sh start.sh install-server.sh |
+- **339 Python tests executed successfully**, in isolated module processes.
+- **72 tests explicitly skipped** because Flask is unavailable, including
+  all 12 newly added real-Flask connection API tests. A skipped test is not passed.
+- **115 Chromium UI assertions passed** in English and Russian with the real
+  templates, CSS, JS and original illustrations; API responses are synthetic.
+- Python syntax compile, all browser JS `node --check`, installer `bash -n`.
+- EN/RU README relative links checked against the overlaid tree.
+- Overlay archive readback, hash/mode verification, preservation checks for
+  unrelated files (.git marker, configs, data, LICENSE and CI) on a temporary tree.
 
-The Python runner reports 363 discovered cases: 303 executed and 60 skipped. Skipped cases are not included in the pass count. Each module runs in a separate process to prevent optional-dependency test doubles from leaking between modules. Detailed results and raw output are in [verification/tests](verification/tests/).
+Logs: `verification/connections-r1/`. `test_all` records skip counts separately.
 
-## UI coverage and screenshot method
+## New tests
 
-Both languages exercised: configured ACL username/tab, three topology nodes, original logo and add-image dimensions, expand/collapse-all, Edit placement, empty initial add fields, default-tab selection without an automatic password modal, deliberate service selection, localized empty-password validation, full-size setup image, automatic scrolling after revealing installation details, click-outside About closing, image pickup/source hiding/restoration, and a 390px layout without horizontal page or dialog overflow.
+`test_connection_profiles.py` verifies independent protocols, global Redis legacy
+behavior, service/session isolation, username-bound secrets, endpoint precedence,
+forget/logout, no credential leakage to JSON/exports, no authentication fallback,
+Sentinel named/password auth, explicit extra Sentinel seeds, master selection,
+mTLS arguments, redacted categorized errors, and protected-auto no-secret probing.
 
-The execution environment blocks browser navigation, including loopback URLs. Consequently, Playwright loaded the real rendered templates in memory, injected the actual stylesheet/script contents, embedded the original images, and supplied fake API responses through an exposed binding to a loopback fixture server. This verifies DOM behavior and layout, **not the production HTTP path or CSP enforcement**. Screenshots are of that real frontend with synthetic data, not a painted mockup. No demo dataset is loaded into a user's catalog on installation.
+`test_connections_http.py` contains real Flask test-client tests for the new endpoint,
+IDs, metadata vs secrets, CSRF, foreign Origin, global profile isolation, invalid
+fields, endpoint overrides, protocol-specific forgetting and separate browser
+sessions. These tests are included for dependency-complete CI but skipped here.
 
-Assertions: [browser-checks.json](browser-checks.json). Reproduce with `python3 tools/render_demo.py` after installing Jinja2, Playwright and Chromium; set `CHROMIUM` when needed.
+Two existing test modules were updated for explicit entry-type selection on protected
+manual ports and retaining locked endpoints rather than pretending they are absent.
+Wrong-password tests still assert that no open/global alternate profile is tried.
 
-## Installer/configuration coverage
+## Browser coverage
 
-Tests cover neutral fresh defaults, English/Russian selection, old configuration preservation (including implicit Russian/LDAP defaults), explicit no-login confirmation, separate client paths, error reporting, source/destination recursion prevention, locally bundled/recovered artwork, connectors as literal data, no LDAP settings in local mode, and stable catalog identity across hostname aliases. CLI processes and LDAP transport in unit tests are doubles where documented in the tests; no authentication to a real directory is implied.
+Catalog controls, EN/RU rendering, no automatic password dialog on switching to
+default, separate Redis/Sentinel selectors, no global Redis option for Sentinel,
+empty password input, independent TLS fields, compact checkboxes, desktop/mobile
+overflow, real image natural dimensions, exact grip at leaf base minus 19 CSS px,
+pointer travel outside source, sway and release restoration.
 
-The installer invokes `tests/test_web_access_020.py` **after** installing the release's web dependencies on the target host. Those 15 tests use a real Flask test client with fake identity/Redis objects. They are part of the 60 skipped here, not additional passes. It subsequently checks candidate configuration and, only for LDAP mode, LDAP transport before activating the release. Transport preflight is not a test of a real employee's password or group membership.
+`tools/render_demo.py` renders in-memory because Chromium navigation to local URLs is
+restricted in this environment. It injects the actual styles/scripts and proxies
+fetch to local test responses. This does **not** test production HTTP headers/CSP,
+a real authenticated API round-trip, TLS, Redis protocol behavior or Firefox.
 
-## Boundaries
+## Not tested here
 
-The preparation environment had Python 3.13, Jinja2, Pillow, dnspython, Node and Chromium, but did not have Flask, Werkzeug, Gunicorn, waitress, ldap3 or redis-cli. Package download attempts failed due to unavailable network/DNS. Therefore this release has **not** been fully exercised as Gunicorn -> Flask -> actual redis-cli/Redis/LDAP here.
+Flask, Gunicorn, ldap3 and real redis-cli/redis-server were unavailable. Attempts to
+obtain dependencies failed due to network/DNS restrictions. No apt, systemd,
+production DNS, LDAP, Redis, Sentinel or remote admin command was run.
+The tests use local fixtures, not a replacement Redis transport in application code.
+No claim of production-readiness, real-cluster integration or automatic CI success
+is made. Run dependency-complete CI and test isolated Redis/Sentinel deployments
+before publishing/redeploying this revision.
 
-Also not executed: APT or systemd installation on Ubuntu, a live HTTPS/reverse-proxy deployment, Firefox, macOS, WSL, real split-DNS resolution, or production upgrades. In particular, successful template rendering is not evidence that authentication, proxies or CSP work end to end. The server installer provides additional gates, but it does not replace testing in your deployment.
+## Reproduce
 
-No claim is made that changing a requirement range produces a reproducible dependency build. For controlled deployments, use your approved Python constraints and package source.
+```bash
+python3 tools/test_all.py
+python3 tools/render_demo.py
+```
 
-## Packaging
-
-The release contains all three supplied illustrations plus SVG/PNG/ICO favicons, both READMEs, relative screenshot paths and synthetic fixtures. The first two PNGs are byte-identical to the uploads; setup.webp retains the third PNG's RGBA pixels losslessly. A scan of source, examples and docs found no known organization-specific production names, IPs or account names from the previous configuration. Such a scan is not a general-purpose secret audit.
-
-Archives are unpacked and compared file-for-file by SHA-256 with the prepared distribution. Checksums for the final archives are provided beside the downloads. Runtime catalogs, connectors, local.json, server.json, private keys, virtual environments and compiled caches are excluded.
+Use the project's requirements files for dependencies in an isolated environment.
+Existing code and artwork licensing notices remain unchanged. The overlay does not
+replace LICENSE, NOTICE.md or .github/workflows/ci.yml.

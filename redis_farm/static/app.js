@@ -51,11 +51,11 @@ function dateTime(ts) {
 }
 function statusClass(value) { return value === true ? "up" : value === false ? "down" : ""; }
 function authMode(item) { return item?.auth_mode || item?.endpoints?.find(e=>e.kind === "redis")?.auth || "admin"; }
-function profile(item) { return authMode(item) === "admin" ? "admin" : "default"; }
+function profile(item) { return ["admin", "user"].includes(authMode(item)) ? "admin" : "default"; }
 function profileServices() { return state.services.filter(s=>profile(s) === state.authMode); }
 function endpointUnlocked(ep, item=service()) {
-  if (!ep || ep.kind === "sentinel" || ep.auth === "none") return true;
-  return ep.auth === "admin" ? state.unlocked : !!item?.credentials?.unlocked_endpoints?.includes(ep.id);
+  if (!ep || ep.auth === "none") return true;
+  return ep.kind === "redis" && ep.auth === "admin" ? state.unlocked : !!item?.credentials?.unlocked_endpoints?.includes(ep.id);
 }
 function service() { return state.services.find(s => s.id === state.selected); }
 function nodes() {
@@ -155,27 +155,30 @@ function chooseConsoleKind(kind) {
   $("commandInput").value = state.drafts[kind] || "";
 }
 
+function usesGlobal() { return state.authMode === "admin" && (!service() || authMode(service()) === "admin"); }
+function accessLabel(ep) {
+  if (!ep || ep.auth === "none") return tr("No authentication");
+  if (ep.auth === "user") return ep.username;
+  return ep.auth === "admin" ? document.body.dataset.adminUser || "admin" : "default";
+}
 function renderCredential() {
-  const isAdmin = state.authMode === "admin", item = service();
+  const shared = usesGlobal(), item = service();
   for (const b of $("authTabs").querySelectorAll("button")) b.classList.toggle("active", b.dataset.auth === state.authMode);
-  $("credentialForm").hidden = !isAdmin;
-  $("defaultCredentialControls").hidden = isAdmin;
-  const credentials = item?.credentials || {}, ready = isAdmin ? state.unlocked :
-    !!credentials.service_password || !!credentials.unlocked_endpoints?.length || authMode(item) === "none";
+  $("credentialForm").hidden = !shared;
+  $("defaultCredentialControls").hidden = shared;
+  const redis = item?.endpoints.filter(e=>e.kind === "redis") || [];
+  const ready = shared ? state.unlocked : redis.length > 0 && redis.every(e=>endpointUnlocked(e,item));
   const status = $("credentialStatus");
   status.className = `credential-status${ready ? " ready" : ""}`;
   let label = ready ? uiText.authorized : uiText.noPassword;
-  if (!isAdmin) {
-    if (!item) label = uiText.chooseService;
-    else if (authMode(item) === "none") label = uiText.openAccess;
-    else if (ready) label += ` (${credentials.unlocked_endpoints?.length || 0}/${item.endpoints.filter(e=>e.kind === "redis").length})`;
-  }
+  if (!shared && !item) label = uiText.chooseService;
+  else if (item && authMode(item) === "none") label = uiText.openAccess;
   status.replaceChildren(el("i", "dot"), document.createTextNode(label));
-  $("lockButton").disabled = isAdmin ? !state.unlocked : !item || authMode(item) !== "default" || !ready;
-  $("redisPassword").placeholder = state.unlocked ? tr("Пароль") : tr("Пароль");
-  $("defaultCredentialTarget").textContent = item ? `${item.group ? item.group + " / " : ""}${item.name}` : uiText.defaultHint;
-  $("defaultAccessButton").disabled = !item || authMode(item) !== "default";
-  $("defaultAccessButton").textContent = ready ? uiText.passwords : uiText.enterDefault;
+  $("lockButton").disabled = shared ? !state.unlocked : !item || !redis.some(e=>e.auth !== "none" && endpointUnlocked(e,item));
+  $("defaultCredentialTarget").textContent = item?.name || uiText.chooseService;
+  $("defaultAccessButton").disabled = !item;
+  $("defaultAccessButton").textContent = tr("Connection settings");
+  $("connectionAccessButton").disabled = !item;
 }
 async function switchAuth(mode, select=true) {
   if (mode === state.authMode) return;
@@ -192,16 +195,58 @@ async function switchAuth(mode, select=true) {
   // Restoring a view is not a request for credentials.
   if (selected && select) await selectService(selected.id, undefined, false, false);
 }
-function showDefaultAccess(endpointId=null) {
-  const item = service(); if (!item || authMode(item) !== "default") return;
-  state.accessServiceId = item.id;
-  $("defaultAccessName").textContent = `${item.group ? item.group + " / " : ""}${item.name}`;
-  const scope = $("defaultAccessScope"); scope.replaceChildren(new Option(uiText.serviceScope, "service"));
-  for (const e of item.endpoints.filter(e=>e.kind === "redis")) scope.append(new Option(`${uiText.endpointScope}: ${displayAddress(e.address)}`, e.id));
-  scope.value = endpointId && item.endpoints.some(e=>e.id === endpointId) ? endpointId : "service";
-  $("defaultAccessPassword").value = ""; $("defaultAccessError").hidden = true;
-  if (!$("defaultAccessDialog").open) $("defaultAccessDialog").showModal();
-  $("defaultAccessPassword").focus();
+function serviceConnection(item,kind) {
+  return item?.[kind+"_connection"] || item?.endpoints.find(e=>e.kind===kind) || {auth:kind==="redis"?"admin":"none"};
+}
+function selectedAccessConfig() {
+  const item = state.services.find(s=>s.id===state.accessServiceId), kind=$("accessKind").value;
+  return $("defaultAccessScope").value === "service" ? serviceConnection(item,kind) : item?.endpoints.find(e=>e.id===$("defaultAccessScope").value) || {};
+}
+function updateAccessFields() {
+  const auth=$("accessAuth").value;
+  $("accessUsernameRow").hidden=auth!=="user"; $("accessUsername").required=auth==="user";
+  $("accessPasswordRow").hidden=!["user","default"].includes(auth);
+  $("accessTlsFields").disabled=!$("accessTls").checked;
+  $("defaultAccessPassword").required=false;
+  $("accessPasswordState").textContent=auth==="admin"?tr("Uses the shared Redis password entered in this session."):auth==="none"?tr("No password is sent."):tr("Leave blank to keep the current session password, or enter a new one.");
+}
+function loadAccessScope() {
+  const kind=$("accessKind").value, config=selectedAccessConfig();
+  const options = kind==="redis" ? [["admin",tr("Global Redis user ({0})",document.body.dataset.adminUser||"admin")]] : [];
+  options.push(["user",tr("Username and password")],["default",tr("Password")],["none",tr("No authentication")]);
+  $("accessAuth").replaceChildren(...options.map(([v,l])=>new Option(l,v)));
+  $("accessAuth").value=config.auth || (kind==="redis"?"admin":"none");
+  $("accessUsername").value=config.username || "";
+  $("accessTls").checked=!!config.tls;
+  for (const [id,key] of [["accessCa","cacert"],["accessSni","sni"],["accessCert","certfile"],["accessKey","keyfile"]]) $(id).value=config[key] || "";
+  $("defaultAccessPassword").value="";
+  updateAccessFields();
+}
+function populateAccessScopes(endpointId=null) {
+  const item=state.services.find(s=>s.id===state.accessServiceId); if(!item)return;
+  const kind=$("accessKind").value, scope=$("defaultAccessScope");
+  scope.replaceChildren(new Option(tr("Entire service"),"service"));
+  for(const e of item.endpoints.filter(e=>e.kind===kind)) scope.append(new Option(e.address,e.id));
+  scope.value=endpointId && [...scope.options].some(o=>o.value===endpointId)?endpointId:"service";
+  $("connectionAccessTitle").textContent=kind==="redis"?tr("Redis access"):tr("Sentinel access");
+  loadAccessScope();
+}
+function showAccess(kind="redis",endpointId=null) {
+  const item=service();if(!item)return;
+  state.accessServiceId=item.id;
+  $("defaultAccessName").textContent=`${item.group?item.group+" / ":""}${item.name}`;
+  $("accessKind").value=kind;
+  $("defaultAccessError").hidden=true;
+  populateAccessScopes(endpointId);
+  if(!$("defaultAccessDialog").open) $("defaultAccessDialog").showModal();
+  if(!$("accessPasswordRow").hidden) $("defaultAccessPassword").focus();
+}
+function showDefaultAccess(endpointId=null) { showAccess("redis",endpointId); }
+function requestEndpointAccess(ep) {
+  if (ep?.kind === "redis" && ep.auth === "admin") {
+    $("redisPassword").focus(); notify(tr("Enter the password.")); return;
+  }
+  showAccess(ep?.kind || "redis",ep?.id);
 }
 function resetViewAfterCredentialChange() {
   state.selectEpoch++; state.detailEpoch++; state.busySnapshots.clear(); state.detailCache.clear(); state.snapshot=null;
@@ -213,19 +258,25 @@ async function syncTerminals() {
   for (const consoles of Object.values(profileTerminals)) for (const t of Object.values(consoles)) if (t && !live.has(t.id)) t.alive=false;
 }
 async function saveDefaultCredential(remove=false) {
-  const sid = state.accessServiceId, scope = $("defaultAccessScope").value;
-  if (!sid) return;
-  const payload = {scope:scope === "service" ? "service" : "endpoint", endpoint_id:scope};
-  if (!remove) payload.password = $("defaultAccessPassword").value;
+  const sid=state.accessServiceId, scope=$("defaultAccessScope").value;
+  if(!sid)return;
+  const payload={kind:$("accessKind").value, scope:scope==="service"?"service":"endpoint",endpoint_id:scope};
+  if(!remove) {
+    payload.connection={auth:$("accessAuth").value,username:$("accessUsername").value.trim(),tls:$("accessTls").checked,
+      cacert:$("accessCa").value.trim(),sni:$("accessSni").value.trim(),certfile:$("accessCert").value.trim(),keyfile:$("accessKey").value.trim()};
+    if(["default","user"].includes(payload.connection.auth)) payload.password=$("defaultAccessPassword").value;
+  }
   $("saveDefaultAccess").disabled=true;
   try {
-    await api(`/api/services/${sid}/credentials`, {method:remove ? "DELETE" : "POST", body:JSON.stringify(payload)});
-    $("defaultAccessPassword").value=""; $("defaultAccessDialog").close();
-    resetViewAfterCredentialChange(); await syncTerminals(); await loadCatalog(); renderCredential(); renderConsole();
-    notify(remove ? uiText.scopeForgotten : uiText.defaultReady);
-    if (state.selected === sid) { await refreshSnapshot(); await loadDetail(true); }
-  } catch (err) { $("defaultAccessError").hidden=false; $("defaultAccessError").textContent=errorMessage(err); }
-  finally { delete payload.password; $("saveDefaultAccess").disabled=false; }
+    await api(`/api/services/${sid}/${remove?"credentials":"connection"}`,{method:remove?"DELETE":"POST",body:JSON.stringify(payload)});
+    $("defaultAccessPassword").value="";$("defaultAccessDialog").close();
+    resetViewAfterCredentialChange();await syncTerminals();await loadCatalog();
+    const item=state.services.find(s=>s.id===sid);
+    if(item && profile(item)!==state.authMode) await switchAuth(profile(item),false);
+    await selectService(sid,undefined,false,false);
+    notify(remove?tr("Password forgotten for this session."):tr("Connection settings updated."));
+  } catch(err) {$("defaultAccessError").hidden=false;$("defaultAccessError").textContent=errorMessage(err);}
+  finally {delete payload.password;$("saveDefaultAccess").disabled=false;}
 }
 // Group expansion is page-local: new visits and reloads start collapsed.
 const catalogExpansion = new Map();
@@ -353,7 +404,7 @@ async function selectService(id, preferred, reveal=true, requestAccess=true) {
   }
   chooseDefaults(preferred); renderWorkspace(); loadSnippets();
   const pickedRedis = item.endpoints.find(e=>e.id === state.picked.redis);
-  if (requestAccess && authMode(item) === "default" && pickedRedis && !endpointUnlocked(pickedRedis, item)) {
+  if (requestAccess && ["default","user"].includes(authMode(item)) && pickedRedis && !endpointUnlocked(pickedRedis, item)) {
     showDefaultAccess(preferred === pickedRedis.id ? preferred : null);
   }
   await refreshSnapshot();
@@ -441,14 +492,16 @@ function renderTopology() {
       const e = row.endpoint_options?.find(option => option.id === chosen) ||
         row.endpoint_options?.find(option => endpointUnlocked(option)) || row.endpoint;
       const button = el("button", `endpoint-button${rowHasEndpoint(row, state.picked[state.kind]) ? " active" : ""}`);
-      button.append(el("i", `dot ${statusClass(row.reachable)}`), el("span", "port", e.port));
-      button.append(el("span", "endpoint-status", row.reachable === null ? tr("не опрошен") : row.reachable ? tr("доступен") : tr("нет ответа")));
+      button.append(el("i", `dot ${row.transport_reachable === true && !row.reachable ? "access-warning" : statusClass(row.reachable)}`), el("span", "port", e.port));
+      const accessStates = {password_required:tr("Password required"),default_password_required:tr("Password required"),sentinel_password_required:tr("Password required"),authentication_required:tr("Authentication required"),authentication_failed:tr("Authentication failed"),permission_denied:tr("Permission denied"),unsupported_command:tr("Unsupported command")};
+      const accessState=accessStates[row.error_code || row.access_state];
+      button.append(el("span", "endpoint-status"+(accessState?" access-warning":""), accessState || (row.reachable===null?tr("Not sampled"):row.reachable?tr("Available"):tr("No response"))));
       button.append(el("span", `endpoint-role ${row.role}`, row.role === "unknown" ? e.kind : row.role));
       button.title = `${row.display?.address || e.address}\n${e.address}\n${row.error ? window.RFI18n.error(row.error, row.error_code || row.code) : ""}${row.aliases?.length ? tr("\nДругие адреса: ")+row.aliases.join(", ") : ""}`;
       button.addEventListener("click", () => {
         state.picked[e.kind] = e.id; chooseConsoleKind(e.kind);
         renderTopology(); renderStats(); renderConsole(); loadSnippets(); loadDetail();
-        if (e.kind === "redis" && e.auth === "default" && !endpointUnlocked(e)) showDefaultAccess(e.id);
+        if (e.auth !== "none" && !endpointUnlocked(e)) requestEndpointAccess(e);
       });
       card.append(button);
     }
@@ -515,6 +568,9 @@ function renderConsole() {
   }
   select.value = ep?.id || "";
   $("dbControl").hidden = state.kind !== "redis";
+  $("databaseNumber").disabled=service()?.mode==="cluster";
+  if(service()?.mode==="cluster") $("databaseNumber").value=0;
+  $("consoleAccessButton").disabled=!service();
   $("redirectControl").hidden = state.kind !== "redis" || service()?.mode !== "cluster";
   $("connectButton").disabled = !ep || !state.sessionLive || !state.cliAvailable;
   $("connectButton").textContent = terminal ? tr("Переоткрыть") : tr("Открыть");
@@ -527,7 +583,7 @@ function renderConsole() {
   $("consoleMismatch").hidden = !mismatch;
   if (mismatch) $("consoleMismatch").textContent = tr`Открытая консоль остаётся на ${terminal.endpoint.address}. Выбрано ${ep.address}; кнопка «Переоткрыть» создаст новое соединение.`;
   if (terminal) {
-    $("consoleContext").textContent = tr`Адрес запуска: ${terminal.endpoint.address}${terminal.connection?.source === "dns" ? ` → ${terminal.connection.address} (DNS ${terminal.connection.dns_servers.join(", ")})` : terminal.connection?.source === "system_fallback" ? tr` → ${terminal.connection.address} (DNS ОС)` : ""} · ${terminal.endpoint.kind === "sentinel" ? tr("без авторизации") : terminal.endpoint.auth === "admin" ? `user ${document.body.dataset.adminUser || "admin"}` : terminal.endpoint.auth === "default" ? "default (AUTH password)" : tr("без авторизации")} · DB при открытии: ${terminal.initial_db}${terminal.cluster_redirect ? tr(" · -c: следование редиректам") : ""} · ${terminal.alive ? tr("процесс CLI запущен") : tr("процесс CLI завершён")}`;
+    $("consoleContext").textContent = tr`Адрес запуска: ${terminal.endpoint.address}${terminal.connection?.source === "dns" ? ` → ${terminal.connection.address} (DNS ${terminal.connection.dns_servers.join(", ")})` : terminal.connection?.source === "system_fallback" ? tr` → ${terminal.connection.address} (DNS ОС)` : ""} · ${accessLabel(terminal.endpoint)} · DB при открытии: ${terminal.initial_db}${terminal.cluster_redirect ? tr(" · -c: следование редиректам") : ""} · ${terminal.alive ? tr("процесс CLI запущен") : tr("процесс CLI завершён")}`;
     $("terminalLog").textContent = terminal.buffer || "";
   } else {
     $("consoleContext").textContent = tr("Соединение не открыто");
@@ -568,7 +624,7 @@ function appendOutput(terminal, text) {
   }
 }
 async function openConsole() {
-  if (selectedEndpoint()?.auth === "default" && !endpointUnlocked(selectedEndpoint())) { showDefaultAccess(selectedEndpoint().id); return; }
+  if (selectedEndpoint() && !endpointUnlocked(selectedEndpoint())) { requestEndpointAccess(selectedEndpoint()); return; }
   const ep = selectedEndpoint(), kind = state.kind, sid = state.selected;
   if (!ep) return;
   $("connectButton").disabled = true;
@@ -664,9 +720,9 @@ async function loadDetail(force=false) {
   if (topic === "events") { renderEvents(); filterDetails(); return; }
   if (!state.cliAvailable) { replaceChildren("detailContent", el("div","empty-note",tr("Для получения данных установите redis-cli и перезапустите панель."))); return; }
   if (!ep) { replaceChildren("detailContent", el("div","empty-note",tr("Выберите инстанс."))); return; }
-  if (ep.auth === "default" && !endpointUnlocked(ep)) {
-    const button=el("button", "secondary", uiText.enterDefault); button.addEventListener("click",()=>showDefaultAccess(ep.id));
-    replaceChildren("detailContent", el("div","empty-note",uiText.defaultRequired),button);
+  if (ep.auth !== "none" && !endpointUnlocked(ep)) {
+    const button=el("button", "secondary", tr("Enter the password.")); button.addEventListener("click",()=>requestEndpointAccess(ep));
+    replaceChildren("detailContent", el("div","empty-note",ep.kind === "sentinel" ? tr("Enter the Sentinel password.") : tr("Enter the password.")),button);
     $("detailStatus").textContent=ep.address; return;
   }
   const key = `${sid}:${ep.id}:${topic}`, cached = state.detailCache.get(key);
@@ -726,10 +782,28 @@ function resetAddition() {
   updateScanSummary();
 }
 function updateSeedAuth() {
-  $("defaultSeedFields").hidden=$("seedAuth").value !== "default";
-  $("seedDefaultPassword").disabled=$("seedAuth").value !== "default";
-  $("seedPasswordPort").disabled=$("seedAuth").value !== "default";
-  $("seedDefaultPassword").value="";
+  const mode=$("seedAuth").value, own=["user","default"].includes(mode);
+  $("defaultSeedFields").hidden=!own;$("seedDefaultPassword").disabled=!own;
+  $("seedPasswordPort").disabled=!own;$("seedUsernameRow").hidden=mode!=="user";
+  $("seedUsername").required=mode==="user";$("seedDefaultPassword").value="";
+  updateSentinelFields();
+}
+function updateSentinelFields() {
+  const mode=$("seedSentinelAuth").value, own=mode!=="none";
+  $("seedSentinelUsernameRow").hidden=mode!=="user";$("seedSentinelUsername").required=mode==="user";
+  $("sentinelPasswordFields").hidden=!own;
+  $("seedSentinelPassword").disabled=!own;
+  $("seedSentinelPasswordPort").disabled=!own;
+  $("seedSentinelTlsFields").disabled=!$("seedSentinelTls").checked;
+  $("sentinelConnectionSummary").textContent=(mode==="none"?tr("No authentication"):mode==="user"?tr("Username and password"):tr("Password"))+($("seedSentinelTls").checked?" / TLS":"");
+}
+function sentinelEndpointList() {
+  const text=$("seedSentinelEndpoints").value.trim();if(!text)return [];
+  return text.split(/\r?\n/).map(line=>line.trim()).filter(Boolean).map(line=>{
+    const match=line.match(/^\[([^\]]+)\]:(\d+)$/) || line.match(/^([^:\s]+):(\d+)$/);
+    if(!match) throw new Error(tr("Use one host:port per line."));
+    return {host:match[1],port:Number(match[2])};
+  });
 }
 function completeAddition(saved, addition) {
   if (!saved?.length) return;
@@ -783,16 +857,23 @@ async function discover(event) {
   replaceChildren("discoveryResults", el("div","empty-note",tr("Обнаружение нод и инстансов…")));
   const spec = {host:$("seedHost").value.trim(), discovery_mode:state.discoveryMode, auth:$("seedAuth").value,
     name:$("seedName").value.trim(), group:$("seedGroup").value.trim(), auto_add:$("autoAddDiscovered").checked,
-    tls:$("seedTls").checked, cacert:$("seedCa").value.trim(), sni:$("seedSni").value.trim()};
+    tls:$("seedTls").checked, cacert:$("seedCa").value.trim(), sni:$("seedSni").value.trim(),
+    username:$("seedUsername").value.trim(),certfile:$("seedCert").value.trim(),keyfile:$("seedKey").value.trim(),
+    sentinel_connection:{auth:$("seedSentinelAuth").value,username:$("seedSentinelUsername").value.trim(),tls:$("seedSentinelTls").checked,
+      cacert:$("seedSentinelCa").value.trim(),sni:$("seedSentinelSni").value.trim(),certfile:$("seedSentinelCert").value.trim(),keyfile:$("seedSentinelKey").value.trim()},
+    sentinel_master:$("seedMasterName").value.trim()};
+  try {spec.sentinel_endpoints=sentinelEndpointList();} catch(err) {state.discoveryRunning=false;notify(errorMessage(err),true);return;}
   if (state.discoveryMode === "node") Object.assign(spec, {redis_start:Number($("scanRedisStart").value), redis_end:Number($("scanRedisEnd").value),sentinel_start:Number($("scanSentinelStart").value),sentinel_end:Number($("scanSentinelEnd").value)});
   else Object.assign(spec, {ports:$("seedPorts").value.replace(/[–—]/g,"-"),kind:$("seedKind").value,find_sentinel:$("findSentinel").checked,sentinel_port:$("seedSentinelPort").value || null});
-  if (spec.auth === "default") {spec.default_password=$("seedDefaultPassword").value; spec.password_port=Number($("seedPasswordPort").value);}
+  if (["default","user"].includes(spec.auth)) {spec.redis_password=$("seedDefaultPassword").value;spec.password_port=Number($("seedPasswordPort").value);}
+  if (spec.sentinel_connection.auth!=="none") {spec.sentinel_password=$("seedSentinelPassword").value;spec.sentinel_password_port=Number($("seedSentinelPasswordPort").value);}
+  $("seedSentinelPassword").value="";
   $("seedDefaultPassword").value="";
   for (const input of $("discoveryForm").querySelectorAll("input,select,button")) input.disabled = true;
   $("cancelDiscovery").hidden = false; $("cancelDiscovery").disabled = false;
   try {
     const result = await job("/api/discover", spec, async id => {
-      delete spec.default_password;
+      delete spec.default_password;delete spec.redis_password;delete spec.sentinel_password;
       state.discoveryId = id;
       if (state.discoveryCancelRequested) await api(`/api/jobs/${id}`, {method:"DELETE"});
     }, renderScanProgress);
@@ -801,7 +882,7 @@ async function discover(event) {
     if (result.auto_added) {(result.saved_services || []).forEach(s => revealCatalogGroup(s.group));completeAddition(result.saved_services, result.addition);await loadCatalog();}
   } catch (err) {replaceChildren("discoveryResults", el("div","error-note",errorMessage(err)));}
   finally {
-    delete spec.default_password;
+    delete spec.default_password;delete spec.redis_password;delete spec.sentinel_password;
     state.discoveryRunning = false; state.discoveryId = null;
     for (const input of $("discoveryForm").querySelectorAll("input,select,button")) input.disabled = false;
     $("cancelDiscovery").hidden = true; setDiscoveryMode(state.discoveryMode, false);
@@ -873,7 +954,17 @@ function bindEvents() {
     catch (err) { notify(errorMessage(err), true); $("panelLogoutButton").disabled = false; }
   });
   $("authTabs").addEventListener("click",e=>{const b=e.target.closest("button[data-auth]");if(b)switchAuth(b.dataset.auth);});
-  $("defaultAccessButton").addEventListener("click",()=>showDefaultAccess());
+  $("defaultAccessButton").addEventListener("click",()=>showAccess("redis"));
+  $("connectionAccessButton").addEventListener("click",()=>showAccess(state.kind));
+  $("consoleAccessButton").addEventListener("click",()=>showAccess(state.kind,state.picked[state.kind]));
+  $("accessKind").addEventListener("change",()=>populateAccessScopes());
+  $("defaultAccessScope").addEventListener("change",loadAccessScope);
+  $("accessAuth").addEventListener("change",()=>{$("defaultAccessPassword").value="";updateAccessFields();});
+  $("accessTls").addEventListener("change",updateAccessFields);
+  $("seedSentinelAuth").addEventListener("change",()=>{$("seedSentinelPassword").value="";updateSentinelFields();});
+  $("seedSentinelTls").addEventListener("change",updateSentinelFields);
+  $("scanSentinelStart").addEventListener("input",()=>{$("seedSentinelPasswordPort").value=$("scanSentinelStart").value;});
+  $("seedKind").addEventListener("change",()=>{if($("seedKind").value==="sentinel")$("seedSentinelPasswordPort").value=parseInt($("seedPorts").value,10)||26379;});
   $("closeDefaultAccess").addEventListener("click",()=>$("defaultAccessDialog").close());
   $("defaultAccessDialog").addEventListener("close",()=>{$("defaultAccessPassword").value="";});
   $("defaultAccessForm").addEventListener("submit",e=>{e.preventDefault();saveDefaultCredential();});
@@ -889,7 +980,7 @@ function bindEvents() {
   });
   $("lockButton").addEventListener("click", async () => {
     try {
-      if(state.authMode === "admin") {await post("/api/session/lock",{profile:"admin"});state.unlocked=false;}
+      if(usesGlobal()) {await post("/api/session/lock",{profile:"admin"});state.unlocked=false;}
       else if(service()) await api(`/api/services/${state.selected}/credentials`,{method:"DELETE",body:JSON.stringify({scope:"service"})});
       resetViewAfterCredentialChange(); await syncTerminals(); await loadCatalog();
       $("redisPassword").value="";renderCredential();renderConsole();if(state.selected)renderWorkspace();
@@ -908,7 +999,7 @@ function bindEvents() {
   $("scanRedisStart").addEventListener("input",()=>{$("seedPasswordPort").value=$("scanRedisStart").value;});
   $("discoveryForm").addEventListener("input",resetAddition);
   $("discoveryForm").addEventListener("change",resetAddition);
-  $("addDialog").addEventListener("close",()=>{$("seedDefaultPassword").value="";});
+  $("addDialog").addEventListener("close",()=>{$("seedDefaultPassword").value="";$("seedSentinelPassword").value="";});
   $("catalogSearch").addEventListener("input",renderCatalog);
   $("addButton").addEventListener("click",showAdd); $("welcomeAdd").addEventListener("click",showAdd);
   $("closeAdd").addEventListener("click",async () => { $("seedDefaultPassword").value=""; await cancelDiscovery(); $("addDialog").close(); });

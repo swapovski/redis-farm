@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{{ t("Вход — Redis Farm") }}</title>
   {% include '_favicons.html' %}
-  <link rel="stylesheet" href="{{ url_for('static', filename='app.css', v=version) }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='app.css', v=version ~ '-connections1') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='login.css', v=version) }}">
   <meta name="referrer" content="same-origin">
   <script type="application/json" id="uiCatalog">{{ ui_catalog|tojson }}</script>

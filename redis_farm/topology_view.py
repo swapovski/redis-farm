@@ -9,7 +9,8 @@ from .display import HostLabels, literal_ip
 
 def _profile(ep):
     return (ep.get('kind', 'redis'), int(ep['port']), ep.get('auth', 'admin'),
-            bool(ep.get('tls', False)), ep.get('cacert', ''), ep.get('sni', ''))
+            bool(ep.get('tls', False)), ep.get('cacert', ''), ep.get('sni', ''), ep.get('username', ''),
+            ep.get('certfile', ''), ep.get('keyfile', ''))
 
 
 def topology_view(service, rows, resolver=None, cancel=None):
