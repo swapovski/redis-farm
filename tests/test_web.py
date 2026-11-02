@@ -54,7 +54,7 @@ class FlaskTests(unittest.TestCase):
 
     def test_discovery_job_and_catalog(self):
         self.post('/api/session/unlock',{'password':'fixture-password'})
-        response=self.post('/api/discover',{'host':'redis-b.example','ports':'6389'})
+        response=self.post('/api/discover',{'host':'redis-b.example','ports':'6389','kind':'redis'})
         self.assertEqual(response.status_code,202)
         jid=response.get_json()['job_id']
         deadline=time.monotonic()+5
@@ -105,7 +105,7 @@ class AutoScanFlaskTests(unittest.TestCase):
         job=self.scan({'host':'seed.example'});self.assertEqual(job['progress']['completed'],10)
         self.assertTrue(job['result']['auto_added']);self.assertEqual(len(self.client.get('/api/services').get_json()['services']),3)
     def test_manual_port_keeps_preview_without_save(self):
-        job=self.scan({'host':'seed.example','ports':'6379'});self.assertFalse(job['result']['auto_added'])
+        job=self.scan({'host':'seed.example','ports':'6379','kind':'redis'});self.assertFalse(job['result']['auto_added'])
         self.assertEqual(len(job['result']['services']),1);self.assertEqual(self.client.get('/api/services').get_json()['services'],[])
     def test_preview_opt_out_then_save(self):
         job=self.scan({'host':'seed.example','auto_add':False});self.assertEqual(self.client.get('/api/services').get_json()['services'],[])
