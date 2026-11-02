@@ -21,7 +21,7 @@ class ConnectionHTTP(unittest.TestCase):
         self.ext=self.app.extensions['redis_farm']
         r=Endpoint('192.0.2.11',6379);s=Endpoint('192.0.2.21',26379,'sentinel')
         self.redis,self.sentinel=r,s
-        self.service=self.ext['inventory'].save({'name':'fixture','mode':'sentinel','seed':r.to_dict(),'endpoints':[r.to_dict(),s.to_dict()]})
+        self.service=self.ext['inventory'].save({'name':'fixture','mode':'sentinel','master_name':'fixture-master','seed':r.to_dict(),'endpoints':[r.to_dict(),s.to_dict()]})
         self.sid=self.service['id'];self.path='/api/services/'+self.sid+'/connection'
     def tearDown(self):
         self.ext['shutdown']();self.tmp.cleanup()
